@@ -1,4 +1,4 @@
-# 14B_Projekt_Bazy
+# 14B_Projekt_Bazy (Przychodnia)
 
 - Ślusarczyk Marcin
 - Bandura Maciej
