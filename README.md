@@ -1,6 +1,6 @@
 # 14B_Projekt_Bazy (Przychodnia)
 
 - Ślusarczyk Marcin
-- Bandura Maciej
+- Bandura Maciek
 - Śmistek Mariusz
 - Tosnowiec Filip
