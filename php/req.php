@@ -14,14 +14,47 @@
 
   //  -- Uwierzytelnianie
 
-
   $acType = "N";
-
 
   //  -- Bufor Wyjscia
 
 
   $ret = array();
+
+  // -- **parser** dla sql'a
+
+  function dbRequire ($query)
+  {
+    global $db;
+    global $ret;
+    $parsed = oci_parse($db, $query);
+
+    if (!$parsed)
+    {
+      echo "PAR ERROR";
+      exit;
+    }
+
+    $result = oci_execute($parsed);
+
+    if (!$result)
+    {
+      echo "EXE ERROR";
+      exit;
+    }
+
+    while ( ($row = oci_fetch_array($parsed, OCI_ASSOC+OCI_RETURN_NULLS) ) != false) 
+    {
+      $cRow = [];
+      foreach ($row as $item) 
+        if ($item !== null)
+          array_push($cRow, $item !== null
+            ? $item
+            : ""
+          );
+      array_push($ret, $cRow);
+    }
+  }
 
   //  -- Polecenia
 
@@ -41,10 +74,7 @@
   function test()
   {
     global $ret;
-    array_push($ret, "A");
-    array_push($ret, "B");
-    array_push($ret, "C");
-    array_push($ret, "D");
+    dbRequire("select * from osoba_informacje");
   }
 
   $cmds = [
@@ -64,6 +94,5 @@
     }
 
   //  -- Zwracanie tablicy $ret jako JSON
-
-  echo json_encode($ret);
+  echo json_encode($ret, JSON_INVALID_UTF8_SUBSTITUTE);
 ?>
