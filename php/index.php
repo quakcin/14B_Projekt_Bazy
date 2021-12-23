@@ -12,11 +12,11 @@
     <script>
       // -- ok
       dbReq((j) => {
-        console.log("got:", j);
+        console.log(" ok, got:", j);
       }, "test");
       // -- invalid
       dbReq((j) => {
-        console.log("got:", j);
+        console.log("bad, got:", j);
       }, "test2");
     </script>
 

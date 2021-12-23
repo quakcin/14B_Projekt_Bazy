@@ -14,7 +14,7 @@ const dbReq = function (callback, command, packed = [])
 
   for (let i = 0; i < packed.length; i += 2)
     reqUrl += `&${packed[i]}=${packed[i + 1]}`;
-
+    
   fetch(new Request(reqUrl))
   .then(response => response.json())
   .then(json => {

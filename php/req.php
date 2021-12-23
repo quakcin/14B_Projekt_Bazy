@@ -1,13 +1,21 @@
 <?php
   header('Content-Type: application/json; charset=utf-8');
 
+  //  -- Bufor Wyjscia
+
+
+  $retDb = array();
+  $retPacket = array();
+  $retPacket['success'] = true;
+
   //  -- Polaczenie Z Baza
 
-  $db = oci_connect("system", "1234", "localhost/xe");
+  $db = @oci_connect("system", "1234", "localhost/xe");
 
   if (!$db)
   {
-    echo (oci_error())['message'];
+    $retPacket['err'] = (oci_error())['message'];
+    echo json_encode($retPacket, JSON_INVALID_UTF8_SUBSTITUTE);
     exit;
   }
 
@@ -15,32 +23,32 @@
   //  -- Uwierzytelnianie
 
   $acType = "N";
-
-  //  -- Bufor Wyjscia
-
-
-  $ret = array();
+  $retPacket['acType'] = $acType;
 
   // -- **parser** dla sql'a
 
   function dbRequire ($query)
   {
     global $db;
-    global $ret;
-    $parsed = oci_parse($db, $query);
+    global $retPacket;
+    // global $ret;
+    $dbRet = array();
+    $parsed = @oci_parse($db, $query);
 
     if (!$parsed)
     {
-      echo "PAR ERROR";
-      exit;
+      $retPacket['err'] = (oci_error($db))['message'];
+      $retPacket['success'] = false;
+      return $dbRet;
     }
 
-    $result = oci_execute($parsed);
+    $result = @oci_execute($parsed);
 
     if (!$result)
     {
-      echo "EXE ERROR";
-      exit;
+      $retPacket['err'] = (oci_error($parsed))['message'];
+      $retPacket['success'] = false;
+      return $dbRet;
     }
 
     while ( ($row = oci_fetch_array($parsed, OCI_ASSOC+OCI_RETURN_NULLS) ) != false) 
@@ -52,8 +60,9 @@
             ? $item
             : ""
           );
-      array_push($ret, $cRow);
+      array_push($dbRet, $cRow);
     }
+    return $dbRet;
   }
 
   //  -- Polecenia
@@ -73,14 +82,15 @@
 
   function test()
   {
-    global $ret;
-    dbRequire("select * from osoba_informacje");
+    global $retDb;
+    $retDb = dbRequire("select * from osoby");
   }
 
   $cmds = [
     new Command("test", "test", "N")
   ];
 
+  $cmdResolved = false;
 
   for ($i = 0; $i < count($cmds); $i++)
     if 
@@ -90,9 +100,20 @@
     )
     {
       call_user_func($cmds[$i]->fn, []);
+      $cmdResolved = true;
       break;
     }
 
+  // -- upewnienie sie ze polecenie zostalo wykonane
+
+  if (!$cmdResolved)
+  {
+    $retPacket['err'] = "Command " . $_GET["cmd"] . " does not exists!";
+    $retPacket['success'] = false;
+  }
+
   //  -- Zwracanie tablicy $ret jako JSON
-  echo json_encode($ret, JSON_INVALID_UTF8_SUBSTITUTE);
+  // array_push($retPacket, $retDb);
+  $retPacket['db'] = $retDb;
+  echo json_encode($retPacket, JSON_INVALID_UTF8_SUBSTITUTE);
 ?>
