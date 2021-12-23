@@ -3,6 +3,8 @@
 */
 
 // callback (json) => resolved json for command, and packed data
+
+
 const dbReq = function (callback, command, packed = [])
 {
   const localToken = localStorage.getItem("token");

@@ -3,27 +3,10 @@
 
   //  -- Bufor Wyjscia
 
-
   $retDb = array();
   $retPacket = array();
   $retPacket['success'] = true;
-
-  //  -- Polaczenie Z Baza
-
-  $db = @oci_connect("system", "1234", "localhost/xe");
-
-  if (!$db)
-  {
-    $retPacket['err'] = (oci_error())['message'];
-    echo json_encode($retPacket, JSON_INVALID_UTF8_SUBSTITUTE);
-    exit;
-  }
-
-
-  //  -- Uwierzytelnianie
-
-  $acType = "N";
-  $retPacket['acType'] = $acType;
+  $retPacket['token'] = $_GET["token"];
 
   // -- **parser** dla sql'a
 
@@ -31,7 +14,7 @@
   {
     global $db;
     global $retPacket;
-    // global $ret;
+    
     $dbRet = array();
     $parsed = @oci_parse($db, $query);
 
@@ -65,6 +48,48 @@
     return $dbRet;
   }
 
+  //  -- Polaczenie Z Baza
+
+  $db = @oci_connect("system", "1234", "localhost/xe");
+
+  if (!$db)
+  {
+    $retPacket['err'] = (oci_error())['message'];
+    $retPacket['success'] = false;
+    echo json_encode($retPacket, JSON_INVALID_UTF8_SUBSTITUTE);
+    exit;
+  }
+
+
+  //  -- Uwierzytelnianie
+
+  $retPacket['acType'] = "brak"; // -- czyli niezalogowany!
+                                 // -- pacjent
+                                 // -- lekarz
+                                 // -- admin
+
+  function verifyToken () // -- TO-DO:  Usuwanie wygaslych sesji.
+  {
+    global $retPacket;
+
+    $verfTokn = "select Konta.typ_konta, Sesje.Osoba_Nr from Sesje
+      INNER JOIN osoby on osoby.nr_osoby = sesje.osoba_nr
+      INNER JOIN Konta on osoby.nr_osoby = konta.osoba_nr
+      WHERE konta.typ_konta='pacjent' and sesje.token=" . "'" . $retPacket['token'] . "'";
+
+    $buff = dbRequire($verfTokn);
+
+    $result = ($buff == null) ? [] : $buff[0];
+
+    if (count($result) > 0)
+    {
+      $retPacket['acType'] = $result[0];
+      $retPacket['id_osoby'] = $result[1];
+    }
+
+  }
+  verifyToken();
+
   //  -- Polecenia
 
   class Command 
@@ -86,8 +111,29 @@
     $retDb = dbRequire("select * from osoby");
   }
 
+  function logowaniePacjenta () // TO-DO!!!
+  {
+    global $retPacket;
+
+    $buff = dbRequire("SELECT Uwierzytelnianie('MIETEK', 'SZTACHETA') FROM DUAL");
+    $return = ($buff == null) ? [] : $buff[0];
+
+    if (count($return) > 0) // -- procedura zadzialala, mozemy sie logowac
+      if (strcmp($return[0], "error") != 0)
+      {
+        $retPacket['token'] = $return[0];
+        $retPacket['acType'] = 'pacjent';
+      }
+    // -- plik w js powinien przestawic 
+
+  }
+
+  // -- Testowanie: http://localhost/req.php?token=nil&cmd=test
+  // JS, PHP, Dostep
   $cmds = [
-    new Command("test", "test", "N")
+    new Command("test", "test", "brak"),
+    new Command("test", "test", "pacjent"),
+    new Command("zalogujPacjenta", "logowaniePacjenta", "brak")
   ];
 
   $cmdResolved = false;
@@ -95,8 +141,8 @@
   for ($i = 0; $i < count($cmds); $i++)
     if 
     (
-      strcmp($_GET["cmd"], $cmds[$i]->name) == 0
-      && strcmp($acType, $cmds[$i]->acType) == 0
+      strcmp($retPacket['acType'], $cmds[$i]->acType) == 0
+      && strcmp($_GET["cmd"], $cmds[$i]->name) == 0
     )
     {
       call_user_func($cmds[$i]->fn, []);
@@ -113,7 +159,8 @@
   }
 
   //  -- Zwracanie tablicy $ret jako JSON
-  // array_push($retPacket, $retDb);
+  
   $retPacket['db'] = $retDb;
   echo json_encode($retPacket, JSON_INVALID_UTF8_SUBSTITUTE);
 ?>
+

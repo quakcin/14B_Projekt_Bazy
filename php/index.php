@@ -8,8 +8,26 @@
 
   </head>
   <body>
+
+    <input type="button" value="Info" id="btn1">
+
     <script src="js/req.js"></script>
     <script>
+
+      function komunikatorZSerwerem ( wartosc )
+      {
+        console.log(wartosc);
+
+        document.body.innerHTML += "<br> " + wartosc.db[0][1] + "<br>" + wartosc.db[1][1];
+      }
+
+
+      btn1.onclick = (e) =>
+      {
+        dbReq(komunikatorZSerwerem, "test");
+      }
+
+      /*
       // -- ok
       dbReq((j) => {
         console.log(" ok, got:", j);
@@ -18,6 +36,7 @@
       dbReq((j) => {
         console.log("bad, got:", j);
       }, "test2");
+      */
     </script>
 
     <!-- Podmień zaloguj z Moje Konto w przypadku zalogowania -->
