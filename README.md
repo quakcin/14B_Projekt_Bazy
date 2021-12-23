@@ -1,5 +1,5 @@
 # 14B_Projekt_Bazy (Przychodnia)
-
+Zespół pracujący nad projektem:
 - Ślusarczyk Marcin
 - Bandura Maciek
 - Śmistek Mariusz
