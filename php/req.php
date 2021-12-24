@@ -1,14 +1,50 @@
 <?php
+  /*
+    Komunikator miedzy skryptami strony,
+    serwerem php a baza danych.
+
+    Obsluguje zarowno klientow zalogowanych
+    jak i tych nie zalogowanych.
+    
+    Zawsze zwraca obiekt JSON zawierajacy
+    niezbedne informacje dla JS'a osblugujacego
+    projekt po stronie klienta.
+  */  
+
+  // -- Naglowek dla wyjscia
+
   header('Content-Type: application/json; charset=utf-8');
 
-  //  -- Bufor Wyjscia
+  //  -- Bufory Wyjscia
 
   $retDb = array();
   $retPacket = array();
   $retPacket['success'] = true;
-  $retPacket['token'] = $_GET["token"];
+  $retPacket['token'] = "nil";
 
-  // -- **parser** dla sql'a
+  // -- Handler bledow
+
+  function packetThrow ($errorMsg, $dbOut)
+  {
+    global $retPacket;
+    $retPacket['success'] = false;
+    $retPacket['err'] = $errorMsg;
+    $retPacket['db'] = $dbOut;
+    echo json_encode(
+      $retPacket, 
+      JSON_INVALID_UTF8_SUBSTITUTE
+    );
+    exit;
+  }
+
+  // -- Kontrola poprawnosci zapytania
+
+  if (   !isset($_GET['token']) || !isset($_GET['cmd'])   )
+    packetThrow("Missing token or command", []);
+  else
+    $retPacket['token'] = $_GET["token"];
+
+  // -- Perser dla sql'a
 
   function dbRequire ($query)
   {
@@ -19,32 +55,33 @@
     $parsed = @oci_parse($db, $query);
 
     if (!$parsed)
-    {
-      $retPacket['err'] = (oci_error($db))['message'];
-      $retPacket['success'] = false;
-      return $dbRet;
-    }
+      packetThrow((oci_error($db))['message'], []);
 
     $result = @oci_execute($parsed);
 
     if (!$result)
+      packetThrow((oci_error($parsed))['message'], []);
+
+    $row = @oci_fetch_array(
+      $parsed, 
+      OCI_ASSOC+OCI_RETURN_NULLS
+    );
+
+    while ($row != false)
     {
-      $retPacket['err'] = (oci_error($parsed))['message'];
-      $retPacket['success'] = false;
-      return $dbRet;
+      $col = [];
+      foreach ($row as $item) 
+        array_push($col, $item !== null
+          ? $item
+          : ""
+        );
+      array_push($dbRet, $col);
+      $row = @oci_fetch_array(
+        $parsed, 
+        OCI_ASSOC+OCI_RETURN_NULLS
+      );
     }
 
-    while ( ($row = oci_fetch_array($parsed, OCI_ASSOC+OCI_RETURN_NULLS) ) != false) 
-    {
-      $cRow = [];
-      foreach ($row as $item) 
-        if ($item !== null)
-          array_push($cRow, $item !== null
-            ? $item
-            : ""
-          );
-      array_push($dbRet, $cRow);
-    }
     return $dbRet;
   }
 
@@ -53,12 +90,7 @@
   $db = @oci_connect("system", "1234", "localhost/xe");
 
   if (!$db)
-  {
-    $retPacket['err'] = (oci_error())['message'];
-    $retPacket['success'] = false;
-    echo json_encode($retPacket, JSON_INVALID_UTF8_SUBSTITUTE);
-    exit;
-  }
+    packetThrow((oci_error())['message'], []);
 
 
   //  -- Uwierzytelnianie
@@ -84,21 +116,25 @@
     if (count($result) > 0)
     {
       $retPacket['acType'] = $result[0];
-      $retPacket['id_osoby'] = $result[1];
+      $retPacket['nrOsoby'] = $result[1];  // -- uzywane przez php do tworzenia kwerend
+                                           //    sql, do wskazywania na konkretna osobe
     }
 
   }
   verifyToken();
 
-  //  -- Polecenia
+  //  -- Polecenia po stronie php wywolywane po przez zapytanie
+  //     najczesciej generowane w JS przy pomocji funkcji dbReq()
 
   class Command 
   {
-    public $acType; // P - Pacjent, L - Lekarz, A - Admin, N - Kazdy
+    public $parmList;
+    public $acType;
     public $name;
     public $fn;
-    public function __construct($name, $fn, $acType)
+    public function __construct($name, $fn, $acType, $parmList)
     {
+      $this->parmList = $parmList;
       $this->acType = $acType;
       $this->name = $name;
       $this->fn = $fn;
@@ -111,9 +147,12 @@
     $retDb = dbRequire("select * from osoby");
   }
 
-  function logowaniePacjenta () // TO-DO!!!
+  // -- niezaleznie od rodzaju konta, logowanie 
+  //    po stronie sql wyglada tak samo
+  function logowanie ()
   {
     global $retPacket;
+    global $retDb;
 
     $newToken = "";
     for ($i = 0; $i < 32; $i++)
@@ -125,7 +164,7 @@
 
     $retPacket['token'] = $newToken;
 
-    // -- tworzenie sesji przez serwer, jesli dane sie zgadzaja
+    // -- tworzenie sesji przez serwer sql
 
     dbRequire(
       "CALL add_session('" . $_GET["user"] . 
@@ -133,14 +172,37 @@
       "', '" . $newToken . "')"
     );
 
+    // -- jesli udalo sie stworzyc sesje, kwerenda 
+    //    zwroci nr osoby oraz rodzaj konta
+
+    $conf = dbRequire("select sesje.osoba_nr, konta.typ_konta 
+                       from sesje inner join osoby 
+                       on sesje.osoba_nr = osoby.nr_osoby 
+                       inner join konta on 
+                       konta.osoba_nr = osoby.nr_osoby 
+                       where sesje.token = '" . $newToken . "'");
+
+    if ($conf != NULL)
+      if (count($conf[0]) > 0)
+      {
+        $retDb = $conf[0];
+        $retPacket['nrOsoby'] = $conf[0][0];
+        $retPacket['acType'] = $conf[0][1];
+        return;
+      }
+
+    // -- informacja o nieudanym logowaniu dla JS'a
+
+    packetThrow('Failed to login!', []);
   }
 
-  // -- Testowanie: http://localhost/req.php?token=nil&cmd=test
-  // JS, PHP, Dostep
+  // -- Wszystkie Polecenia oblugiwane po stronie php
+  //    Format:   (  JS, PHP, Dostep, [parametry z _GET]  )
+
   $cmds = [
-    new Command("test", "test", "brak"),
-    new Command("test", "test", "pacjent"),
-    new Command("zalogujPacjenta", "logowaniePacjenta", "brak")
+    new Command("test", "test", "brak", []),
+    new Command("test", "test", "pacjent", []),
+    new Command("zaloguj", "logowanie", "brak", ["user", "password"])
   ];
 
   $cmdResolved = false;
@@ -152,22 +214,28 @@
       && strcmp($_GET["cmd"], $cmds[$i]->name) == 0
     )
     {
+      // -- sprawdzanie integralnosci parametrow
+      foreach ($cmds[$i]->parmList as $parm)
+        if (!isset($_GET[$parm]))
+          packetThrow("Missing parameter: " . $parm, []);
+
+      // -- wywolanie php-sided funkcji
       call_user_func($cmds[$i]->fn, []);
       $cmdResolved = true;
       break;
     }
 
-  // -- upewnienie sie ze polecenie zostalo wykonane
+  // -- upewnienie sie ze jakies polecenie zostalo wykonane
 
   if (!$cmdResolved)
-  {
-    $retPacket['err'] = "Command " . $_GET["cmd"] . " does not exists!";
-    $retPacket['success'] = false;
-  }
+    packetThrow("Command " . $_GET["cmd"] . " does not exists!", []);
 
-  //  -- Zwracanie tablicy $ret jako JSON
+  //  -- Zwracanie tablico-obiektu $retPacket jako JSON
   
   $retPacket['db'] = $retDb;
-  echo json_encode($retPacket, JSON_INVALID_UTF8_SUBSTITUTE);
+  echo json_encode(
+    $retPacket, 
+    JSON_INVALID_UTF8_SUBSTITUTE
+  );
 ?>
 
