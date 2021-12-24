@@ -115,16 +115,23 @@
   {
     global $retPacket;
 
-    $buff = dbRequire("SELECT Uwierzytelnianie('MIETEK', 'SZTACHETA') FROM DUAL");
-    $return = ($buff == null) ? [] : $buff[0];
+    $newToken = "";
+    for ($i = 0; $i < 32; $i++)
+      $newToken .= (
+        (rand(0, 1) == 0)
+          ? chr(rand(97, 122))
+          : chr(rand(48, 57))
+      );
 
-    if (count($return) > 0) // -- procedura zadzialala, mozemy sie logowac
-      if (strcmp($return[0], "error") != 0)
-      {
-        $retPacket['token'] = $return[0];
-        $retPacket['acType'] = 'pacjent';
-      }
-    // -- plik w js powinien przestawic 
+    $retPacket['token'] = $newToken;
+
+    // -- tworzenie sesji przez serwer, jesli dane sie zgadzaja
+
+    dbRequire(
+      "CALL add_session('" . $_GET["user"] . 
+      "','" . $_GET["password"] . 
+      "', '" . $newToken . "')"
+    );
 
   }
 
