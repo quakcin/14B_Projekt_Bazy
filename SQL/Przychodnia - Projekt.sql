@@ -18,6 +18,11 @@ INCREMENT BY 1
 START WITH 1
 NOCYCLE;
 
+CREATE SEQUENCE Konta_sequence
+INCREMENT BY 1
+START WITH 1
+NOCYCLE;
+
 CREATE SEQUENCE Osoby_sequence
 INCREMENT BY 1
 START WITH 1
@@ -67,13 +72,12 @@ CREATE TABLE Pacjenci(
     CONSTRAINT Osoba_fk FOREIGN KEY(Osoba_Nr) REFERENCES Osoby(Nr_Osoby)
     );
 	
-
 CREATE OR REPLACE VIEW Pacjenci_view AS
-SELECT  osoby.imie, osoby.nazwisko, osoby.data_urodzenia, osoby.pesel, kontakty.telefon, 
+SELECT  Konta.login, Konta.haslo, osoby.imie, osoby.nazwisko, osoby.data_urodzenia, osoby.pesel, kontakty.telefon, 
         kontakty.email, adresy.miasto, adresy.ulica, adresy.nr_domu, adresy.nr_mieszkania, 
         adresy.kod_pocztowy
-        FROM Osoby, Adresy, Kontakty
-        WHERE osoby.adres_nr = adresy.nr_adresu AND osoby.kontakt_nr = kontakty.nr_kontaktu;
+        FROM Osoby, Adresy, Kontakty, Konta
+        WHERE osoby.adres_nr = adresy.nr_adresu AND osoby.kontakt_nr = kontakty.nr_kontaktu AND Osoby.Nr_osoby=Konta.Osoba_Nr;
 
 CREATE OR REPLACE TRIGGER Pacjent_add_trigger
 INSTEAD OF INSERT ON Pacjenci_view
@@ -83,13 +87,14 @@ BEGIN
     INSERT INTO Kontakty VALUES (KONTAKTY_SEQUENCE.nextval, :NEW.Telefon, :NEW.Email);
     INSERT INTO Osoby VALUES (OSOBY_SEQUENCE.nextval, :NEW.Nazwisko, :NEW.Imie, :NEW.Data_Urodzenia, :NEW.PESEL, ADRESY_SEQUENCE.currval, KONTAKTY_SEQUENCE.currval);
     INSERT INTO Pacjenci VALUES (PACJENCI_SEQUENCE.nextval, OSOBY_SEQUENCE.currval);
+    INSERT INTO Konta VALUES (KONTA_SEQUENCE.nextval, :NEW.Login, :NEW.Haslo, 'pacjent', OSOBY_SEQUENCE.currval);
 END;
 /
 
 INSERT INTO Specjalizacja (Nazwa_Specjalizacji) VALUES ('Kardiolog');
 INSERT INTO Specjalizacja (Nazwa_Specjalizacji) VALUES ('Dentysta');
 
-INSERT INTO Pacjenci_view VALUES ('Adam', 'Kowalski', sysdate-1000, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'kowal@wp.pl', 'Kielce', 'Sandomierska', 74, 10, '25-987');
-INSERT INTO Pacjenci_view VALUES ('Andrzej', 'Niewulis', sysdate-1200, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'andrzejek@onet.pl', 'Czƒôstochowa', 'Limanowskiego', 12, NULL, '71-411');
-INSERT INTO Pacjenci_view VALUES ('≈Åukasz', '≈ªr√≥dowski', sysdate-2500, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'luki2121@wp.pl', 'Kielce', 'Bohater√≥w Warszawy', 14, 5, '25-200');
-SELECT * FROM Pacjenci_view;
+INSERT INTO Pacjenci_view VALUES ('Pac1', 'Dudek', 'Adam', 'Kowalski', sysdate-1000, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'kowal@wp.pl', 'Kielce', 'Sandomierska', 74, 10, '25-987');
+INSERT INTO Pacjenci_view VALUES ('Pac2', 'Andrzejek','Andrzej', 'Niewulis', sysdate-1200, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'andrzejek@onet.pl', 'CzÍstochowa', 'Limanowskiego', 12, NULL, '71-411');
+INSERT INTO Pacjenci_view VALUES ('Pac3', 'luki','£ukasz', 'èrÛd≥dowski', sysdate-2500, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'luki2121@wp.pl', 'Kielce', 'BohaterÛw Warszawy', 14, 5, '25-200');
+--SELECT * FROM Pacjenci_view;
