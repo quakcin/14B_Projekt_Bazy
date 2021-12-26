@@ -1,13 +1,3 @@
-DROP TABLE Adresy CASCADE CONSTRAINTS;
-DROP TABLE Kontakty CASCADE CONSTRAINTS;
-DROP TABLE Osoby CASCADE CONSTRAINTS;
-DROP TABLE Pacjenci CASCADE CONSTRAINTS;
-DROP SEQUENCE Adresy_sequence;
-DROP SEQUENCE Kontakty_sequence;
-DROP SEQUENCE Osoby_sequence;
-DROP SEQUENCE Pacjenci_sequence;
-
-
 CREATE SEQUENCE Adresy_sequence
 INCREMENT BY 1
 START WITH 1
@@ -37,8 +27,8 @@ CREATE TABLE Adresy(
     Nr_Adresu NUMERIC PRIMARY KEY,
     Miasto NVARCHAR2(30) NOT NULL,
     Ulica NVARCHAR2(30) NOT NULL,
-    Nr_Domu NUMBER NOT NULL,
-    Nr_Mieszkania NUMBER,
+    Nr_Domu NVARCHAR2(5) NOT NULL,
+    Nr_Mieszkania NVARCHAR2(5),
     Kod_Pocztowy NVARCHAR2(6) NOT NULL
 );
 
@@ -94,7 +84,7 @@ END;
 INSERT INTO Specjalizacja (Nazwa_Specjalizacji) VALUES ('Kardiolog');
 INSERT INTO Specjalizacja (Nazwa_Specjalizacji) VALUES ('Dentysta');
 
-INSERT INTO Pacjenci_view VALUES ('Pac1', 'Dudek', 'Adam', 'Kowalski', sysdate-1000, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'kowal@wp.pl', 'Kielce', 'Sandomierska', 74, 10, '25-987');
-INSERT INTO Pacjenci_view VALUES ('Pac2', 'Andrzejek','Andrzej', 'Niewulis', sysdate-1200, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'andrzejek@onet.pl', 'CzÍstochowa', 'Limanowskiego', 12, NULL, '71-411');
-INSERT INTO Pacjenci_view VALUES ('Pac3', 'luki','£ukasz', 'èrÛd≥dowski', sysdate-2500, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'luki2121@wp.pl', 'Kielce', 'BohaterÛw Warszawy', 14, 5, '25-200');
+INSERT INTO Pacjenci_view VALUES ('Pac1', 'Dudek', 'Adam', 'Kowalski', sysdate-1000, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'kowal@wp.pl', 'Kielce', 'Sandomierska', '74', '10', '25-987');
+INSERT INTO Pacjenci_view VALUES ('Pac2', 'Andrzejek','Andrzej', 'Niewulis', sysdate-1200, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'andrzejek@onet.pl', 'Czƒôstochowa', 'Limanowskiego', '12', NULL, '71-411');
+INSERT INTO Pacjenci_view VALUES ('Pac3', 'luki','≈Åukasz', '≈πr√≥d≈Çdowski', sysdate-2500, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'luki2121@wp.pl', 'Kielce', 'Bohater√≥w Warszawy', '14', '5', '25-200');
 --SELECT * FROM Pacjenci_view;
