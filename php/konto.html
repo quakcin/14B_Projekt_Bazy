@@ -5,8 +5,12 @@
 -->
 <html lang="pl">
   <head>
+    <title> PRZYCHODNIA | MOJE KONTO </title>
+    <meta charset="UTF-8">
   </head>
   <body>
+  <div id="dbgOut"></div>
+  <input type="button" value="Wyloguj!" id="logOut">
 
   <!--
     ** Rozloz na 3 pliki:
@@ -26,6 +30,35 @@
       Lista Lekarzy -> Edycja -> Dodawanie / Usuwanie
       (...) Tak do wszystkich pierdół
   -->
+    <script src="js/req.js"></script>
+
+    <script>
+
+      dbReq((res) => {
+        const fields = ['login', 'haslo', 'imie', 'nazwisko', 'dataurodz', 'pesel', 'telefon', 'mail', 'miasto', 'ulica', 'dom', 'lokal', 'poczta'];
+
+        if (res.success)
+        {
+          console.log(res);
+          let strDbg = "<table>";
+          for (let i = 0; i < fields.length; i++)
+          strDbg += `<tr><td>${fields[i]}</td><td>${res.db[0][i]}</td></tr>`;
+          dbgOut.innerHTML = `${strDbg}</table>`;
+        }
+        else
+        {
+          alert("Prosze sie zalogowac!");
+          window.location.href = './logowanie.html';
+        }
+
+      }, "ac_debug");
+
+      logOut.onclick = function (e)
+      {
+        dbDropSession();
+      }
+
+    </script>
     
   </body>
 </html>

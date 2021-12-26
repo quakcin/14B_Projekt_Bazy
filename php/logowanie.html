@@ -5,19 +5,50 @@
 -->
 <html lang="pl">
   <head>
+    <title> PRZYCHODNIA | LOGOWANIE </title>
+    <meta charset="UTF-8">
   </head>
   <body>
 
     <!-- TO-DO: Styl -->
     <center>
 
-      <input type="text" placeholder="Nazwa Uzytkownika"> <br>
-      <input type="password" placeholder="Haslo"> <br><br>
+      <input type="text" placeholder="Nazwa Uzytkownika" autocomplete="off" id="loginArea"> <br>
+      <input type="password" placeholder="Haslo" autocomplete="off" id="passwdArea"> <br><br>
 
-      <a href="#js"> Zaloguj Sie </a>
-      <a href="rejestracja.php">Zarejestruj Sie</a> 
+      <div id="errOut"></div>
+
+      <a href="rejestracja.html"> Rejestracja</a>
+      <input type="button" value="Zaloguj" id="loginButton"> 
 
     </center>
+
+    <script src="js/req.js"></script>
+    <script>
+
+      loginButton.onclick = function(e) 
+      {
+        const form = {
+          login: loginArea.value,
+          passwd: passwdArea.value
+        }
+        
+        dbReq((res) =>
+        {
+          console.log(res);
+          if (res.success)
+          {
+            localStorage.setItem("token", res.token);
+            window.location.href = './konto.html';
+          }
+          else
+          {
+            errOut.innerHTML = `Nie udalo sie zalogowac: ${res.err}`;
+          }
+        }, "zaloguj", ["user", form.login, "password", form.passwd]);
+      }
+
+    </script>
 
   </body>
 </html>

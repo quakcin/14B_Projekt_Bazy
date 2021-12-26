@@ -5,6 +5,8 @@
 -->
 <html lang="pl">
   <head>
+    <title> PRZYCHODNIA | ZAREJESTRUJ SIĘ </title>
+    <meta charset="UTF-8">
   </head>
   <body>
 
@@ -12,26 +14,67 @@
 
   <!-- Napisz: Uniwersalny Skrypt -->  
   <!-- generateForm() -->
-  <input type="text" placeholder="Imie">
-  <input type="text" placeholder="Nazwisko">
+  <input class="f1" type="text" placeholder="Imie" name="Imie"> <br>
+  <input class="f1" type="text" placeholder="Nazwisko" name="Nazwisko"> <br> <br>
 
-  <input type="text" placeholder="Data Urodzenia"> <!-- !@/ -->
+  <input class="f1" type="date" placeholder="Data Urodzenia" name="Dataurodz"> <br>
 
-  <input type="text" placeholder="Pesel">
-  <input type="text" placeholder="Miasto">
-  <input type="text" placeholder="Ulica">
-  <input type="text" placeholder="Nr Domu">
-  <input type="text" placeholder="Nr Lokalu">
-  <input type="text" placeholder="Kod Pocztowy">
+  <input class="f1" type="number" placeholder="Pesel" name="Pesel"> <br> <br>
+  <input class="f1" type="text" placeholder="Miasto" name="Miasto"> <br>
+  <input class="f1" type="text" placeholder="Ulica" name="Ulica"> <br>
+  <input class="f1" type="text" placeholder="Nr Domu" name="Dom"> <br>
+  <input class="f1" type="text" placeholder="Nr Lokalu" name="Lokal"> <br>
+  <input class="f1" type="text" placeholder="Kod Pocztowy" name="Poczta"> <br><br>
   
-  <input type="text" placeholder="Nr Telefony">
-  <input type="text" placeholder="Adres">
+  <input class="f1" type="text" placeholder="Nr Telefony" name="Telefon"> <br> 
+  <input class="f1" type="text" placeholder="Email" name="Mail"> <br> <br>
     
-  <input type="text" placeholder="Nazwa Uzytkownika">
-  <input type="password" placeholder="Haslo">
+  <input class="f1" type="text" placeholder="Nazwa Uzytkownika" autocomplete="off" name="Login"> <br>
+  <input class="f1" type="password" placeholder="Haslo" autocomplete="off" name="Haslo"> <br>
+  <br> 
+    <div id="errOut"></div>
+  <br>
+  <input type="button" value="Zarejestruj" id="registerButton"> <br>
+  <input type="checkbox"> Zgadzam sie i podpisuje cyrograf!
+  
 
-  <a href="#js"> Zaloguj Sie </a> <!-- loggerAPI.register(TYPE) -->
-  <a href="rejestracja.php">Zarejestruj Sie</a> 
+  <script src="js/req.js"></script>
+  <script>
 
+    registerButton.onclick = function (e)
+    {
+      let argList = [];
+      for (let itm of document.getElementsByClassName("f1"))
+      {
+        argList.push(itm.name.toLowerCase());
+
+        const strippedValue = itm.value.trim();
+        if (strippedValue == '' && itm.name != 'Lokal')
+        {
+          errOut.innerHTML = `Pole ${itm.name} nie moze byc puste!`;
+          return;
+        }
+        argList.push(strippedValue);
+      }
+      console.log(argList);
+
+      dbReq((res) =>
+      {
+        if (res.success)
+        {
+          window.location.href = './logowanie.html';
+        }
+        else
+        {
+          errOut.innerHTML = `Nie udalo sie utworzyc konta: ${res.err}`;
+        }
+        console.log(res);
+      }, "zarejestruj", argList);
+
+    }
+
+
+
+  </script>
   </body>
 </html>

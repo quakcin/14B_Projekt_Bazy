@@ -105,9 +105,9 @@
     global $retPacket;
 
     $verfTokn = "select Konta.typ_konta, Sesje.Osoba_Nr from Sesje
-      INNER JOIN osoby on osoby.nr_osoby = sesje.osoba_nr
-      INNER JOIN Konta on osoby.nr_osoby = konta.osoba_nr
-      WHERE konta.typ_konta='pacjent' and sesje.token=" . "'" . $retPacket['token'] . "'";
+                 INNER JOIN osoby on osoby.nr_osoby = sesje.osoba_nr
+                 INNER JOIN Konta on osoby.nr_osoby = konta.osoba_nr
+                 WHERE sesje.token=" . "'" . $retPacket['token'] . "'";
 
     $buff = dbRequire($verfTokn);
 
@@ -141,10 +141,10 @@
     }
   }
 
-  function test()
+  function serverPing()
   {
-    global $retDb;
-    $retDb = dbRequire("select * from osoby");
+    global $retPacket;
+    $retPacket['ip'] = $_SERVER['REMOTE_ADDR'];
   }
 
   // -- niezaleznie od rodzaju konta, logowanie 
@@ -196,13 +196,59 @@
     packetThrow('Failed to login!', []);
   }
 
+  function wylogowywanie ()
+  {
+    global $retPacket;
+    dbRequire("delete from sesje where token = '" . $retPacket['token'] . "'");
+  }
+
+  function rejestracja ()
+  {
+    global $retPacket;
+    global $retDb;
+
+    $buff = dbRequire(
+      "CALL Pacjent_add('" . $_GET["login"] . "', '" . $_GET["haslo"] . "', '" . $_GET["imie"] . "', '" . $_GET["nazwisko"] . "', to_date('" . $_GET["dataurodz"] . "', 'YYYY-MM-DD'), '" . $_GET["pesel"] . "', '" . $_GET["telefon"] . "', '" . $_GET["mail"] . "', '" . $_GET["miasto"] . "', '" . $_GET["ulica"] . "', '" . $_GET["dom"] . "', " . ($_GET["lokal"] == "" ? "NULL" : "'" . $_GET["lokal"] . "'") . ", '" . $_GET["poczta"] . "')"
+    ); 
+
+    $retDb = $buff;
+  }
+
+  function konto_info ()
+  {
+    global $retDb;
+    global $retPacket;
+    $buff = dbRequire(
+        "SELECT  Konta.login, Konta.haslo, osoby.imie, osoby.nazwisko, osoby.data_urodzenia, osoby.pesel, kontakty.telefon, 
+        kontakty.email, adresy.miasto, adresy.ulica, adresy.nr_domu, adresy.nr_mieszkania, 
+        adresy.kod_pocztowy
+        FROM Osoby
+        INNER JOIN Adresy ON osoby.adres_nr = adresy.nr_adresu
+        INNER JOIN Kontakty ON osoby.kontakt_nr = kontakty.nr_kontaktu
+        INNER JOIN Konta ON Osoby.Nr_osoby=Konta.Osoba_Nr
+        WHERE osoby.nr_osoby='" . $retPacket['nrOsoby'] . "'"
+    );
+    $retDb = $buff;
+  }
+
   // -- Wszystkie Polecenia oblugiwane po stronie php
   //    Format:   (  JS, PHP, Dostep, [parametry z _GET]  )
 
   $cmds = [
-    new Command("test", "test", "brak", []),
-    new Command("test", "test", "pacjent", []),
-    new Command("zaloguj", "logowanie", "brak", ["user", "password"])
+    new Command("ping", "serverPing", "brak", []),
+    new Command("ping", "serverPing", "pacjent", []),
+    new Command("ping", "serverPing", "admin", []),
+
+    new Command("ac_debug", "konto_info", "pacjent", []),
+    new Command("ac_debug", "konto_info", "admin", []),
+
+    new Command("dropSess", "wylogowywanie", "pacjent", []),
+    new Command("dropSess", "wylogowywanie", "admin", []),
+    new Command("zaloguj", "logowanie", "brak", ["user", "password"]),
+    new Command("zarejestruj", "rejestracja", "brak", [
+      "imie", "nazwisko", "dataurodz", "pesel", "miasto", "ulica", 
+      "dom", "lokal", "poczta", "telefon", "login", "haslo"
+    ])
   ];
 
   $cmdResolved = false;
