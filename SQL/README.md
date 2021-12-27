@@ -1,5 +1,5 @@
 # FOLDER SQL
-Kolejność uruchamiania skryptów z folderu SQL: \
+Kolejność uruchamiania skryptów z folderu SQL:
 1. DROPs.sql
 2. CREATE.sql
 3. LOGOWANIE.sql
