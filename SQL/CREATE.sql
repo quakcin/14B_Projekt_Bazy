@@ -23,6 +23,8 @@ INCREMENT BY 1
 START WITH 1
 NOCYCLE;
 
+
+
 CREATE TABLE Adresy(
     Nr_Adresu NUMERIC PRIMARY KEY,
     Miasto NVARCHAR2(30) NOT NULL,
@@ -82,12 +84,15 @@ CREATE TABLE Sesje(
     CONSTRAINT Osoba_fk_Sesje FOREIGN KEY(Osoba_Nr) REFERENCES Osoby(Nr_Osoby)
 );
 
+
+
 CREATE OR REPLACE VIEW Pacjenci_view AS
 SELECT  Konta.login, Konta.haslo, osoby.imie, osoby.nazwisko, osoby.data_urodzenia, osoby.pesel, kontakty.telefon, 
         kontakty.email, adresy.miasto, adresy.ulica, adresy.nr_domu, adresy.nr_mieszkania, 
         adresy.kod_pocztowy
         FROM Osoby, Adresy, Kontakty, Konta
         WHERE osoby.adres_nr = adresy.nr_adresu AND osoby.kontakt_nr = kontakty.nr_kontaktu AND Osoby.Nr_osoby=Konta.Osoba_Nr;
+
 
 CREATE OR REPLACE TRIGGER Pacjent_add_trigger
 INSTEAD OF INSERT ON Pacjenci_view
@@ -101,6 +106,20 @@ BEGIN
 END;
 /
 
+--##########################################################################
+CREATE OR REPLACE TRIGGER check_dates_trigger
+  BEFORE INSERT OR UPDATE ON Osoby
+  FOR EACH ROW
+BEGIN
+  IF( :new.Data_Urodzenia > SYSDATE )
+  THEN
+    RAISE_APPLICATION_ERROR( -20001, 
+          'Błędna data urodzenia: Data w polu data urodzenia musi być mniejsza lób równa aktualnej:' );
+  END IF;
+END;
+/
+--##########################################################################################
+
 INSERT INTO Specjalizacja (Nazwa_Specjalizacji) VALUES ('Kardiolog');
 INSERT INTO Specjalizacja (Nazwa_Specjalizacji) VALUES ('Dentysta');
 
@@ -109,6 +128,3 @@ INSERT INTO Konta VALUES(1, 'admin', 'qwerty', 'admin', NULL);
 INSERT INTO Pacjenci_view VALUES ('Pac1', 'Dudek', 'Adam', 'Kowalski', sysdate-1000, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'kowal@wp.pl', 'Kielce', 'Sandomierska', '74', '10', '25-987');
 INSERT INTO Pacjenci_view VALUES ('Pac2', 'Andrzejek','Andrzej', 'Niewulis', sysdate-1200, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'andrzejek@onet.pl', 'Częstochowa', 'Limanowskiego', '12', NULL, '71-411');
 INSERT INTO Pacjenci_view VALUES ('Pac3', 'luki','Łukasz', 'Źródłdowski', sysdate-2500, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'luki2121@wp.pl', 'Kielce', 'Bohaterów Warszawy', '14', '5', '25-200');
---SELECT * FROM Pacjenci_view;
---SELECT * FROM KONTA;
-
