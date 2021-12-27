@@ -38,8 +38,13 @@
   <input type="checkbox"> Zgadzam sie i podpisuje cyrograf!
   
 
-  <script src="js/req.js"></script>
+  <script src="js/api.js"></script>
   <script>
+    
+    dbRestrict(
+      "Jestes juz zarejestrowany/zarejestrowana!", 
+      "./konto.html", ["brak", "admin"]
+    ); // ?lekarz
 
     registerButton.onclick = function (e)
     {

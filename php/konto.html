@@ -9,6 +9,7 @@
     <meta charset="UTF-8">
   </head>
   <body>
+  <a href="./index.html">Strona Główna</a> <br><br>
   <div id="dbgOut"></div>
   <input type="button" value="Wyloguj!" id="logOut">
 
@@ -30,7 +31,7 @@
       Lista Lekarzy -> Edycja -> Dodawanie / Usuwanie
       (...) Tak do wszystkich pierdół
   -->
-    <script src="js/req.js"></script>
+    <script src="js/api.js"></script>
 
     <script>
 
@@ -47,6 +48,7 @@
         }
         else
         {
+          console.log("FAIL", res);
           alert("Prosze sie zalogowac!");
           window.location.href = './logowanie.html';
         }

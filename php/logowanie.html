@@ -23,9 +23,11 @@
 
     </center>
 
-    <script src="js/req.js"></script>
+    <script src="js/api.js"></script>
     <script>
 
+      dbRestrict("Jestes juz zalogowany/zalogowana!", "./konto.html", ["brak"]);
+      
       loginButton.onclick = function(e) 
       {
         const form = {
