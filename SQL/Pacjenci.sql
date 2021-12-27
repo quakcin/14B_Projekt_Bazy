@@ -5,7 +5,8 @@ SELECT  Konta.login, Konta.haslo, osoby.imie, osoby.nazwisko, osoby.data_urodzen
         FROM Osoby
         INNER JOIN Adresy ON osoby.adres_nr = adresy.nr_adresu
         INNER JOIN Kontakty ON osoby.kontakt_nr = kontakty.nr_kontaktu
-        INNER JOIN Konta ON Osoby.Nr_osoby=Konta.Osoba_Nr;
+        INNER JOIN Konta ON Osoby.Nr_osoby = Konta.Osoba_Nr
+        INNER JOIN Pacjenci ON osoby.nr_osoby = pacjenci.osoba_nr;
         
 
 CREATE OR REPLACE TRIGGER Pacjent_add_trigger
