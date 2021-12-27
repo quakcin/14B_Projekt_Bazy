@@ -114,7 +114,7 @@ BEGIN
   IF( :new.Data_Urodzenia > SYSDATE )
   THEN
     RAISE_APPLICATION_ERROR( -20001, 
-          'Błędna data urodzenia: Data w polu data urodzenia musi być mniejsza lób równa aktualnej:' );
+          'Błędna data urodzenia: Data w polu data urodzenia musi być mniejsza lub równa aktualnej:' );
   END IF;
 END;
 /
