@@ -218,16 +218,9 @@
   {
     global $retDb;
     global $retPacket;
-    $buff = dbRequire(
-        "SELECT  Konta.login, Konta.haslo, osoby.imie, osoby.nazwisko, osoby.data_urodzenia, osoby.pesel, kontakty.telefon, 
-        kontakty.email, adresy.miasto, adresy.ulica, adresy.nr_domu, adresy.nr_mieszkania, 
-        adresy.kod_pocztowy
-        FROM Osoby
-        INNER JOIN Adresy ON osoby.adres_nr = adresy.nr_adresu
-        INNER JOIN Kontakty ON osoby.kontakt_nr = kontakty.nr_kontaktu
-        INNER JOIN Konta ON Osoby.Nr_osoby=Konta.Osoba_Nr
-        WHERE osoby.nr_osoby='" . $retPacket['nrOsoby'] . "'"
-    );
+    $buff = dbRequire("SELECT * FROM Pacjenci_view WHERE nr_osoby=" . $retPacket['nrOsoby']);
+
+    // TO-DO: --> $buff = dbRequire("call dane_osoby_proc(" . $retPacket['nrOsoby'] . ")");
     $retDb = $buff;
   }
 
@@ -235,14 +228,17 @@
   //    Format:   (  JS, PHP, Dostep, [parametry z _GET]  )
 
   $cmds = [
-    new Command("ping", "serverPing", "brak", []),
     new Command("ping", "serverPing", "pacjent", []),
+    new Command("ping", "serverPing", "lekarz", []),
     new Command("ping", "serverPing", "admin", []),
+    new Command("ping", "serverPing", "brak", []),
 
     new Command("ac_debug", "konto_info", "pacjent", []),
+    new Command("ac_debug", "konto_info", "lekarz", []),
     new Command("ac_debug", "konto_info", "admin", []),
 
     new Command("dropSess", "wylogowywanie", "pacjent", []),
+    new Command("dropSess", "wylogowywanie", "lekarz", []),
     new Command("dropSess", "wylogowywanie", "admin", []),
     new Command("zaloguj", "logowanie", "brak", ["user", "password"]),
     new Command("zarejestruj", "rejestracja", "brak", [

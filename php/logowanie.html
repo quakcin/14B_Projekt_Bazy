@@ -18,7 +18,7 @@
 
       <div id="errOut"></div>
 
-      <a href="rejestracja.html"> Rejestracja</a>
+      <a href="rejestracja"> Rejestracja</a>
       <input type="button" value="Zaloguj" id="loginButton"> 
 
     </center>
@@ -26,7 +26,7 @@
     <script src="js/api.js"></script>
     <script>
 
-      dbRestrict("Jestes juz zalogowany/zalogowana!", "./konto.html", ["brak"]);
+      dbRestrict("Jestes juz zalogowany/zalogowana!", "./konto", ["brak"]);
       
       loginButton.onclick = function(e) 
       {
@@ -41,7 +41,7 @@
           if (res.success)
           {
             localStorage.setItem("token", res.token);
-            window.location.href = './konto.html';
+            window.location.href = './konto';
           }
           else
           {

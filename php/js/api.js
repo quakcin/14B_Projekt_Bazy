@@ -1,8 +1,6 @@
-/*
-  --
-  --  Komunikator Z Serwerem PHP
-  --
-*/
+//
+//  --  Komunikator Z Serwerem PHP
+//
 
 // -- Wywołuje callbacka (odpowiedź) dla polecenia command o argumentach packed
 const dbReq = function (callback, command, packed = [])
@@ -12,7 +10,7 @@ const dbReq = function (callback, command, packed = [])
     ? localToken
     : "nil";
 
-  let reqUrl = `./req.php?token=${cToken}&cmd=${command}`;
+  let reqUrl = `/req.php?token=${cToken}&cmd=${command}`;
 
   for (let i = 0; i < packed.length; i += 2)
     reqUrl += `&${packed[i]}=${packed[i + 1]}`;
@@ -33,7 +31,7 @@ const dbDropSession = function ()
     if (e.success)
     {
       localStorage.clear();
-      window.location.href = './index.html';
+      window.location.href = '/index.html';
     }
     else
       alert(
@@ -47,7 +45,7 @@ const dbRestrict = function (errMsg, errUrl, acTypes)
 {
   const dbTrespasser = function ()
   {
-    alert(`${errMsg}`); // --> turn into some api kind of stuff
+    scheduleMessesage(errMsg, 8);
     window.location.href = errUrl;
   }
 
@@ -64,4 +62,58 @@ const dbRestrict = function (errMsg, errUrl, acTypes)
       );
 
   }, "ping");
+}
+
+
+//
+//  -- Kolejka komunkatów międzystronna
+//
+
+const scheduleMessesage = function (content, timeout)
+{
+  localStorage.setItem("msg", JSON.stringify({
+    content: content,
+    timeout: timeout
+  }));
+}
+
+const displayMessesage = function (content, timeout)
+{
+
+  const msgBox = document.createElement("div");
+  const tID = crypto.randomUUID();
+  msgBox.id = tID;
+  msgBox.setAttribute("class", "api_msg");
+  msgBox.innerText = content;
+
+  document.body.appendChild(msgBox);
+
+  setTimeout((e) => {
+    if (document.getElementById(tID) != null)
+      document.getElementById(tID).remove();
+  }, timeout * 1000);
+
+  document.getElementById(tID).onclick = (e) => {
+    e.srcElement.remove();
+  }
+}
+
+//
+//  -- Main
+//
+
+const apiInit = function ()
+{
+  document.head.innerHTML += `<link rel="stylesheet" type="text/css" href="/css/apiStyle.css">'`;
+  const cMsg = localStorage.getItem("msg");
+  if (cMsg != null)
+  {
+    const msg = JSON.parse(cMsg);
+    displayMessesage(msg.content, msg.timeout);
+    localStorage.removeItem("msg");
+  }
+}
+
+document.body.onload = (e) => {
+  apiInit();
 }

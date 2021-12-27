@@ -43,7 +43,7 @@
     
     dbRestrict(
       "Jestes juz zarejestrowany/zarejestrowana!", 
-      "./konto.html", ["brak", "admin"]
+      "./konto", ["brak", "admin"]
     ); // ?lekarz
 
     registerButton.onclick = function (e)
@@ -67,7 +67,7 @@
       {
         if (res.success)
         {
-          window.location.href = './logowanie.html';
+          window.location.href = './logowanie';
         }
         else
         {

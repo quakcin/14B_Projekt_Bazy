@@ -7,60 +7,97 @@
   <head>
     <title> PRZYCHODNIA | MOJE KONTO </title>
     <meta charset="UTF-8">
+    <link rel="Stylesheet" href="css/dashboard.css">
   </head>
   <body>
-  <a href="./index.html">Strona Główna</a> <br><br>
+
+  <!--
+  <a href="/index">Strona Główna</a> <br><br>
   <div id="dbgOut"></div>
   <input type="button" value="Wyloguj!" id="logOut">
 
-  <!--
-    ** Rozloz na 3 pliki:
-    1. Pacjent
-      Najblizsze Wizyty,
-      Skierowania (self destructive || remvoe btn)
-      Historia Wizyt
-        Recepty z tej wizyty
 
-    2. Lekarz
-      Nadchodzące Wizyty (opcja: Potwierdz Wizyte)
-      Historia Wizyt
-        Wypisane Recepty
 
-    3. Admin
-      Lista Pacjentow -> Edycja -> Dodawanie / Usuwanie
-      Lista Lekarzy -> Edycja -> Dodawanie / Usuwanie
-      (...) Tak do wszystkich pierdół
+  <a href="#" id="baton"> BATON </a>
   -->
-    <script src="js/api.js"></script>
 
-    <script>
+  <div class="wrapper">
+    <div class="menu" id="wMenu">
+      a
+    </div>
+    <div class="content" id="wContent">
 
-      dbReq((res) => {
-        const fields = ['login', 'haslo', 'imie', 'nazwisko', 'dataurodz', 'pesel', 'telefon', 'mail', 'miasto', 'ulica', 'dom', 'lokal', 'poczta'];
+      <div id="mojeKonto">
+        <h2>Hello World</h2> 
+      </div>
 
-        if (res.success)
-        {
-          console.log(res);
-          let strDbg = "<table>";
-          for (let i = 0; i < fields.length; i++)
-          strDbg += `<tr><td>${fields[i]}</td><td>${res.db[0][i]}</td></tr>`;
-          dbgOut.innerHTML = `${strDbg}</table>`;
-        }
-        else
-        {
-          console.log("FAIL", res);
-          alert("Prosze sie zalogowac!");
-          window.location.href = './logowanie.html';
-        }
+      <div id="test">
+        <h2>Hello test</h2> 
+      </div>
 
-      }, "ac_debug");
+    </div>
+  </div>
 
-      logOut.onclick = function (e)
+
+
+
+  <script src="/js/api.js"></script>
+  <script>
+
+    dbRestrict("Prosze sie zalogowac!", "./logowanie", ["admin", "pacjent", "lekarz"]);
+    
+    /*dbReq((res) => {
+      const fields = ['login', 'haslo', 'imie', 'nazwisko', 'dataurodz', 'pesel', 'telefon', 'mail', 'miasto', 'ulica', 'dom', 'lokal', 'poczta'];
+
+      if (res.success)
       {
-        dbDropSession();
+        console.log(res);
+        let strDbg = "<table>";
+        for (let i = 0; i < fields.length; i++)
+        strDbg += `<tr><td>${fields[i]}</td><td>${res.db[0][i]}</td></tr>`;
+        dbgOut.innerHTML = `${strDbg}</table>`;
       }
 
-    </script>
-    
+    }, "ac_debug");*/
+
+    const resetPanels = function ()
+    {
+      for (let itm of document.getElementsByClassName("wrapperButton"))
+        document.getElementById(itm.dataset['template']).style = "display: none";
+    }
+
+    const addPanel = function (name, template)
+    {
+      const btn = document.createElement("input");
+      btn.setAttribute("type", "button");
+      btn.setAttribute("class", "wrapperButton");
+      btn.setAttribute("value", name);
+      btn.setAttribute("data-template", template.id);
+
+      btn.onclick = (e) => {
+        console.log(e.srcElement.dataset['template']);
+        resetPanels();
+        document.getElementById(
+          e.srcElement.dataset['template']
+        ).style = "display: block";
+      }
+
+      wMenu.appendChild(btn);
+      template.style = "display: none;";
+
+    }
+
+    const Init = function ()
+    {
+      addPanel("Moje Konto", mojeKonto);
+      addPanel("Moje Test", test);
+    }
+    document.body.onload = (e) => {
+      Init();
+    }
+
+
+  </script>
+  
   </body>
 </html>
