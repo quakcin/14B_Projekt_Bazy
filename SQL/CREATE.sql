@@ -1,11 +1,11 @@
 CREATE SEQUENCE Adresy_sequence
 INCREMENT BY 1
-START WITH 1
+START WITH 2
 NOCYCLE;
 
 CREATE SEQUENCE Kontakty_sequence
 INCREMENT BY 1
-START WITH 1
+START WITH 2
 NOCYCLE;
 
 CREATE SEQUENCE Konta_sequence
@@ -15,7 +15,7 @@ NOCYCLE;
 
 CREATE SEQUENCE Osoby_sequence
 INCREMENT BY 1
-START WITH 1
+START WITH 2
 NOCYCLE;
 
 CREATE SEQUENCE Pacjenci_sequence
@@ -70,7 +70,7 @@ CREATE TABLE Konta(
     login NVARCHAR2(30) UNIQUE,
     haslo NVARCHAR2(32),
     typ_konta NVARCHAR2(10),
-    Osoba_Nr NUMBER,
+    Osoba_Nr NUMBER NOT NULL,
     CONSTRAINT check_account_type CHECK( typ_konta IN('admin', 'lekarz', 'pacjent')),
     CONSTRAINT Osoba_fk_Konta FOREIGN KEY(Osoba_Nr) REFERENCES Osoby(Nr_Osoby)
 );
@@ -106,7 +106,7 @@ BEGIN
 END;
 /
 
---##########################################################################
+
 CREATE OR REPLACE TRIGGER check_dates_trigger
   BEFORE INSERT OR UPDATE ON Osoby
   FOR EACH ROW
@@ -118,12 +118,16 @@ BEGIN
   END IF;
 END;
 /
---##########################################################################################
+
 
 INSERT INTO Specjalizacja (Nazwa_Specjalizacji) VALUES ('Kardiolog');
 INSERT INTO Specjalizacja (Nazwa_Specjalizacji) VALUES ('Dentysta');
 
-INSERT INTO Konta VALUES(1, 'admin', 'qwerty', 'admin', NULL);
+--Konto ADMINA
+INSERT INTO Adresy  VALUES(1, 'Daleszyce', 'Xyz', '1', NULL, '26-021');
+INSERT INTO Kontakty VALUES (1, NULL, NULL);
+INSERT INTO Osoby   VALUES(1, 'Bandura', 'Maciek', TO_DATE('2000-05-16', 'YYYY-MM-DD'), '00000000000', 1, 1);
+INSERT INTO Konta   VALUES(1, 'admin', 'qwerty', 'admin', 1);
 
 INSERT INTO Pacjenci_view VALUES ('Pac1', 'Dudek', 'Adam', 'Kowalski', sysdate-1000, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'kowal@wp.pl', 'Kielce', 'Sandomierska', '74', '10', '25-987');
 INSERT INTO Pacjenci_view VALUES ('Pac2', 'Andrzejek','Andrzej', 'Niewulis', sysdate-1200, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'andrzejek@onet.pl', 'Częstochowa', 'Limanowskiego', '12', NULL, '71-411');
