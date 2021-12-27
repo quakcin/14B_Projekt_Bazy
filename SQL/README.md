@@ -8,4 +8,4 @@ Kolejność uruchamiania skryptów z folderu SQL: \
 
 W PRZYSZŁOŚCI 3, 4 I 5 plik zostanie połączony, ale na razie nie mam pomysłu na nazwę. 
 
-** Plik DROPs.sql może wywalać błędy. Pozostałe nie powinny! **
+**Plik DROPs.sql może wywalać błędy. Pozostałe nie powinny!**
