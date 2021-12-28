@@ -7,23 +7,36 @@
   <head>
     <title> PRZYCHODNIA | LOGOWANIE </title>
     <meta charset="UTF-8">
+	<link rel="stylesheet" href="css/m_style.css">
+	<link rel="stylesheet" href="css/log_style.css">
   </head>
   <body>
 
     <!-- TO-DO: Styl -->
-    <center>
+	<div class="navbar">
+		<a href="index.html">
+			<img src="data/img/samples/left_arrow.png" alt="back" class="back_arrow" 	/>
+		</a> 
+	</div>
+	
+	<div class="log_panel">
+		<center>
 
-      <input type="text" placeholder="Nazwa Uzytkownika" autocomplete="off" id="loginArea"> <br>
-      <input type="password" placeholder="Haslo" autocomplete="off" id="passwdArea"> <br><br>
+		  <input type="text" placeholder="Nazwa Uzytkownika" autocomplete="off" id="loginArea"> <br>
+		  <input type="password" placeholder="Haslo" autocomplete="off" id="passwdArea"> <br><br>
 
-      <div id="errOut"></div>
+		  <div id="errOut"></div>
 
-      <a href="rejestracja"> Rejestracja</a>
-      <input type="button" value="Zaloguj" id="loginButton"> 
+		  <a href="rejestracja"> Rejestracja</a>
+		  <input type="button" value="Zaloguj" id="loginButton"> 
 
-    </center>
+		</center>
+	</div>
+    
 
-    <script src="js/api.js"></script>
+    
+	
+	<script src="js/api.js"></script>
     <script>
 
       dbRestrict("Jestes juz zalogowany/zalogowana!", "./konto", ["brak"]);
