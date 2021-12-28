@@ -92,7 +92,6 @@ const displayMessesage = function (content, timeout)
     if (document.getElementById(tID) != null)
       document.getElementById(tID).remove();
   }, timeout * 1000);
-
   document.getElementById(tID).onclick = (e) => {
     e.srcElement.remove();
   }
@@ -104,7 +103,7 @@ const displayMessesage = function (content, timeout)
 
 const apiInit = function ()
 {
-  document.head.innerHTML += `<link rel="stylesheet" type="text/css" href="/css/apiStyle.css">'`;
+  document.head.innerHTML += `<link rel="stylesheet" type="text/css" href="./css/apiStyle.css">'`;
   const cMsg = localStorage.getItem("msg");
   if (cMsg != null)
   {

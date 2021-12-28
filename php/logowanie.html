@@ -7,8 +7,8 @@
   <head>
     <title> PRZYCHODNIA | LOGOWANIE </title>
     <meta charset="UTF-8">
-	<link rel="stylesheet" href="css/m_style.css">
-	<link rel="stylesheet" href="css/log_style.css">
+	<link rel="stylesheet" href="./css/m_style.css">
+	<link rel="stylesheet" href="./css/log_style.css">
   </head>
   <body>
 
@@ -45,7 +45,7 @@
 
     
 	
-	<script src="js/api.js"></script>
+	<script src="./js/api.js"></script>
     <script>
 
       dbRestrict("Jestes juz zalogowany/zalogowana!", "./konto", ["brak"]);
@@ -67,18 +67,17 @@
           }
           else
           {
-			let err_class = document.getElementsByClassName('error_msg');
-			err_class[0].style.display= "flex";
-			err_class = document.getElementsByClassName('e_msg');
-            err_class[0].textContent = `Nie udalo sie zalogowac: ${res.err}`;
-			
-			
-			exitButton.onclick = function(x)
-			{
-				err_class = document.getElementsByClassName('error_msg');
-				err_class[0].style.display= "none";
-			}
-			
+						let err_class = document.getElementsByClassName('error_msg');
+						err_class[0].style.display= "flex";
+						err_class = document.getElementsByClassName('e_msg');
+						err_class[0].textContent = `Nie udalo sie zalogowac: ${res.err}`;
+
+						exitButton.onclick = function(x)
+						{
+							err_class = document.getElementsByClassName('error_msg');
+							err_class[0].style.display= "none";
+						}
+
           }
         }, "zaloguj", ["user", form.login, "password", form.passwd]);
       }
