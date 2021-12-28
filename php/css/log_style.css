@@ -8,10 +8,7 @@ body
 {
 	background-color: #0d1117;
 }
-div
-{
-	display: block;
-}
+
 .log_panel, .reg_panel, .error_msg
 {
 	background-color: #161b22;
@@ -32,6 +29,16 @@ div
 	background-color: #382328;
 	border-color: #8f2626;
 }
+.e_msg
+{
+	flex: 70%;
+}
+.e_butt
+{
+	flex: 30%;
+	flex-wrap: wrap;
+}
+
 .reg_panel
 {
 	background-color: #0d1117;
@@ -82,4 +89,15 @@ input[type=text], input[type=password], input[type=button]
 	border-color: #0d7020;
     outline: none;
 }
-
+#exitButton
+{
+	border: none;
+	background-color: #382328;
+	color: red;
+	position: relative;
+	max-width: 25px;
+}
+#exitButton:hover
+{
+	color: #b63333;
+}

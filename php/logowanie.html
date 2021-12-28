@@ -15,9 +15,13 @@
     <!-- TO-DO: Styl -->
 
 	
-	<div class="error_msg">
-	
-	<input type="button"
+	<div class="error_msg" style="display:none">
+		<div class="e_msg">
+		
+		</div>
+		<div class="e_butt">
+			 <input type="button" value="X" id="exitButton" > 
+		</div>
 	</div>
 	<div class="log_panel">
 		<center>
@@ -35,7 +39,8 @@
 		</center>
 	</div>
     <div class="reg_panel">
-		<a href="rejestracja"> Rejestracja</a>
+
+		<a href="rejestracja.html"> Rejestracja</a>
 	</div>
 
     
@@ -63,10 +68,17 @@
           else
           {
 			let err_class = document.getElementsByClassName('error_msg');
-			err_class[0].style.display= "block";
+			err_class[0].style.display= "flex";
+			err_class = document.getElementsByClassName('e_msg');
             err_class[0].textContent = `Nie udalo sie zalogowac: ${res.err}`;
-			let c_butt = document.createElement("BUTTON");
-			err_class[0].appendChild(c_butt);
+			
+			
+			exitButton.onclick = function(x)
+			{
+				err_class = document.getElementsByClassName('error_msg');
+				err_class[0].style.display= "none";
+			}
+			
           }
         }, "zaloguj", ["user", form.login, "password", form.passwd]);
       }
