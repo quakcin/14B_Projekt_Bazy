@@ -13,26 +13,30 @@
   <body>
 
     <!-- TO-DO: Styl -->
-	<div class="navbar">
-		<a href="index.html">
-			<img src="data/img/samples/left_arrow.png" alt="back" class="back_arrow" 	/>
-		</a> 
-	</div>
+
 	
+	<div class="error_msg">
+	
+	<input type="button"
+	</div>
 	<div class="log_panel">
 		<center>
-
-		  <input type="text" placeholder="Nazwa Uzytkownika" autocomplete="off" id="loginArea"> <br>
-		  <input type="password" placeholder="Haslo" autocomplete="off" id="passwdArea"> <br><br>
+			<form class="log_control">
+				<label for="login">Username or email address</label>	<br>
+				<input type="text"  autocomplete="off" id="loginArea" class="rounded-input"> <br>
+				<label for="passw">Password</label>
+				<input type="password"  autocomplete="off" id="passwdArea" class="rounded-input"> <br><br>
+			</form>
+		  
 
 		  <div id="errOut"></div>
-
-		  <a href="rejestracja"> Rejestracja</a>
-		  <input type="button" value="Zaloguj" id="loginButton"> 
+		  <input type="button" value="Zaloguj" id="loginButton" class="rounded-input"> 
 
 		</center>
 	</div>
-    
+    <div class="reg_panel">
+		<a href="rejestracja"> Rejestracja</a>
+	</div>
 
     
 	
@@ -58,7 +62,11 @@
           }
           else
           {
-            errOut.innerHTML = `Nie udalo sie zalogowac: ${res.err}`;
+			let err_class = document.getElementsByClassName('error_msg');
+			err_class[0].style.display= "block";
+            err_class[0].textContent = `Nie udalo sie zalogowac: ${res.err}`;
+			let c_butt = document.createElement("BUTTON");
+			err_class[0].appendChild(c_butt);
           }
         }, "zaloguj", ["user", form.login, "password", form.passwd]);
       }
