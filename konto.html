@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<!--
+  Mini Projekt Baz Danych
+  2ID14B, Przychodnia
+-->
+<html lang="pl">
+  <head>
+    <title> PRZYCHODNIA | MOJE KONTO </title>
+    <meta charset="UTF-8">
+    <link rel="Stylesheet" href="css/dashboard.css">
+  </head>
+  <body>
+
+  <!--
+  <a href="/index">Strona Główna</a> <br><br>
+  <div id="dbgOut"></div>
+  <input type="button" value="Wyloguj!" id="logOut">
+
+
+
+  <a href="#" id="baton"> BATON </a>
+  -->
+
+  <div class="wrapper">
+    <div class="menu" id="wMenu">
+      a
+    </div>
+    <div class="content" id="wContent">
+
+      <div id="mojeKonto">
+        <h2>Hello World</h2> 
+      </div>
+
+      <div id="test">
+        <h2>Hello test</h2> 
+      </div>
+
+    </div>
+  </div>
+
+
+
+
+  <script src="./js/api.js"></script>
+  <script>
+
+    dbRestrict("Prosze sie zalogowac!", "./logowanie", ["admin", "pacjent", "lekarz"]);
+    
+    /*dbReq((res) => {
+      const fields = ['login', 'haslo', 'imie', 'nazwisko', 'dataurodz', 'pesel', 'telefon', 'mail', 'miasto', 'ulica', 'dom', 'lokal', 'poczta'];
+
+      if (res.success)
+      {
+        console.log(res);
+        let strDbg = "<table>";
+        for (let i = 0; i < fields.length; i++)
+        strDbg += `<tr><td>${fields[i]}</td><td>${res.db[0][i]}</td></tr>`;
+        dbgOut.innerHTML = `${strDbg}</table>`;
+      }
+
+    }, "ac_debug");*/
+
+    const resetPanels = function ()
+    {
+      for (let itm of document.getElementsByClassName("wrapperButton"))
+        document.getElementById(itm.dataset['template']).style = "display: none";
+    }
+
+    const addPanel = function (name, template)
+    {
+      const btn = document.createElement("input");
+      btn.setAttribute("type", "button");
+      btn.setAttribute("class", "wrapperButton");
+      btn.setAttribute("value", name);
+      btn.setAttribute("data-template", template.id);
+
+      btn.onclick = (e) => {
+        console.log(e.srcElement.dataset['template']);
+        resetPanels();
+        document.getElementById(
+          e.srcElement.dataset['template']
+        ).style = "display: block";
+      }
+
+      wMenu.appendChild(btn);
+      template.style = "display: none;";
+
+    }
+
+    const Init = function ()
+    {
+      addPanel("Moje Konto", mojeKonto);
+      addPanel("Moje Test", test);
+    }
+    document.body.onload = (e) => {
+      Init();
+    }
+
+
+  </script>
+  
+  </body>
+</html>

@@ -1,10 +1,6 @@
-# 14B_Projekt_Bazy (Przychodnia)
-Zespół pracujący nad projektem:
-- Ślusarczyk Marcin
-- Bandura Maciek
-- Śmistek Mariusz
-- Tosnowiec Filip
+# Uwag Uwaga,
+do pliku htaccess dodajemy kropke na początku! (.htaccess)
+Robimy to konsolą, ani github ani windows nie są
+na tyle bystre aby to zrobić.
 
-# Diagram ER
-Strona na której wspólnie edytujemy diagram ER: \
-https://lucid.app/lucidchart/8a03e80e-f409-444d-a3fd-3bdb65bc88eb/edit?invitationId=inv_942ec75d-c9ae-4927-85ac-796f1cb8365d
+PowerShell> rename htaccess .htaccess
