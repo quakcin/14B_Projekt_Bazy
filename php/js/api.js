@@ -10,7 +10,7 @@ const dbReq = function (callback, command, packed = [])
     ? localToken
     : "nil";
 
-  let reqUrl = `/req.php?token=${cToken}&cmd=${command}`;
+  let reqUrl = `/.req.php?token=${cToken}&cmd=${command}`;
 
   for (let i = 0; i < packed.length; i += 2)
     reqUrl += `&${packed[i]}=${packed[i + 1]}`;
