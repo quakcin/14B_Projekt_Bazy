@@ -5,7 +5,7 @@ CREATE OR REPLACE PROCEDURE Pacjent_add(p_login Konta.login%TYPE, p_haslo Konta.
 IS
 BEGIN
     INSERT INTO Pacjenci_view 
-    VALUES (p_login, p_haslo, p_imie, p_nazwisko, p_data_ur, p_PESEL, p_telefon, p_email, p_miasto, p_ulica, p_dom, p_mieszk, p_kodPoczt);
+    VALUES (p_login, p_haslo, p_imie, p_nazwisko, p_data_ur, p_PESEL, p_telefon, p_email, p_miasto, p_ulica, p_dom, p_mieszk, p_kodPoczt, NULL);
 END;
 /
 
