@@ -1,15 +1,10 @@
-/*.back_arrow
-{
-	width: 2em;
-	height: 2em;
-}*/
 
 body
 {
 	background-color: #0d1117;
 }
 
-.log_panel, .reg_panel, .error_msg
+.log_panel, .reg_panel, .error_msg, .bjuti_panel
 {
 	background-color: #161b22;
 	padding: 20px;
@@ -23,6 +18,24 @@ body
 	border-style: solid;
 	border-color: #30363d;
 }
+
+.bjuti_panel
+{
+	background-color: #0d1117;	
+	border: 0px;
+}
+.logo
+{
+	width: 150px;
+	height: 150px;
+	margin: auto;
+	border-radius: 50%;
+}
+.logo:hover
+{
+	opacity: 0.9;
+}
+
 .error_msg
 {
 	display: none;
@@ -45,7 +58,24 @@ body
 	border: 1px;
 	border-style: solid;
 	border-color: #30363d;
+
 }
+.reg_p_a:link
+{
+	color: #58a6ff;
+	text-decoration: none;
+}
+.reg_p_a:visited
+{
+	color: #58a6ff;
+	text-decoration: none;
+}
+.reg_p_a:hover
+{
+	color: #58a6ff;
+	text-decoration: underline;
+}
+
 input[type=text], input[type=password], input[type=button]
 {
 	appearance:none;

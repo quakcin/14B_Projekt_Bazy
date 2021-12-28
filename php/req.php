@@ -87,7 +87,7 @@
 
   //  -- Polaczenie Z Baza
 
-  $db = @oci_connect("system", "1234", "localhost/xe");
+  $db = @oci_connect("system", "123qwe", "localhost/xe");
 
   if (!$db)
     packetThrow((oci_error())['message'], []);
