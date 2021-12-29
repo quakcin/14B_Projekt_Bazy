@@ -91,7 +91,7 @@
 
   //  -- Polaczenie Z Baza
 
-  $db = @oci_connect("system", "1234", "localhost/xe");
+  $db = @oci_connect("system", "Filiop02", "localhost/xe");
 
   if (!$db)
     packetThrow((oci_error())['message'], []);
@@ -259,7 +259,7 @@
     new Command("ac_debug", "konto_info", "admin", []),
 
     new Command("req_pacKonto", "req_pacKonto", "pacjent", ["p_id"]),
-    new Command("upt_pacKonto", "upt_pacKonto", "pacjent", ["p_id", "imie", "nazwisko"]),
+    new Command("upt_pacKonto", "upt_pacKonto", "pacjent", ["p_id", "imie", "nazwisko","haslo","data_uro", "pesel","telefon","email","miasto","ulica","nr_domu","nr_lokalu","kod_poczt"]),
 
     new Command("dropSess", "wylogowywanie", "pacjent", []),
     new Command("dropSess", "wylogowywanie", "lekarz", []),
