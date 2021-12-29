@@ -31,7 +31,7 @@ const dbDropSession = function ()
     if (e.success)
     {
       localStorage.clear();
-      window.location.href = '/index.html';
+      window.location.href = './index';
     }
     else
       alert(
@@ -50,7 +50,7 @@ const dbRestrict = function (errMsg, errUrl, acTypes)
   }
 
   dbReq((e) => {
-
+    console.log("RESRICT RESP:", e);
     if (e.success)
     {
       if (!(acTypes.includes(e.acType)))
