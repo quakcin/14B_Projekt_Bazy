@@ -239,10 +239,9 @@
   function upt_pacKonto ()
   {
     global $retPacket;
-    $qr = "CALL Pacjent_Update('" . $_GET["imie"] . "', '" . $_GET["nazwisko"] . "', '" . $_GET["haslo"] . "', to_date('" . $_GET["data_uro"] . "', 'YYYY-MM-DD'), '" . $_GET["pesel"] . "', '" . $_GET["telefon"] . "', '" . $_GET["email"] . "', '" . $_GET["miasto"] . "', '" . $_GET["ulica"] . "', '" . $_GET["nr_domu"] . "', " . ($_GET["nr_lokalu"] == "" ? "NULL" : "'" . $_GET["nr_lokalu"] . "'") . ", '" . $_GET["kod_poczt"] . "', " . $_GET["p_id"] . ")";
-    $retPacket['qr'] = $qr;
-    dbRequire($qr);  
-    //dbRequire("UPDATE Osoby SET imie = '" . $_GET["imie"] . "', nazwisko = '" . $_GET["nazwisko"] . "' WHERE nr_osoby = " . $_GET["p_id"]);    
+    // -- comm: Ja bym procedure zostawil
+    //          ale sie uparli...
+    dbRequire("UPDATE Pacjenci_view SET imie = '" . $_GET["imie"] . "', nazwisko = '" . $_GET["nazwisko"] . "', haslo = '" . $_GET["haslo"] . "',data_urodzenia = to_date('" . $_GET["data_uro"] . "', 'YYYY-MM-DD'), pesel = '" . $_GET["pesel"] . "', telefon = '" . $_GET["telefon"] . "', email = '" . $_GET["email"] . "', miasto = '" . $_GET["miasto"] . "', ulica = '" . $_GET["ulica"] . "', NR_DOMU = '" . $_GET["nr_domu"] . "', NR_MIESZKANIA = " . ($_GET["nr_lokalu"] == "" ? "NULL" : "'" . $_GET["nr_lokalu"] . "'") . ", KOD_POCZTOWY = '" . $_GET["kod_poczt"] . "' WHERE nr_osoby = " . $_GET["p_id"]);
   }
 
   // -- szukamy klucza $key z widoku $view w polach $fields
