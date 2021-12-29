@@ -245,6 +245,49 @@
     //dbRequire("UPDATE Osoby SET imie = '" . $_GET["imie"] . "', nazwisko = '" . $_GET["nazwisko"] . "' WHERE nr_osoby = " . $_GET["p_id"]);    
   }
 
+  // -- szukamy klucza $key z widoku $view w polach $fields
+  function packSearchQuerry ($key, $view, $fields)
+  {
+    $querry = "SELECT * FROM " . $view . " WHERE (";
+    foreach ($fields as $index => $field)
+      $querry .= (
+        $field . " LIKE ('%" . $key . "%') " . (($index !== array_key_last($fields)) ? "OR " : ")")
+      );
+    
+    global $retPacket;
+    return $querry;
+  }
+
+  function szukajPacjenta ()  // -- TO-DO: Dodac Inne Pola do szukajki
+  {
+    $qr = packSearchQuerry($_GET["key"], "pacjenci_view",
+      ["imie", "nazwisko"]
+    );
+    $buff = dbRequire($qr);
+    global $retDb;
+    $retDb = $buff;
+  }
+
+  function szukajWizytyPacjent ()
+  {
+    global $retPacket;
+    global $retDb;
+    $qr = packSearchQuerry($_GET["key"], "pacjent_wizyty",
+      ["imie", "nazwisko", "nazwa_specjalizacji", "data_wizyty"]
+    );
+
+    $qr .= " AND pacjent_nr = (SELECT NR_KARTY_PACJENTA FROM Pacjenci INNER JOIN Osoby ON pacjenci.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = " . $retPacket['nrOsoby'] . ")";
+    $retPacket['qr'] = $qr;
+
+    $retDb = dbRequire($qr);
+  }
+
+  function indexSpecjalizacje ()
+  {
+    global $retDb;
+    $retDb = dbRequire("SELECT Nazwa_Specjalizacji FROM Specjalizacje");
+  }
+
   // -- Wszystkie Polecenia oblugiwane po stronie php
   //    Format:   (  JS, PHP, Dostep, [parametry z _GET]  )
 
@@ -258,8 +301,18 @@
     new Command("ac_debug", "konto_info", "lekarz", []),
     new Command("ac_debug", "konto_info", "admin", []),
 
+    new Command("indexSpec", "indexSpecjalizacje", "brak", []),
+    new Command("indexSpec", "indexSpecjalizacje", "admin", []),
+    new Command("indexSpec", "indexSpecjalizacje", "lekarz", []),
+    new Command("indexSpec", "indexSpecjalizacje", "pacjent", []),
+
     new Command("req_pacKonto", "req_pacKonto", "pacjent", ["p_id"]),
     new Command("upt_pacKonto", "upt_pacKonto", "pacjent", ["p_id", "imie", "nazwisko","haslo","data_uro", "pesel","telefon","email","miasto","ulica","nr_domu","nr_lokalu","kod_poczt"]),
+
+    new Command("szukajPacjenta", "szukajPacjenta", "admin", ["key"]),
+    new Command("szukajPacjenta", "szukajPacjenta", "lekarz", ["key"]),
+
+    new Command("szukajWizyty", "szukajWizytyPacjent", "pacjent", ["key"]),
 
     new Command("dropSess", "wylogowywanie", "pacjent", []),
     new Command("dropSess", "wylogowywanie", "lekarz", []),

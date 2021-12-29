@@ -179,6 +179,10 @@ const initPacjent = function ()
 document.getElementById("search-button").onclick = (e) => {
   const key = document.getElementById("search-box").value;
   console.log("Searching", key);
+
+  dbReq((e) => {
+    console.log(e);
+  }, "szukajWizyty", ["key", key]);
 }
 
 

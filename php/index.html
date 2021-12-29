@@ -18,49 +18,60 @@
 		<!-- Zrub wrapper do logowania w php -->
 		<!-- Dodaj loggera do js'a zeby dodawal tokena do linkow -->
 		<!-- Wrapper moze obejmowac cale menu -->
-	<div class="header">
-	  <h1>Apteka</h1>
-	  <p><b>LOOOOREM</b> Ipsum ipsum.</p>
-	</div>
-	<div class="navbar">
-		<a href="logowanie.html">Zaloguj</a> 
-		<a href="rejestracja">Zarejestruj Sie</a> 
-		<a href="konto">Moje Konto</a> 
-		<a href="wizyty"> Umuw sie na wizyte </a>
-		<a href="informator"> Informacje o Pacjencie / Lekarzu </a>
-		<a href="apteka"> Apteka </a>
-	</div>
-		
-	<div class="row">
-		<div class="side">
-			<h2>O aptece</h2>
-			<h5>Dobrze wykwalifikowany personel:</h5>
-			<div  ><img class="fakeimg" src="./data/img/news/back.png" style="height:300px;" /></div>
-			<p> mea culpa qui officia deserunt mollit anim..</p>
-			<h3>More Text</h3>
-			<p>Lorem ipsum dolor sit ame.</p>
-			<div class="fakeimg" style="height:60px;">Image</div><br>
-			<div class="fakeimg" style="height:60px;">Image</div><br>
-			<div class="fakeimg" style="height:60px;">Image</div>
-		</div>
-		<div class="main">
-			<h2>TITLE HEADING</h2>
-			<h5>Title description, Dec 27, 2021</h5>
-			<div class="fakeimg" style="height:200px;">Image</div>
-			<p>Some text..</p>
-			<p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
-			<br>
-			<h2>TITLE HEADING</h2>
-			<h5>Title description, Dec 27, 2021</h5>
-			<div class="fakeimg" style="height:200px;">Image</div>
-			<p>Some text..</p>
-			<p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
-	  </div>
-	</div>
+      <div class="header">
+        <h1>Apteka</h1>
+        <p><b>LOOOOREM</b> Ipsum ipsum.</p>
+      </div>
+      <div class="navbar">
+        <a href="logowanie.html">Zaloguj</a> 
+        <a href="rejestracja">Zarejestruj Sie</a> 
+        <a href="konto">Moje Konto</a> 
+        <a href="wizyty"> Umuw sie na wizyte </a>
+        <a href="informator"> Informacje o Pacjencie / Lekarzu </a>
+        <a href="apteka"> Apteka </a>
+      </div>
 
-<div class="footer">
-  <h2>Footer</h2>
-</div>
+      <div class="row">
+        <div class="side">
+          <h2>O aptece</h2>
+          <h5>Dobrze wykwalifikowany personel:</h5>
+          <div  ><img class="fakeimg" src="./data/img/news/back.png" style="height:300px;" /></div>
+          <p> mea culpa qui officia deserunt mollit anim..</p>
+          <h3>More Text</h3>
+          <p>Lorem ipsum dolor sit ame.</p>
+          <div class="fakeimg" style="height:60px;">Image</div><br>
+          <div class="fakeimg" style="height:60px;">Image</div><br>
+          <div class="fakeimg" style="height:60px;">Image</div>
+        </div>
+        <div class="main">
+          <h2>TITLE HEADING</h2>
+          <h5>Title description, Dec 27, 2021</h5>
+          <div class="fakeimg" style="height:200px;" id="db_out"></div>
+          <p>Some text..</p>
+          <p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+          <br>
+          <h2>TITLE HEADING</h2>
+          <h5>Title description, Dec 27, 2021</h5>
+          <div class="fakeimg" style="height:200px;">Image</div>
+          <p>Some text..</p>
+          <p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+        </div>
+      </div>
+
+    <div class="footer">
+      <h2>Footer</h2>
+    </div>
 	</div>
+  <script>
+    document.body.onload = function () {
+      dbReq((e) => {
+        if (e.success)
+        {
+          for (let elem of e.db)
+            document.getElementById("db_out").innerHTML += `<p>${elem[0]}</p><br>`;
+        }
+      }, "indexSpec");
+    }
+  </script>
   </body>
 </html>
