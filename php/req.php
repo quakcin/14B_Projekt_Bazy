@@ -238,7 +238,11 @@
 
   function upt_pacKonto ()
   {
-    dbRequire("UPDATE Osoby SET imie = '" . $_GET["imie"] . "', nazwisko = '" . $_GET["nazwisko"] . "' WHERE nr_osoby = " . $_GET["p_id"]);    
+    global $retPacket;
+    $qr = "CALL Pacjent_Update('" . $_GET["imie"] . "', '" . $_GET["nazwisko"] . "', '" . $_GET["haslo"] . "', to_date('" . $_GET["data_uro"] . "', 'YYYY-MM-DD'), '" . $_GET["pesel"] . "', '" . $_GET["telefon"] . "', '" . $_GET["email"] . "', '" . $_GET["miasto"] . "', '" . $_GET["ulica"] . "', '" . $_GET["nr_domu"] . "', " . ($_GET["nr_lokalu"] == "" ? "NULL" : "'" . $_GET["nr_lokalu"] . "'") . ", '" . $_GET["kod_poczt"] . "', " . $_GET["p_id"] . ")";
+    $retPacket['qr'] = $qr;
+    dbRequire($qr);  
+    //dbRequire("UPDATE Osoby SET imie = '" . $_GET["imie"] . "', nazwisko = '" . $_GET["nazwisko"] . "' WHERE nr_osoby = " . $_GET["p_id"]);    
   }
 
   // -- Wszystkie Polecenia oblugiwane po stronie php

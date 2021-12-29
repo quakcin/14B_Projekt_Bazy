@@ -176,6 +176,11 @@ const initPacjent = function ()
   addPanel("Wyloguj", "n/a", P_LOGOUT);
 }
 
+document.getElementById("search-button").onclick = (e) => {
+  const key = document.getElementById("search-box").value;
+  console.log("Searching", key);
+}
+
 
 document.body.onload = (e) => {
   dbReq((e) => {
@@ -187,4 +192,3 @@ document.body.onload = (e) => {
     }
   }, "ping");
 }
-
