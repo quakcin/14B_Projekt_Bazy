@@ -152,3 +152,4 @@ const initPacjent = function ()
 document.body.onload = (e) => {
   initPacjent();
 }
+
