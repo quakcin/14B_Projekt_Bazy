@@ -1,0 +1,78 @@
+
+dbRestrict("Prosze sie zalogowac!", "./logowanie", ["admin", "pacjent", "lekarz"]);
+
+const resetPanels = function ()
+{
+  for (let itm of document.getElementsByClassName("wrapperButton"))
+    document.getElementById(itm.dataset['template']).style = "display: none";
+}
+
+// -- Init: Fields
+const cFields = [];
+
+const addField = function (name, fields)
+{
+  cFields.push({
+    name: name,
+    fields: fields,
+  });
+}
+
+// -- Panels Configuration
+const cPanels = [];
+
+const addPanel = function (name, type)
+{
+  // ??
+}
+// Perhaps: Panels should have callbacks?
+
+const InitPacjent = function ()
+{
+  // -- Fields:
+  addField("pacKonto", [
+    "haslo", "imie", "nazwisko"
+  ]);
+  // -- Panels:
+  addPanel("Moje Konto", "pacKonto");
+}
+
+// -- Panels: Invokators
+
+const invokeEditor = function (?type)
+{
+
+}
+
+/*
+const addPanel = function (name, template)
+{
+  const btn = document.createElement("input");
+  btn.setAttribute("type", "button");
+  btn.setAttribute("class", "wrapperButton");
+  btn.setAttribute("value", name);
+  btn.setAttribute("data-template", template.id);
+
+  btn.onclick = (e) => {
+    console.log(e.srcElement.dataset['template']);
+    resetPanels();
+    document.getElementById(
+      e.srcElement.dataset['template']
+    ).style = "display: block";
+  }
+
+  wMenu.appendChild(btn);
+  template.style = "display: none;";
+
+}
+
+const Init = function ()
+{
+  addPanel("Moje Konto", mojeKonto);
+  addPanel("Moje Test", test);
+}
+document.body.onload = (e) => {
+  Init();
+}
+*/
+
