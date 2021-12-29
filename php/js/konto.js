@@ -9,6 +9,8 @@ dbRestrict(
   ["admin", "pacjent", "lekarz"]
 );
 
+let G_PERSON_ID = null;
+
 // -- Init: Schematy Bazy
 const cSchemes = [];
 
@@ -33,36 +35,46 @@ const findScheme = function (name)
 
 const P_EDIT = 'db-edit';
 const P_SEARCH = 'db-search';
+const P_LOGOUT = 'other-log-out';
 const cPanels = [];
 
-const editorCommit = function (e)
+const editorCommit = function (e, p_id)
 {
   const scheme = findScheme(e.dataset['name']);
   // -- collect: all information from form
   //             in dbReq like manner
-  const formParams = [];
+  const formParams = ["p_id", p_id];
   for (let sc of scheme.schemes)
   {
     formParams.push(sc.n);
     formParams.push(document.getElementById(`form_${sc.n}`).value);
   }
-  console.log(formParams);
+
   // -- now: tell server to update data!
   dbReq((e) => {
     // -- to-do: Handle response!
     console.log(e);
+    if (e.success)
+      return;
+    console.log(e);
+    alert('Serwer teraz nie odpowiada, prosimy sprobwac pozniej!');
   }, `upt_${scheme.name}`, formParams);
     
 }
 
-const invokeEditor = function (name) 
+const invokeEditor = function (name, p_id) 
 {
   // -- first: ask server for data
   // -- then: build forms + insert received data
 
   dbReq((e) => {
-
-    console.log(e); // -- to-do: error handling
+    console.log("ivk", e);
+    if (e.success == false)
+    {
+      console.log("invokeEditor()", e);
+      alert("Serwer nie odpowiada, prosimy sprobowac pozniej!");
+      return;
+    }
     
     const self = document.getElementById(P_EDIT);
     const scheme = findScheme(name).schemes;
@@ -70,30 +82,33 @@ const invokeEditor = function (name)
     while (self.firstChild)
       self.removeChild(self.lastChild);
 
+    let dbIter = 0;
     for (let item of scheme)
     {
       const wrapper = document.createElement('div');
       const label = document.createElement('div');
       const inp = document.createElement('input');
-      inp.setAttribute('type', item.t);
+      inp.setAttribute('type', item.t);      
       inp.setAttribute('id', `form_${item.n}`);
+
+      inp.setAttribute('value', e.db[0][dbIter++]);
       label.textContent = item.n;
       wrapper.appendChild(label);
       wrapper.appendChild(inp);
       self.appendChild(wrapper);
     }
 
-    // append commit button
+    // -- Przycisk do zatwierdzenia zmian!
     const fin = document.createElement('input');
     fin.setAttribute('type', 'button');
     fin.setAttribute('value', 'Zapisz');
     fin.setAttribute('data-name', name);
     self.appendChild(fin);
-
+    
     fin.onclick = (e) => {
-      editorCommit(e.target);
+      editorCommit(e.target, p_id);
     }
-  }, `req_${name}`);
+  }, `req_${name}`, ["p_id", p_id]);
 }
 
 const menuAction = function (sender)
@@ -105,11 +120,13 @@ const menuAction = function (sender)
     elem.setAttribute("style", "display: none;");
 
   const panel = document.getElementById(type);
-  panel.setAttribute("style", "");    
+  if (panel)
+    panel.setAttribute("style", "");    
   
   if (type == P_EDIT)
-    invokeEditor(name);
-  // console.log(type, name);
+    invokeEditor(name, G_PERSON_ID);
+  else if (type == P_LOGOUT)
+    dbDropSession();
 }
 
 const addPanel = function (str, name, type)
@@ -141,15 +158,33 @@ const initPacjent = function ()
   // -- Schemes:
   addScheme("pacKonto", [
     {n: "imie", t: "text"},
-    {n: "naziwsko", t: "text"}
+    {n: "nazwisko", t: "text"},
+    {n: "haslo", t: "password"},
+    {n: "data_uro", t: "date"},
+    {n: "pesel", t: "text"},
+    {n: "telefon", t: "text"},
+    {n: "email", t: "text"},
+    {n: "miasto", t: "text"},
+    {n: "ulica", t: "text"},
+    {n: "nr_domu", t: "text"},
+    {n: "nr_lokalu", t: "text"},
+    {n: "kod_poczt", t: "text"}
   ]);
   // -- Panels:
   addPanel("Moje Konto", "pacKonto", P_EDIT);
   addPanel("Wizyty", "pacWizyty", P_SEARCH);
+  addPanel("Wyloguj", "n/a", P_LOGOUT);
 }
 
 
 document.body.onload = (e) => {
-  initPacjent();
+  dbReq((e) => {
+    if (e.success)
+    {
+      G_PERSON_ID = e.nrOsoby;
+      if (e.acType == 'pacjent')
+        initPacjent();
+    }
+  }, "ping");
 }
 

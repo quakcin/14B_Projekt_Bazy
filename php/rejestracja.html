@@ -132,52 +132,54 @@
       "Jestes juz zarejestrowany/zarejestrowana!", 
       "./konto", ["brak", "admin"]
     ); // ?lekarz
-	
+
+    // -- TO-DO: Mimo blednych danych i wychwycenia tego faktu
+    //    zapytania dalej przechodza do serwera! 
 	
     registerButton.onclick = function (e)
     {
-      let argList = [];
+      const argList = [];
       for (let itm of document.getElementsByClassName("f1"))
       {
         argList.push(itm.name.toLowerCase());
-		let errorMsg = document.getElementsByClassName(itm.name+"_error");
+        let errorMsg = document.getElementsByClassName(itm.name+"_error");
         const strippedValue = itm.value.trim();
         if (strippedValue == '' && itm.name != 'Lokal')
         {
-			errorMsg[0].innerHTML= `Pole ${itm.name} nie moze byc puste!`;
-			document.getElementById(itm.name).style.borderBottomColor= "red";
+          errorMsg[0].innerHTML= `Pole ${itm.name} nie moze byc puste!`;
+          document.getElementById(itm.name).style.borderBottomColor= "red";
           return;
         }
-		else
-		{
-			//Walidacja wprowadanych danych
-			if(itm.name != 'Lokal')
-			{
-				errorMsg[0].innerHTML= "";
-				document.getElementById(itm.name).style.borderBottomColor= "#30363d";
-			}
-			
-			
-			switch(itm.name)
-			{
-				case 'Pesel':
-					if((strippedValue.length)!=11)
-					{
-						errorMsg[0].innerHTML= `Pole ${itm.name} musi miec 11 znakow`;
-						document.getElementById(itm.name).style.borderBottomColor= "red";
-					}
-				break;
-				case 'Mail':
-					if(!strippedValue.includes("@"))
-					{
-						errorMsg[0].innerHTML= `Pole ${itm.name} nie jest mailem`;
-						document.getElementById(itm.name).style.borderBottomColor= "red";
-					}
-				break;
-			}
-			
-			
-		}
+        else
+        {
+          //Walidacja wprowadanych danych
+          if(itm.name != 'Lokal')
+          {
+            errorMsg[0].innerHTML= "";
+            document.getElementById(itm.name).style.borderBottomColor= "#30363d";
+          }
+
+
+          switch(itm.name)
+          {
+            case 'Pesel':
+              if((strippedValue.length)!=11)
+              {
+                errorMsg[0].innerHTML= `Pole ${itm.name} musi miec 11 znakow`;
+                document.getElementById(itm.name).style.borderBottomColor= "red";
+              }
+            break;
+            case 'Mail':
+              if(!strippedValue.includes("@"))
+              {
+                errorMsg[0].innerHTML= `Pole ${itm.name} nie jest mailem`;
+                document.getElementById(itm.name).style.borderBottomColor= "red";
+              }
+            break;
+          }
+
+
+        }
         argList.push(strippedValue);
       }
       console.log(argList);

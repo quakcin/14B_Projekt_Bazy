@@ -81,7 +81,11 @@
         OCI_ASSOC+OCI_RETURN_NULLS
       );
     }
-
+  
+    $commit = @oci_commit($db);
+    if (!$commit)
+      packetThrow((oci_error($db))['message'], []);
+  
     return $dbRet;
   }
 
@@ -207,9 +211,9 @@
     global $retPacket;
     global $retDb;
 
-    $buff = dbRequire(
-      "CALL Pacjent_add('" . $_GET["login"] . "', '" . $_GET["haslo"] . "', '" . $_GET["imie"] . "', '" . $_GET["nazwisko"] . "', to_date('" . $_GET["dataurodz"] . "', 'YYYY-MM-DD'), '" . $_GET["pesel"] . "', '" . $_GET["telefon"] . "', '" . $_GET["mail"] . "', '" . $_GET["miasto"] . "', '" . $_GET["ulica"] . "', '" . $_GET["dom"] . "', " . ($_GET["lokal"] == "" ? "NULL" : "'" . $_GET["lokal"] . "'") . ", '" . $_GET["poczta"] . "')"
-    ); 
+    $qr = "CALL Pacjent_add('" . $_GET["login"] . "', '" . $_GET["haslo"] . "', '" . $_GET["imie"] . "', '" . $_GET["nazwisko"] . "', to_date('" . $_GET["dataurodz"] . "', 'YYYY-MM-DD'), '" . $_GET["pesel"] . "', '" . $_GET["telefon"] . "', '" . $_GET["mail"] . "', '" . $_GET["miasto"] . "', '" . $_GET["ulica"] . "', '" . $_GET["dom"] . "', " . ($_GET["lokal"] == "" ? "NULL" : "'" . $_GET["lokal"] . "'") . ", '" . $_GET["poczta"] . "')";
+    $retPacket['qr'] = $qr;  
+    $buff = dbRequire($qr); 
 
     $retDb = $buff;
   }
@@ -224,6 +228,19 @@
     $retDb = $buff;
   }
 
+  function req_pacKonto ()
+  {
+    global $retDb;
+    //$buff = dbRequire("select imie, nazwisko from osoby where nr_osoby = " . $_GET["p_id"]);
+    $buff = dbRequire("select * from reqPacjenci where nr_osoby = " . $_GET["p_id"]);
+    $retDb = $buff;
+  }
+
+  function upt_pacKonto ()
+  {
+    dbRequire("UPDATE Osoby SET imie = '" . $_GET["imie"] . "', nazwisko = '" . $_GET["nazwisko"] . "' WHERE nr_osoby = " . $_GET["p_id"]);    
+  }
+
   // -- Wszystkie Polecenia oblugiwane po stronie php
   //    Format:   (  JS, PHP, Dostep, [parametry z _GET]  )
 
@@ -236,6 +253,9 @@
     new Command("ac_debug", "konto_info", "pacjent", []),
     new Command("ac_debug", "konto_info", "lekarz", []),
     new Command("ac_debug", "konto_info", "admin", []),
+
+    new Command("req_pacKonto", "req_pacKonto", "pacjent", ["p_id"]),
+    new Command("upt_pacKonto", "upt_pacKonto", "pacjent", ["p_id", "imie", "nazwisko"]),
 
     new Command("dropSess", "wylogowywanie", "pacjent", []),
     new Command("dropSess", "wylogowywanie", "lekarz", []),
