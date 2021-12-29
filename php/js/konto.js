@@ -10,19 +10,19 @@ dbRestrict(
 );
 
 // -- Init: Schematy Bazy
-const cFields = [];
+const cSchemes = [];
 
-const addField = function (name, fields)
+const addScheme = function (name, schemes)
 {
-  cFields.push({
+  cSchemes.push({
     name: name,
-    fields: fields,
+    schemes: schemes,
   });
 }
 
 const findScheme = function (name)
 {
-  for (let scheme of cFields)
+  for (let scheme of cSchemes)
     if (scheme.name == name)
       return scheme;
   
@@ -41,12 +41,12 @@ const editorCommit = function (e)
   // -- collect: all information from form
   //             in dbReq like manner
   const formParams = [];
-  for (let field of scheme.fields)
+  for (let sc of scheme.schemes)
   {
-    formParams.push(field.n);
-    formParams.push(document.getElementById(`form_${field.n}`).value);
+    formParams.push(sc.n);
+    formParams.push(document.getElementById(`form_${sc.n}`).value);
   }
-
+  console.log(formParams);
   // -- now: tell server to update data!
   dbReq((e) => {
     // -- to-do: Handle response!
@@ -57,35 +57,43 @@ const editorCommit = function (e)
 
 const invokeEditor = function (name) 
 {
-  const self = document.getElementById(P_EDIT);
-  const scheme = findScheme(name).fields;
+  // -- first: ask server for data
+  // -- then: build forms + insert received data
 
-  while (self.firstChild)
-    self.removeChild(self.lastChild);
-  
-  for (let item of scheme)
-  {
-    const wrapper = document.createElement('div');
-    const label = document.createElement('div');
-    const inp = document.createElement('input');
-    inp.setAttribute('type', item.t);
-    inp.setAttribute('id', `form_${item.n}`);
-    label.textContent = item.n;
-    wrapper.appendChild(label);
-    wrapper.appendChild(inp);
-    self.appendChild(wrapper);
-  }
+  dbReq((e) => {
 
-  // append commit button
-  const fin = document.createElement('input');
-  fin.setAttribute('type', 'button');
-  fin.setAttribute('value', 'Zapisz');
-  fin.setAttribute('data-name', name);
-  self.appendChild(fin);
+    console.log(e); // -- to-do: error handling
+    
+    const self = document.getElementById(P_EDIT);
+    const scheme = findScheme(name).schemes;
 
-  fin.onclick = (e) => {
-    editorCommit(e.target);
-  }
+    while (self.firstChild)
+      self.removeChild(self.lastChild);
+
+    for (let item of scheme)
+    {
+      const wrapper = document.createElement('div');
+      const label = document.createElement('div');
+      const inp = document.createElement('input');
+      inp.setAttribute('type', item.t);
+      inp.setAttribute('id', `form_${item.n}`);
+      label.textContent = item.n;
+      wrapper.appendChild(label);
+      wrapper.appendChild(inp);
+      self.appendChild(wrapper);
+    }
+
+    // append commit button
+    const fin = document.createElement('input');
+    fin.setAttribute('type', 'button');
+    fin.setAttribute('value', 'Zapisz');
+    fin.setAttribute('data-name', name);
+    self.appendChild(fin);
+
+    fin.onclick = (e) => {
+      editorCommit(e.target);
+    }
+  }, `req_${name}`);
 }
 
 const menuAction = function (sender)
@@ -130,8 +138,8 @@ const addPanel = function (str, name, type)
 
 const initPacjent = function ()
 {
-  // -- Fields:
-  addField("pacKonto", [
+  // -- Schemes:
+  addScheme("pacKonto", [
     {n: "imie", t: "text"},
     {n: "naziwsko", t: "text"}
   ]);
