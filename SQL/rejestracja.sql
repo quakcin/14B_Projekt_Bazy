@@ -9,4 +9,4 @@ BEGIN
 END;
 /
 
---EXECUTE Pacjent_add('pajac', 'pajac1234', 'Tomek', 'Skalski', TO_DATE('2001-12-11', 'YYYY-MM-DD'), '01258741258', '512398521', 'szymsmi@gmail.com', 'Kielce', 'Wikaryjska', '60', NULL, '25-255');
+EXECUTE Pacjent_add('pajac', 'pajac1234', 'Tomek', 'Skalski', TO_DATE('2001-12-11', 'YYYY-MM-DD'), '01258741258', '512398521', 'szymsmi@gmail.com', 'Kielce', 'Wikaryjska', '60', NULL, '25-255');

@@ -188,7 +188,7 @@ BEGIN
     RAISE_APPLICATION_ERROR( -20003, 
           'Błędna data wizyty: Data w polu data wizyty musi być większa lub równa aktualnej:' );
   END IF;
-  DELETE FROM Umawianie WHERE Umawianie.Data_Wizyty = :new.Data_Wizyty and  Umawianie.Pacjent_Nr = :new.Pacjent_Nr;
+  DELETE FROM Umawianie WHERE Umawianie.Data_Wizyty < :new.Data_Wizyty and  Umawianie.Pacjent_Nr = :new.Pacjent_Nr;
 END;
 /
 
