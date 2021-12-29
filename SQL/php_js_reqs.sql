@@ -1,7 +1,7 @@
 
 -- gowno pierdolone zajebane
 CREATE OR REPLACE VIEW reqPacjenci AS
-SELECT  osoby.imie, osoby.nazwisko, Konta.haslo, osoby.data_urodzenia, osoby.pesel, kontakty.telefon, 
+SELECT  osoby.imie, osoby.nazwisko, Konta.haslo, TO_CHAR(osoby.data_urodzenia, 'yyyy-MM-dd'), osoby.pesel, kontakty.telefon, 
         kontakty.email, adresy.miasto, adresy.ulica, adresy.nr_domu, adresy.nr_mieszkania, 
         adresy.kod_pocztowy, osoby.nr_osoby
         FROM Osoby
