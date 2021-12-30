@@ -18,4 +18,4 @@ BEGIN
 END;
 /   
 
-SELECT * FROM Producenci_Lekow_view;
+--SELECT * FROM Producenci_Lekow_view;

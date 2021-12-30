@@ -67,3 +67,5 @@ INSERT INTO leki (Nazwa_Leku, Producent_Nr) VALUES ('Anesteloc',7);
 INSERT INTO leki (Nazwa_Leku, Producent_Nr) VALUES ('Recigar',7);
 INSERT INTO leki (Nazwa_Leku, Producent_Nr) VALUES ('Ibupar Forte',7);
 INSERT INTO leki (Nazwa_Leku, Producent_Nr) VALUES ('Nervomix',7);
+
+--Wizyty

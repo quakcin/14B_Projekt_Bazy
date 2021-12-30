@@ -42,5 +42,3 @@ END CASE;
 END;
 /
 
---select * from lekarze_view;
---delete lekarze_view where nr_osoby=7;
