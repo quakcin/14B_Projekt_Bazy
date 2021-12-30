@@ -207,7 +207,9 @@ const renderSearchResult = function (dbRow, resScheme, index)
   for (let item of dbRow)
   {
     const col = document.createElement('div');
-    col.setAttribute('style', `width: ${resScheme.fields[dbRow.indexOf(item)].s}px`);    
+    col.setAttribute('style', `width: ${resScheme.fields[dbRow.indexOf(item)].s}px`);
+    if (index == 0)
+      col.style.fontWeight = 'bold';
     col.textContent = item;
     row.appendChild(col);
   }
@@ -298,9 +300,10 @@ const initPacjent = function ()
       {n: "Numer", s: 40},
       {n: "Imie", s: 120},
       {n: "Nazwisko", s: 120},
-      {n: "Specjalizacja", s: 120},
-      {n: "Data", s: 120},
+      {n: "Specjalizacja", s: 110},
+      {n: "Data", s: 110},
       {n: "Opis", s: 350},
+      {n: "Status", s: 100},
       {n: "Pacjent", s: 40}
     ],
     {
@@ -317,11 +320,13 @@ const initPacjent = function ()
   });
   addResult("pacRecepty", "szukajRecepty",
     [
-      {n: 'Nr', s: 50},
+      {n: 'Nr Recepty', s: 110},
+      {n: 'Wizyta', s: 50},
       {n: 'Nazwa Leku', s: 150},
-      {n: 'Data Waznosci', s: 130},
-      {n: 'Lekarz: Imie', s: 130},
-      {n: 'Naziwsko', s: 130},             
+      {n: 'Imie', s: 130},
+      {n: 'Nazwisko', s: 130},
+      {n: 'Data Waznosci', s: 110},
+      {n: 'Pacjent', s: 0},
     ],
     {
       name: 'Apteka',

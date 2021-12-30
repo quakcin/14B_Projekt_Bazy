@@ -9,8 +9,181 @@
     <meta charset="UTF-8">
   </head>
   <body>
+    <!-- Wykonwyane w klatkach/scenach -->
+    <div id="div-form">
+      <div id="form-description"></div>
+      <!-- Cialo formularza -->
 
-    <!-- Duzo JS'a -->
+      <div class="form-body" id="stage-0">
+        <select id="rodzaj-lekarza"></select>
+        <input type="date" id="meet-date">
+      </div>
+
+      <div class="form-body" id="stage-1">
+        <select id="nazwy-lekarza"></select>
+      </div>      
+
+      <div class="form-body" id="stage-2">
+        <select id="godziny-lekarza"></select>
+      </div>
+
+      <div class="form-body" id="stage-3">
+        <textarea id="opis"></textarea>
+      </div>            
+
+      <div class="form-body" id="stage-4">
+        Prosze Czekac...
+      </div>            
+                 
+      <!-- / Cialo formularza -->
+      <div id="controlls">
+        <input type="button" id="form-cancel" value="Anuluj">
+        <input type="button" id="form-continue" value="Dalej">        
+      </div>
+    </div>
+    <script src="./js/api.js"></script>
+    <script>
+      const stages = [{}];
+      let latest_stage = 0;
+      
+      const addStage = function (description, fn)
+      {
+        stages.push({
+          desc: description,
+          fn: fn
+        });
+        // console.log(`stage-${latest_stage++}`);
+        document.getElementById(
+          `stage-${latest_stage++}`
+        ).setAttribute(
+          'style', 'display: none'
+        );
+      }
+
+      const nextStage = function ()
+      {
+        if (stages.length <= 0)
+          return;
+        stages.splice(0, 1);
+        stages[0].fn();
+        document.getElementById("form-description").textContent = stages[0].desc;
+        document.getElementById(
+          `stage-${latest_stage++}`
+        ).setAttribute(
+          'style', ''
+        );
+        const prev = document.getElementById(
+          `stage-${latest_stage - 2}`
+        )
+        if (prev != null)
+          prev.setAttribute(
+            'style', 'display: none'
+          );
+        
+      }
+      
+      document.body.onload = (e) =>
+      {
+        // -- dodanie klatek / etapow
+        addStage("Rodzaj Lekarza:", (e) => {
+          dbReq((e) => {
+            if (e.success == false)
+              alert("Serwer nie odpowiada!");
+
+            const sel = document.getElementById('rodzaj-lekarza');
+            for (let rodz of e.db)
+            {
+              const opt = document.createElement('option');
+              opt.value = rodz;
+              opt.textContent = rodz;
+              sel.appendChild(opt);
+            }
+          }, "rodzajeLekarzy");
+        });
+
+        addStage("Dostepni Lekarze:", (e) => {
+          dbReq((e) => {
+            if (e.success == false)
+              alert("Serwer nie odpowiada!");
+            
+            const sel = document.getElementById('nazwy-lekarza');
+            for (let rodz of e.db)
+            {
+              const opt = document.createElement('option');
+              const nazw = `${rodz[1]} ${rodz[2]}`;
+              opt.value = rodz[0];
+              opt.textContent = nazw;
+              sel.appendChild(opt);
+            }
+            
+          }, "dostepniLekarze", ["spec", document.getElementById("rodzaj-lekarza").value]);
+        });
+
+        addStage("Dostepne Godziny:", (e) => {
+          const sel = document.getElementById('godziny-lekarza');
+          const hour_and_a_half = 30 * 60 * 1000 + 60 * 60 * 1000;
+          const root_time = new Date(document.getElementById('meet-date').value).getTime();
+          let cur_time = root_time + 6 * hour_and_a_half;
+          for (let i = 0; i < 7; i += 1)
+          {
+            const t = new Date(cur_time)
+            const stamp = `${t.getDate()}.${t.getMonth() + 1}.${t.getFullYear()} ${t.getHours()}:${t.getMinutes()}`;
+            dbReq((e) => {
+              if (e.success)
+                if (e.db[0][0] == '')
+                {
+                  const opt = document.createElement('option');
+                  const tName = `${t.getHours()}:${t.getMinutes()}`;
+                  opt.textContent = tName;
+                  opt.value = stamp;
+                  sel.appendChild(opt);
+                }
+              console.log(e);
+            }, "czyLekarzDostepny", ["time", stamp, "lekarz", document.getElementById('nazwy-lekarza').value]);
+            cur_time += hour_and_a_half;
+          }
+        });
+
+        addStage("Opisz swoj problem:", (e) => {
+          document.getElementById('form-continue').value = 'Zatwierdz!';
+        });
+
+        addStage("Zapisywanie...", (e) => {
+          document.getElementById('form-continue').setAttribute('style', 'display: none');
+          dbReq((e) => {
+            if (e.success)
+              rejestracjaSukces();
+            else
+              rejestracjaBlad();
+          }, "dodajWizyte", ["lekarz", document.getElementById('nazwy-lekarza').value, "time", document.getElementById('godziny-lekarza').value, "opis", document.getElementById('opis').value]);
+        });
+        
+        // -- wywolanie pierwszej klatki
+        latest_stage = 0;
+        nextStage();
+      }
+
+      document.getElementById("form-continue").onclick = (e) =>{
+        nextStage();
+      }
+
+      // ---------------------------------------------------------
+      // -- Pozwalam edytowac:
+      // ---------------------------------------------------------
+
+      function rejestracjaSukces()
+      {
+        alert("Jestes Zarejestrowany/a!");
+      }
+
+      function rejestracjaBlad()
+      {
+        alert("Cos Poszlo Nie Tak!");
+      }
+      
+    </script>
+    
+    <!--
 
     Rodzaj Lekarza:
     <select>
@@ -39,7 +212,6 @@
     <textarea> Dluzszy Opis Problemu (max 256 znakow) </textarea>
 
     <a href="#js"> Umuw sie na wizyte! </a>
-    
-    <script src="./js/api.js"></script>
+    -->
   </body>
 </html>

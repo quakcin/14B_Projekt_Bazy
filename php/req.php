@@ -240,7 +240,7 @@
   function upt_pacKonto ()
   {
     global $retPacket;
-    dbRequire("UPDATE Pacjenci_view SET imie = '" . $_GET["imie"] . "', nazwisko = '" . $_GET["nazwisko"] . "', haslo = '" . $_GET["haslo"] . "',data_urodzenia = to_date('" . $_GET["data_uro"] . "', 'YYYY-MM-DD'), pesel = '" . $_GET["pesel"] . "', telefon = '" . $_GET["telefon"] . "', email = '" . $_GET["email"] . "', miasto = '" . $_GET["miasto"] . "', ulica = '" . $_GET["ulica"] . "', NR_DOMU = '" . $_GET["nr_domu"] . "', NR_MIESZKANIA = " . ($_GET["nr_lokalu"] == "" ? "NULL" : "'" . $_GET["nr_lokalu"] . "'") . ", KOD_POCZTOWY = '" . $_GET["kod_poczt"] . "' WHERE nr_osoby = " . $retPacket['nrOsoby']);
+    dbRequire("UPDATE Pacjenci_view SET imie = '" . $_GET["imie"] . "', nazwisko = '" . $_GET["nazwisko"] . "', haslo = '" . $_GET["haslo"] . "', data_urodzenia = to_date('" . $_GET["data_uro"] . "', 'YYYY-MM-DD'), pesel = '" . $_GET["pesel"] . "', telefon = '" . $_GET["telefon"] . "', email = '" . $_GET["email"] . "', miasto = '" . $_GET["miasto"] . "', ulica = '" . $_GET["ulica"] . "', NR_DOMU = '" . $_GET["nr_domu"] . "', NR_MIESZKANIA = " . ($_GET["nr_lokalu"] == "" ? "NULL" : "'" . $_GET["nr_lokalu"] . "'") . ", KOD_POCZTOWY = '" . $_GET["kod_poczt"] . "' WHERE nr_osoby = " . $retPacket['nrOsoby']);
   }
 
   // -- szukamy klucza $key z widoku $view w polach $fields
@@ -273,7 +273,7 @@
     global $retPacket;
     global $retDb;
     $qr = packSearchQuerry($_GET["key"], "pacjent_wizyty",
-      ["imie", "nazwisko", "nazwa_specjalizacji", '"data_wizyty"', "nr_wizyty"]
+      ["imie", "nazwisko", "nazwa_specjalizacji", '"Data_Wizyty"', "nr_wizyty"]
     );
 
     $qr .= " AND pacjent_nr = (SELECT NR_KARTY_PACJENTA FROM Pacjenci INNER JOIN Osoby ON pacjenci.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = " . $retPacket['nrOsoby'] . ")";
@@ -300,14 +300,46 @@
   {
     global $retPacket;
     global $retDb;
-    $qr = packSearchQuerry($_GET["key"], "pacjent_wizyty",
-      ["", "nr_"]
+    $qr = packSearchQuerry($_GET["key"], "pacjent_recepty",
+      ["nr_recepty", "nr_wizyty", "nazwa_leku", "imie", "nazwisko", "data_waznosci"]
     );
-    $qr .= " AND pacjent_nr = " . $retPacket['nrOsoby'];
+    $qr .= " AND pacjent_nr = (SELECT NR_KARTY_PACJENTA FROM Pacjenci INNER JOIN Osoby ON pacjenci.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = " . $retPacket['nrOsoby'] . ")";
     $retPacket['qr'] = $qr;
     $retDb = dbRequire($qr);
   }
 
+  // -------------------------------------
+  // -- Wizyty:
+  // -------------------------------------
+
+  // Perm: pacjent
+  function rodzajeLekarzy ()
+  {
+    global $retDb;
+    $retDb = dbRequire("SELECT Nazwa_Specjalizacji FROM Specjalizacje");
+  }
+
+  function dostepniLekarze ()
+  {
+    global $retDb;
+    $retDb = dbRequire("SELECT lekarze.nr_lekarza, osoby.imie, osoby.nazwisko FROM Lekarze
+                        INNER JOIN Specjalizacje ON specjalizacje.nr_specjalizacji = lekarze.specjalizacja_nr
+                        INNER JOIN Osoby ON  osoby.nr_osoby = lekarze.osoba_nr
+                        WHERE Specjalizacje.Nazwa_Specjalizacji = '" . $_GET["spec"] . "'");
+  }
+
+  function czyLekarzDostepny ()
+  {
+    global $retDb;
+    $retDb = dbRequire("SELECT Dostepnosc_wizyty(" . $_GET["lekarz"] . ", '" . $_GET["time"] . "') FROM DUAL");
+  }
+  
+  function dodajWizyte ()
+  {
+    global $retPacket;
+    dbRequire("CALL Umow_Wizyte(" . $_GET["lekarz"] .  ", " . $retPacket["nrOsoby"] . ", '" . $_GET["time"] . "', '" . $_GET["opis"] . "')");    
+  }
+  
   // -- Wszystkie Polecenia oblugiwane po stronie php
   //    Format:   (  JS, PHP, Dostep, [parametry z _GET]  )
 
@@ -336,6 +368,12 @@
     new Command("szukajWizyty", "szukajWizytyPacjent", "pacjent", ["key"]),
     new Command("odwolajWizyte", "odwolajWizytePacjent", "pacjent", ["nrwiz"]),
     new Command("szukajRecepty", "szukajRecepty", "pacjent", ["key"]),
+
+    // -- Wizyty:
+    new Command("rodzajeLekarzy", "rodzajeLekarzy", "pacjent", []),
+    new Command("dostepniLekarze", "dostepniLekarze", "pacjent", ["spec"]),
+    new Command("czyLekarzDostepny", "czyLekarzDostepny", "pacjent", ["lekarz", "time"]),    
+    new Command("dodajWizyte", "dodajWizyte", "pacjent", ["lekarz", "time", "opis"]),    
   
     new Command("dropSess", "wylogowywanie", "pacjent", []),
     new Command("dropSess", "wylogowywanie", "lekarz", []),
