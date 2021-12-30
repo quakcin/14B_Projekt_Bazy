@@ -29,11 +29,12 @@ const addScheme = function (name, schemes)
   });
 }
 
-const addResult = function (name, sCommand, action = null)
+const addResult = function (name, sCommand, fields, action = null)
 {
   cResults.push({
     name: name,
     sCommand: sCommand,
+    fields: fields,
     action: action
   });
 }
@@ -58,6 +59,7 @@ const findResultScheme = function (name)
 const P_EDIT = 'db-edit';
 const P_SEARCH = 'db-search';
 const P_LOGOUT = 'other-log-out';
+const P_HOMEPAGE = 'other-home';
 const cPanels = [];
 
 const editorCommit = function (e, p_id)
@@ -95,6 +97,8 @@ const invokeSearch = function (name, p_id)
   const sbx = document.getElementById("search-box");
   sbx.setAttribute("data-name", name);
   sbx.setAttribute("data-p_id", p_id);
+  document.getElementById("search-box").value = "";
+  performSearch();
 }
 
 const invokeEditor = function (name, p_id) 
@@ -146,6 +150,11 @@ const invokeEditor = function (name, p_id)
   }, `req_${name}`, ["p_id", p_id]);
 }
 
+const invokeHomePage = function ()
+{
+  window.location.href = './index';
+}
+
 const menuAction = function (sender)
 {
   console.log(sender);
@@ -165,6 +174,8 @@ const menuAction = function (sender)
     invokeSearch(name, G_PERSON_ID);
   else if (type == P_LOGOUT)
     dbDropSession();
+  else if (type == P_HOMEPAGE)
+    invokeHomePage();
 }
 
 const addPanel = function (str, name, type)
@@ -186,7 +197,7 @@ const addPanel = function (str, name, type)
 // -- Obsluga Szukajki
 // ---------------------------------------------------------------
 
-const renderSearchResult = function (dbRow, resScheme)
+const renderSearchResult = function (dbRow, resScheme, index)
 {
   const rowID = crypto.randomUUID();
   const row = document.createElement('div');
@@ -196,6 +207,7 @@ const renderSearchResult = function (dbRow, resScheme)
   for (let item of dbRow)
   {
     const col = document.createElement('div');
+    col.setAttribute('style', `width: ${resScheme.fields[dbRow.indexOf(item)].s}px`);    
     col.textContent = item;
     row.appendChild(col);
   }
@@ -204,11 +216,15 @@ const renderSearchResult = function (dbRow, resScheme)
   {
     const col = document.createElement('div');
     const btn = document.createElement('input');
+
+    col.setAttribute('style', `width: 100px`);
+    
     btn.setAttribute('type', 'button');
     btn.setAttribute('value', resScheme.action.name);
     btn.setAttribute('data-row', rowID);
     btn.onclick = resScheme.action.action;
-    col.appendChild(btn);
+    if (index != 0)
+      col.appendChild(btn);
     row.appendChild(col);
   }
   
@@ -216,7 +232,10 @@ const renderSearchResult = function (dbRow, resScheme)
   return row;
 }
 
-document.getElementById("search-button").onclick = (e) => {
+// -- Dzialanie: Wykona przeszukanie bazy danych
+//    oraz wyrenderuje rezultaty na stronie.
+const performSearch = function ()
+{
   const sbr = document.getElementById("search-results");
   const sbx = document.getElementById("search-box");
   const res = findResultScheme(sbx.dataset['name']);
@@ -233,12 +252,24 @@ document.getElementById("search-button").onclick = (e) => {
     console.log(e);
 
     if (e.success)
-      for (let elem of e.db)
+    {
+      const fields = [];
+      for (let field of res.fields)
+        fields.push(field.n);
+      let results = [];
+      results.push(fields);
+      results = results.concat(e.db);
+      for (let elem of results)
         tab.appendChild(
-          renderSearchResult(elem, res)
+          renderSearchResult(elem, res, results.indexOf(elem))
         );
+    }
     sbr.appendChild(tab);
   }, res.sCommand, ["key", key, "p_id", p_id]);
+}
+
+document.getElementById("search-button").onclick = (e) => {
+  performSearch();
 }
 
 
@@ -262,18 +293,43 @@ const uncomplexResult = function (elem)
 const initPacjent = function ()
 {
   // -- Schematy Dla Szukajki:
-  addResult("pacWizyty", "szukajWizyty", {
+  addResult("pacWizyty", "szukajWizyty",
+    [
+      {n: "Numer", s: 40},
+      {n: "Imie", s: 120},
+      {n: "Nazwisko", s: 120},
+      {n: "Specjalizacja", s: 120},
+      {n: "Data", s: 120},
+      {n: "Opis", s: 350},
+      {n: "Pacjent", s: 40}
+    ],
+    {
     name: "Usun",
     action: (e) => {
-      console.log(uncomplexResult(e.target));
-      /*
-      const row = document.getElementById(
-        e.target.dataset['row']
-      );
-      console.log(row);
-      */
+      const items = uncomplexResult(e.target);
+      dbReq((e) => {
+        console.log(e);
+        if (e.success == false)
+          alert("Serwer nie odpowiada!");
+        performSearch();
+      }, "odwolajWizyte", ["nrwiz", items[0]]);
     }
   });
+  addResult("pacRecepty", "szukajRecepty",
+    [
+      {n: 'Nr', s: 50},
+      {n: 'Nazwa Leku', s: 150},
+      {n: 'Data Waznosci', s: 130},
+      {n: 'Lekarz: Imie', s: 130},
+      {n: 'Naziwsko', s: 130},             
+    ],
+    {
+      name: 'Apteka',
+      action: (e) => {
+        console.log("APTEKA", e);
+      }
+    }
+  );
   // -- Schematy Dla Edytora:
   addScheme("pacKonto", [
     {n: "imie", t: "text"},
@@ -290,8 +346,10 @@ const initPacjent = function ()
     {n: "kod_poczt", t: "text"}
   ]);
   // -- Panels:
+  addPanel("Strona Glowna", "n/a", P_HOMEPAGE);
   addPanel("Moje Konto", "pacKonto", P_EDIT);
   addPanel("Wizyty", "pacWizyty", P_SEARCH);
+  addPanel("Recepty", "pacRecepty", P_SEARCH);
   addPanel("Wyloguj", "n/a", P_LOGOUT);
 }
 

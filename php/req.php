@@ -246,10 +246,11 @@
   // -- szukamy klucza $key z widoku $view w polach $fields
   function packSearchQuerry ($key, $view, $fields)
   {
+    $key = strtolower($key);
     $querry = "SELECT * FROM " . $view . " WHERE (";
     foreach ($fields as $index => $field)
       $querry .= (
-        $field . " LIKE ('%" . $key . "%') " . (($index !== array_key_last($fields)) ? "OR " : ")")
+        "LOWER(" . $field . ") LIKE ('%" . $key . "%') " . (($index !== array_key_last($fields)) ? "OR " : ")")
       );
     
     global $retPacket;
@@ -266,12 +267,13 @@
     $retDb = $buff;
   }
 
+  // Perm: Pacjent
   function szukajWizytyPacjent ()
   {
     global $retPacket;
     global $retDb;
     $qr = packSearchQuerry($_GET["key"], "pacjent_wizyty",
-      ["imie", "nazwisko", "nazwa_specjalizacji", "data_wizyty"]
+      ["imie", "nazwisko", "nazwa_specjalizacji", '"data_wizyty"', "nr_wizyty"]
     );
 
     $qr .= " AND pacjent_nr = (SELECT NR_KARTY_PACJENTA FROM Pacjenci INNER JOIN Osoby ON pacjenci.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = " . $retPacket['nrOsoby'] . ")";
@@ -280,10 +282,30 @@
     $retDb = dbRequire($qr);
   }
 
+  // Perm: Pacjent
+  function odwolajWizytePacjent()
+  {
+    global $retPacket;
+    $nrWizyty = $_GET["nrwiz"];
+    dbRequire("CALL odwolaj_wizyte(" . $nrWizyty . "," . $retPacket['nrOsoby'] . ")");
+  }
+
   function indexSpecjalizacje ()
   {
     global $retDb;
     $retDb = dbRequire("SELECT Nazwa_Specjalizacji FROM Specjalizacje");
+  }
+
+  function szukajRecepty ()
+  {
+    global $retPacket;
+    global $retDb;
+    $qr = packSearchQuerry($_GET["key"], "pacjent_wizyty",
+      ["", "nr_"]
+    );
+    $qr .= " AND pacjent_nr = " . $retPacket['nrOsoby'];
+    $retPacket['qr'] = $qr;
+    $retDb = dbRequire($qr);
   }
 
   // -- Wszystkie Polecenia oblugiwane po stronie php
@@ -312,7 +334,9 @@
     // TO-DO: new Command("szukajPacjenta", "szukajPacjenta", "lekarz", ["key"]),
 
     new Command("szukajWizyty", "szukajWizytyPacjent", "pacjent", ["key"]),
-
+    new Command("odwolajWizyte", "odwolajWizytePacjent", "pacjent", ["nrwiz"]),
+    new Command("szukajRecepty", "szukajRecepty", "pacjent", ["key"]),
+  
     new Command("dropSess", "wylogowywanie", "pacjent", []),
     new Command("dropSess", "wylogowywanie", "lekarz", []),
     new Command("dropSess", "wylogowywanie", "admin", []),

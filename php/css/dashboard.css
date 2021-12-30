@@ -2,7 +2,7 @@ body
 {
   padding: 0px;
   margin: 0px;
-  overflow: hidden;
+  -overflow: hidden;
 }
 
 .wrapper 
@@ -28,4 +28,23 @@ body
   overflow: show;
   padding: 15px;
   box-sizing: border-box;
+}
+
+.superTable
+{
+    margin-top: 50px;
+}
+.superTable > .row
+{
+    width: 60vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px dotted black;
+}
+
+.superTable > .row > div
+{
+    padding: 15px;
+    box-sizing: border-box;
 }
