@@ -84,6 +84,11 @@ const editorCommit = function (e, p_id)
     
 }
 
+// -- UWAGA: Wywolwyanie funkcji z p_id po stronie
+//    pacjenta i czasem lekarza, nie wplywa na wynik
+//    po stronie serwera. Serwer odpowiednio dobiera
+//    z ktorego p_id ma skorzystac (p_id := nrOsoby)
+
 const invokeSearch = function (name, p_id)
 {
   // -- remember: name and personal id
