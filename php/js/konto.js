@@ -11,8 +11,15 @@ dbRestrict(
 
 let G_PERSON_ID = null;
 
-// -- Init: Schematy Bazy
-const cSchemes = [];
+
+// ---------------------------------------------------------------
+// -- Obsluga Interfejsu i jego elementow
+// ---------------------------------------------------------------
+
+
+// -- Init: Schematy Bazy:
+const cSchemes = []; // -- dla edytora
+const cResults = []; // -- dla szukajki
 
 const addScheme = function (name, schemes)
 {
@@ -22,16 +29,31 @@ const addScheme = function (name, schemes)
   });
 }
 
+const addResult = function (name, sCommand, action = null)
+{
+  cResults.push({
+    name: name,
+    sCommand: sCommand,
+    action: action
+  });
+}
+
 const findScheme = function (name)
 {
   for (let scheme of cSchemes)
     if (scheme.name == name)
       return scheme;
   
-  console.log("ERR!");
   return null;
 }
 
+const findResultScheme = function (name)
+{
+  for (let res of cResults)
+    if (res.name == name)
+      return res;
+  return null;
+}
 
 const P_EDIT = 'db-edit';
 const P_SEARCH = 'db-search';
@@ -60,6 +82,14 @@ const editorCommit = function (e, p_id)
     alert('Serwer teraz nie odpowiada, prosimy sprobwac pozniej!');
   }, `upt_${scheme.name}`, formParams);
     
+}
+
+const invokeSearch = function (name, p_id)
+{
+  // -- remember: name and personal id
+  const sbx = document.getElementById("search-box");
+  sbx.setAttribute("data-name", name);
+  sbx.setAttribute("data-p_id", p_id);
 }
 
 const invokeEditor = function (name, p_id) 
@@ -113,6 +143,7 @@ const invokeEditor = function (name, p_id)
 
 const menuAction = function (sender)
 {
+  console.log(sender);
   const type = sender.dataset['type'];
   const name = sender.dataset['name'];
 
@@ -125,6 +156,8 @@ const menuAction = function (sender)
   
   if (type == P_EDIT)
     invokeEditor(name, G_PERSON_ID);
+  else if (type == P_SEARCH)
+    invokeSearch(name, G_PERSON_ID);
   else if (type == P_LOGOUT)
     dbDropSession();
 }
@@ -144,18 +177,99 @@ const addPanel = function (str, name, type)
   wMenu.appendChild(btn);
 }
 
-/*
-  Dzialanie:
-  1. Dodanie schematu pol z bazy
-     do tworzenia formulazy itp..
+// ---------------------------------------------------------------
+// -- Obsluga Szukajki
+// ---------------------------------------------------------------
 
-  2. Dodanie paneli (bocznych opcji)
-     utilzujacy szukajke i edytor
-*/
+const renderSearchResult = function (dbRow, resScheme)
+{
+  const rowID = crypto.randomUUID();
+  const row = document.createElement('div');
+  row.setAttribute('class', 'row');
+  row.setAttribute('id', rowID);
+  
+  for (let item of dbRow)
+  {
+    const col = document.createElement('div');
+    col.textContent = item;
+    row.appendChild(col);
+  }
+
+  if (resScheme.action != null)
+  {
+    const col = document.createElement('div');
+    const btn = document.createElement('input');
+    btn.setAttribute('type', 'button');
+    btn.setAttribute('value', resScheme.action.name);
+    btn.setAttribute('data-row', rowID);
+    btn.onclick = resScheme.action.action;
+    col.appendChild(btn);
+    row.appendChild(col);
+  }
+  
+  console.log(dbRow, resScheme);
+  return row;
+}
+
+document.getElementById("search-button").onclick = (e) => {
+  const sbr = document.getElementById("search-results");
+  const sbx = document.getElementById("search-box");
+  const res = findResultScheme(sbx.dataset['name']);
+  const p_id = findResultScheme(sbx.dataset['p_id']);
+  const key = sbx.value;
+
+  // renderer:
+  const tab = document.createElement('div');
+  tab.setAttribute('class', 'superTable');
+  while (sbr.firstChild)
+    sbr.removeChild(sbr.lastChild);
+  
+  dbReq((e) => {
+    console.log(e);
+
+    if (e.success)
+      for (let elem of e.db)
+        tab.appendChild(
+          renderSearchResult(elem, res)
+        );
+    sbr.appendChild(tab);
+  }, res.sCommand, ["key", key, "p_id", p_id]);
+}
+
+
+// -- Przyjmuje ref na przycisk wiersza,
+//    po czym zwraca elementy z danego wiersza.
+const uncomplexResult = function (elem)
+{
+  const row = document.getElementById(elem.dataset['row']);
+  const finArr = [];
+  for (let i = 0; i < row.childElementCount - 1; i++)
+    finArr.push(row.children[i].textContent);
+  return finArr;
+}
+
+
+// ---------------------------------------------------------------
+// -- Tworzenie Dashboarda dla: Pacjenta
+// ---------------------------------------------------------------
+
 
 const initPacjent = function ()
 {
-  // -- Schemes:
+  // -- Schematy Dla Szukajki:
+  addResult("pacWizyty", "szukajWizyty", {
+    name: "Usun",
+    action: (e) => {
+      console.log(uncomplexResult(e.target));
+      /*
+      const row = document.getElementById(
+        e.target.dataset['row']
+      );
+      console.log(row);
+      */
+    }
+  });
+  // -- Schematy Dla Edytora:
   addScheme("pacKonto", [
     {n: "imie", t: "text"},
     {n: "nazwisko", t: "text"},
@@ -176,14 +290,10 @@ const initPacjent = function ()
   addPanel("Wyloguj", "n/a", P_LOGOUT);
 }
 
-document.getElementById("search-button").onclick = (e) => {
-  const key = document.getElementById("search-box").value;
-  console.log("Searching", key);
 
-  dbReq((e) => {
-    console.log(e);
-  }, "szukajWizyty", ["key", key]);
-}
+// ---------------------------------------------------------------
+// -- Decyzja jak wyrenderowac strone
+// ---------------------------------------------------------------
 
 
 document.body.onload = (e) => {

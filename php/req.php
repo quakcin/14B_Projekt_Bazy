@@ -228,20 +228,19 @@
     $retDb = $buff;
   }
 
+  // Perm: Pacjenci
   function req_pacKonto ()
   {
+    global $retPacket;
     global $retDb;
-    //$buff = dbRequire("select imie, nazwisko from osoby where nr_osoby = " . $_GET["p_id"]);
-    $buff = dbRequire("select * from reqPacjenci where nr_osoby = " . $_GET["p_id"]);
-    $retDb = $buff;
+    $retDb = dbRequire("select * from reqPacjenci where nr_osoby = " . $retPacket['nrOsoby']);
   }
 
+  // Perm: Pacjenci
   function upt_pacKonto ()
   {
     global $retPacket;
-    // -- comm: Ja bym procedure zostawil
-    //          ale sie uparli...
-    dbRequire("UPDATE Pacjenci_view SET imie = '" . $_GET["imie"] . "', nazwisko = '" . $_GET["nazwisko"] . "', haslo = '" . $_GET["haslo"] . "',data_urodzenia = to_date('" . $_GET["data_uro"] . "', 'YYYY-MM-DD'), pesel = '" . $_GET["pesel"] . "', telefon = '" . $_GET["telefon"] . "', email = '" . $_GET["email"] . "', miasto = '" . $_GET["miasto"] . "', ulica = '" . $_GET["ulica"] . "', NR_DOMU = '" . $_GET["nr_domu"] . "', NR_MIESZKANIA = " . ($_GET["nr_lokalu"] == "" ? "NULL" : "'" . $_GET["nr_lokalu"] . "'") . ", KOD_POCZTOWY = '" . $_GET["kod_poczt"] . "' WHERE nr_osoby = " . $_GET["p_id"]);
+    dbRequire("UPDATE Pacjenci_view SET imie = '" . $_GET["imie"] . "', nazwisko = '" . $_GET["nazwisko"] . "', haslo = '" . $_GET["haslo"] . "',data_urodzenia = to_date('" . $_GET["data_uro"] . "', 'YYYY-MM-DD'), pesel = '" . $_GET["pesel"] . "', telefon = '" . $_GET["telefon"] . "', email = '" . $_GET["email"] . "', miasto = '" . $_GET["miasto"] . "', ulica = '" . $_GET["ulica"] . "', NR_DOMU = '" . $_GET["nr_domu"] . "', NR_MIESZKANIA = " . ($_GET["nr_lokalu"] == "" ? "NULL" : "'" . $_GET["nr_lokalu"] . "'") . ", KOD_POCZTOWY = '" . $_GET["kod_poczt"] . "' WHERE nr_osoby = " . $retPacket['nrOsoby']);
   }
 
   // -- szukamy klucza $key z widoku $view w polach $fields
@@ -305,11 +304,12 @@
     new Command("indexSpec", "indexSpecjalizacje", "lekarz", []),
     new Command("indexSpec", "indexSpecjalizacje", "pacjent", []),
 
-    new Command("req_pacKonto", "req_pacKonto", "pacjent", ["p_id"]),
-    new Command("upt_pacKonto", "upt_pacKonto", "pacjent", ["p_id", "imie", "nazwisko","haslo","data_uro", "pesel","telefon","email","miasto","ulica","nr_domu","nr_lokalu","kod_poczt"]),
+    // UWAGA: Polecenia Tylko Dla Pacjenta, p_id nie wymagane!
+    new Command("req_pacKonto", "req_pacKonto", "pacjent", []),
+    new Command("upt_pacKonto", "upt_pacKonto", "pacjent", ["imie", "nazwisko","haslo","data_uro", "pesel","telefon","email","miasto","ulica","nr_domu","nr_lokalu","kod_poczt"]),
 
-    new Command("szukajPacjenta", "szukajPacjenta", "admin", ["key"]),
-    new Command("szukajPacjenta", "szukajPacjenta", "lekarz", ["key"]),
+    // TO-DO: new Command("szukajPacjenta", "szukajPacjenta", "admin", ["key"]),
+    // TO-DO: new Command("szukajPacjenta", "szukajPacjenta", "lekarz", ["key"]),
 
     new Command("szukajWizyty", "szukajWizytyPacjent", "pacjent", ["key"]),
 
