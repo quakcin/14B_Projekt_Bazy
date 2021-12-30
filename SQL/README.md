@@ -6,8 +6,12 @@ Kolejność uruchamiania skryptów z folderu SQL:
 4. Lekarze.sql
 5. Producenci_Lekow.sql
 6. INSERT.sql
-7. LOGOWANIE.sql
-8. rejestracja.sql
-9. odświeżanie sesji.sql
+7. wizyty.sql
+8. recepty.sql
+
+Uruchamiane tylko raz:
+1. LOGOWANIE.sql
+2. rejestracja.sql
+3. odświeżanie sesji.sql
 
 **Plik DROPs.sql może wywalać błędy. Pozostałe nie powinny!**
