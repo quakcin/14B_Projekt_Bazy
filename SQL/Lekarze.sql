@@ -21,7 +21,6 @@ WHEN INSERTING THEN
     INSERT INTO Adresy VALUES (ADRESY_SEQUENCE.NEXTVAL, :NEW.Miasto, :NEW.Ulica, :NEW.Nr_Domu, :NEW.Nr_Mieszkania, :NEW.Kod_Pocztowy);
     INSERT INTO Kontakty VALUES (KONTAKTY_SEQUENCE.NEXTVAL, :NEW.Telefon, :NEW.Email);
     INSERT INTO Osoby VALUES (OSOBY_SEQUENCE.NEXTVAL, :NEW.Nazwisko, :NEW.Imie, :NEW.Data_Urodzenia, :NEW.PESEL, ADRESY_SEQUENCE.currval, KONTAKTY_SEQUENCE.currval);
-    --INSERT INTO Specjalizacje VALUES(Specjalizacje_sequence.NEXTVAL, :NEW.Nazwa_Specjalizacji, :NEW.Opis); 
     SELECT Nr_Specjalizacji INTO v_Nr_Specjalizacji FROM Specjalizacje WHERE nazwa_specjalizacji=:NEW.nazwa_specjalizacji;
     INSERT INTO Lekarze VALUES (Lekarze_sequence.NEXTVAL, OSOBY_SEQUENCE.currval, v_nr_specjalizacji);
     INSERT INTO Konta VALUES (KONTA_SEQUENCE.NEXTVAL, :NEW.Login, :NEW.Haslo, 'lekarz', OSOBY_SEQUENCE.CURRVAL);
@@ -43,5 +42,5 @@ END CASE;
 END;
 /
 
-select * from lekarze_view;
-delete lekarze_view where nr_osoby=7;
+--select * from lekarze_view;
+--delete lekarze_view where nr_osoby=7;

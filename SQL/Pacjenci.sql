@@ -9,7 +9,7 @@ SELECT  Konta.login, Konta.haslo, osoby.imie, osoby.nazwisko, osoby.data_urodzen
         INNER JOIN Pacjenci ON osoby.nr_osoby = pacjenci.osoba_nr;
         
 
-CREATE OR REPLACE TRIGGER Pacjent_add_trigger
+CREATE OR REPLACE TRIGGER Pacjent_trigger
 INSTEAD OF INSERT OR UPDATE OR DELETE ON Pacjenci_view
 FOR EACH ROW
 BEGIN
@@ -35,7 +35,7 @@ WHEN DELETING THEN
 END CASE;
 END;
 /
-
+/*
 CREATE OR REPLACE PROCEDURE Pacjent_Update (p_imie osoby.imie%TYPE, p_nazwisko osoby.nazwisko%TYPE, p_haslo konta.haslo%TYPE, p_data_uro osoby.data_urodzenia%TYPE, 
                                             p_pesel osoby.pesel%TYPE, p_telefon kontakty.telefon%TYPE, p_email kontakty.email%TYPE, p_miasto adresy.miasto%TYPE,
                                             p_ulica adresy.ulica%TYPE, p_dom adresy.nr_domu%TYPE, p_mieszk adresy.nr_mieszkania%TYPE, p_Kod_Poczt adresy.kod_pocztowy%TYPE, 
@@ -47,7 +47,19 @@ BEGIN
     UPDATE Osoby    SET Nazwisko = p_nazwisko, Imie = p_imie, Data_Urodzenia = p_data_uro, PESEL = p_pesel WHERE Nr_Osoby = p_Nr_Osoby;
     UPDATE Konta    SET haslo = p_haslo WHERE Osoba_Nr = p_Nr_Osoby;
 END;
-/
+/*/
 select * from pacjenci_view;
-DELETE Pacjenci_view where Nr_Osoby = 2;
+UPDATE pacjenci_view SET imie = 'Roman' WHERE Nr_Osoby = 2;
+desc pacjenci_view;
+
 --EXECUTE Pacjent_Update('Tomasz', 'Boniek', 'qwerty123', sysdate-14700, '13785236985', NULL, NULL, 'Warszawa', 'Solidarności', '1', NULL, '25-255', 3);
+
+CREATE OR REPLACE VIEW reqPacjenci AS
+SELECT  osoby.imie, osoby.nazwisko, Konta.haslo, TO_CHAR(osoby.data_urodzenia, 'yyyy-MM-dd') as "Data", osoby.pesel, kontakty.telefon, 
+        kontakty.email, adresy.miasto, adresy.ulica, adresy.nr_domu, adresy.nr_mieszkania, 
+        adresy.kod_pocztowy, osoby.nr_osoby
+        FROM Osoby
+        INNER JOIN Adresy ON osoby.adres_nr = adresy.nr_adresu
+        INNER JOIN Kontakty ON osoby.kontakt_nr = kontakty.nr_kontaktu
+        INNER JOIN Konta ON Osoby.Nr_osoby = Konta.Osoba_Nr
+        INNER JOIN Pacjenci ON osoby.nr_osoby = pacjenci.osoba_nr;
