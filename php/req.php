@@ -91,7 +91,7 @@
 
   //  -- Polaczenie Z Baza
 
-  $db = @oci_connect("system", "123qwe", "localhost/xe");
+  $db = @oci_connect("system", "1234", "localhost/xe");
 
   if (!$db)
     packetThrow((oci_error())['message'], []);
@@ -316,7 +316,7 @@
   function rodzajeLekarzy ()
   {
     global $retDb;
-    $retDb = dbRequire("SELECT Nazwa_Specjalizacji FROM Specjalizacje");
+    $retDb = dbRequire("SELECT Nazwa_Specjalizacji FROM Specjalizacje ORDER BY nazwa_specjalizacji");
   }
 
   function dostepniLekarze ()

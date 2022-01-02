@@ -46,8 +46,8 @@
         <div class="main">
           <h2>TITLE HEADING</h2>
           <h5>Title description, Dec 27, 2021</h5>
-          <div class="fakeimg" style="height:200px;" id="db_out"></div>
-          <p>Some text..</p>
+          <div class="fakeimg" style="height:200px;"></div>
+          <p id="db_out">Some text..</p>
           <p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
           <br>
           <h2>TITLE HEADING</h2>
@@ -68,7 +68,7 @@
         if (e.success)
         {
           for (let elem of e.db)
-            document.getElementById("db_out").innerHTML += `<p>${elem[0]}</p><br>`;
+            document.getElementById("db_out").innerHTML += `${elem[0]}, `;
         }
       }, "indexSpec");
     }

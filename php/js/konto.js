@@ -79,7 +79,10 @@ const editorCommit = function (e, p_id)
     // -- to-do: Handle response!
     console.log(e);
     if (e.success)
+    {
+      alert("Dokonano Zmian!");
       return;
+    }
     console.log(e);
     alert('Serwer teraz nie odpowiada, prosimy sprobwac pozniej!');
   }, `upt_${scheme.name}`, formParams);
@@ -107,7 +110,6 @@ const invokeEditor = function (name, p_id)
   // -- then: build forms + insert received data
 
   dbReq((e) => {
-    console.log("ivk", e);
     if (e.success == false)
     {
       console.log("invokeEditor()", e);
@@ -197,12 +199,21 @@ const addPanel = function (str, name, type)
 // -- Obsluga Szukajki
 // ---------------------------------------------------------------
 
+const renderCalcRowWidth = function (resScheme)
+{
+  let finWidth = 0;
+  for (let field of resScheme.fields)
+    finWidth += field.s;
+  finWidth += (resScheme.fields.length - 1) * 15;
+}
+
 const renderSearchResult = function (dbRow, resScheme, index)
 {
   const rowID = crypto.randomUUID();
   const row = document.createElement('div');
   row.setAttribute('class', 'row');
   row.setAttribute('id', rowID);
+  row.setAttribute('style', `width: ${renderCalcRowWidth(resScheme)}px`);
   
   for (let item of dbRow)
   {
@@ -241,7 +252,7 @@ const performSearch = function ()
   const sbr = document.getElementById("search-results");
   const sbx = document.getElementById("search-box");
   const res = findResultScheme(sbx.dataset['name']);
-  const p_id = findResultScheme(sbx.dataset['p_id']);
+  const p_id = sbx.dataset['p_id'];
   const key = sbx.value;
 
   // renderer:
@@ -297,14 +308,14 @@ const initPacjent = function ()
   // -- Schematy Dla Szukajki:
   addResult("pacWizyty", "szukajWizyty",
     [
-      {n: "Numer", s: 40},
+      {n: "Numer", s: 60},
       {n: "Imie", s: 120},
       {n: "Nazwisko", s: 120},
       {n: "Specjalizacja", s: 110},
-      {n: "Data", s: 110},
+      {n: "Data", s: 180},
       {n: "Opis", s: 350},
       {n: "Status", s: 100},
-      {n: "Pacjent", s: 40}
+      {n: "Pacjent", s: 60}
     ],
     {
     name: "Usun",

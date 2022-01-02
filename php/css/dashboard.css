@@ -45,7 +45,7 @@ body
 }
 .superTable > .row
 {
-    width: 70vw;
+    --width: 70vw;
     display: flex;
     align-items: center;
     justify-content: space-between;

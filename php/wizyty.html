@@ -44,7 +44,7 @@
       </div>
     </div>
     <script src="./js/api.js"></script>
-    <script>
+    <script>    
       const stages = [{}];
       let latest_stage = 0;
       
@@ -86,11 +86,15 @@
       
       document.body.onload = (e) =>
       {
+        // -- Pomysl: Zmienic na callbacka zeby serwer nie probowal ladowac
+        //            danych dla nie zalogowanych!
+        dbRestrict("Musisz byc zalogowany/zalogowana!", "./rejestracja", ["pacjent"]);
+        
         // -- dodanie klatek / etapow
         addStage("Rodzaj Lekarza:", (e) => {
           dbReq((e) => {
-            if (e.success == false)
-              alert("Serwer nie odpowiada!");
+            /* if (e.success == false)
+              alert("Serwer nie odpowiada!"); */
 
             const sel = document.getElementById('rodzaj-lekarza');
             for (let rodz of e.db)
@@ -144,6 +148,8 @@
             }, "czyLekarzDostepny", ["time", stamp, "lekarz", document.getElementById('nazwy-lekarza').value]);
             cur_time += hour_and_a_half;
           }
+          // TO-DO: Sortowanie zwroconych godzin ewentualnie
+          //        obluga wyjatku jesli wszytkie godziny zajete!
         });
 
         addStage("Opisz swoj problem:", (e) => {
@@ -157,7 +163,12 @@
               rejestracjaSukces();
             else
               rejestracjaBlad();
-          }, "dodajWizyte", ["lekarz", document.getElementById('nazwy-lekarza').value, "time", document.getElementById('godziny-lekarza').value, "opis", document.getElementById('opis').value]);
+          }, "dodajWizyte", [
+              "lekarz", document.getElementById('nazwy-lekarza').value,
+              "time",   document.getElementById('godziny-lekarza').value,
+              "opis",   document.getElementById('opis').value
+            ]
+          );
         });
         
         // -- wywolanie pierwszej klatki
@@ -165,55 +176,31 @@
         nextStage();
       }
 
-      document.getElementById("form-continue").onclick = (e) =>{
+      document.getElementById("form-continue").onclick = (e) => {
         nextStage();
       }
 
+      document.getElementById("form-cancel").onclick = (e) => {
+        window.location.href = './index';
+      }
+            
+
       // ---------------------------------------------------------
-      // -- Pozwalam edytowac:
+      // -- Wyjsciowa Obsluga:
       // ---------------------------------------------------------
 
-      function rejestracjaSukces()
+      const rejestracjaSukces = function ()
       {
-        alert("Jestes Zarejestrowany/a!");
+        alert("Dodano Wizyte!");
+        window.location.href = './konto';
       }
 
-      function rejestracjaBlad()
+      const rejestracjaBlad = function ()
       {
         alert("Cos Poszlo Nie Tak!");
+        window.location.href = './index';        
       }
       
     </script>
-    
-    <!--
-
-    Rodzaj Lekarza:
-    <select>
-      <option>Kardiolog</option>
-      <option>Ortopeda</option>
-      <option>Urolog</option>
-    </select>
-
-
-    <input type="date">
-
-    Dostepni Lekarze:
-    <select>
-      <option>Lekarz 1</option>
-      <option>Lekarz 2</option>
-      <option>Lekarz 3</option>
-    </select>
-
-    Dostepne Godziny
-    <select>
-      <option>6:00</option>
-      <option>10:00</option>
-      <option>14:00</option>
-    </select>
-
-    <textarea> Dluzszy Opis Problemu (max 256 znakow) </textarea>
-
-    <a href="#js"> Umuw sie na wizyte! </a>
-    -->
   </body>
 </html>
