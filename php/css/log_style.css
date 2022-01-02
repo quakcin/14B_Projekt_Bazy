@@ -83,7 +83,6 @@ input[type=text], input[type=password], input[type=button]
 	-webkit-appearance:none;
 	padding:10px;
 	margin:10px 0;
-	border:none;
 	background-color:#0d1117;
 	color: white;
 	border: 1px;
