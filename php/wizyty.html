@@ -124,7 +124,9 @@
             
           }, "dostepniLekarze", ["spec", document.getElementById("rodzaj-lekarza").value]);
         });
-
+        
+        // -- Inny pomysl: Wpisac na sztywno godziny wizyt (posortowane)
+        //                 i usuwac te ktore sa juz zajete!
         addStage("Dostepne Godziny:", (e) => {
           const sel = document.getElementById('godziny-lekarza');
           const hour_and_a_half = 30 * 60 * 1000 + 60 * 60 * 1000;
@@ -145,6 +147,24 @@
                   sel.appendChild(opt);
                 }
               console.log(e);
+              /*
+              // -- Niestey: JS nie obsluguje semaforow i muteksow
+              //             moze dojsc do hazardu :(
+              if (i == 6)
+              {
+                // -- Na ostatnim: sortujemy legitne godziny
+                let hrs = Array.apply(null, sel.options);
+                console.log(hrs);
+                hrs = hrs.sort((a, b) =>
+                  new Date(`11-21-2000 ${a.innerText}`) - new Date(`11-21-2000 ${b.innerText}`)
+                );
+
+                let j = 0;
+                for (let t of sel.options)
+                  t.innerText = hrs[j++].innerText;
+                console.log(hrs);
+              }
+              */
             }, "czyLekarzDostepny", ["time", stamp, "lekarz", document.getElementById('nazwy-lekarza').value]);
             cur_time += hour_and_a_half;
           }
