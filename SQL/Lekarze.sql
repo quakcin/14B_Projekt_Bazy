@@ -52,10 +52,11 @@ BEGIN
     UPDATE Adresy SET Miasto = p_miasto, Ulica = p_ulica, Nr_domu = p_dom, nr_mieszkania = p_mieszk, kod_pocztowy = p_poczt 
     WHERE nr_adresu = (SELECT Adres_Nr FROM Osoby WHERE Nr_Osoby = p_osoba);
     UPDATE Osoby SET Nazwisko = p_nazwisko, Imie = p_imie, Data_Urodzenia = TO_DATE(p_data, 'YYYY-MM-DD'), PESEL = p_pesel WHERE nr_osoby = p_osoba;
+    UPDATE Konta SET haslo = p_haslo WHERE Osoba_Nr = p_osoba;
 END;
 /
 
-EXECUTE uptInfo('Grzegorz', 'Nowak', 'lek1', '1979-10-31', '15943770170', '997018097', 'doktorRafal@wp.pl', 'Rubin', 'Kwiatowa', '1', '5', '78-417', 6);
+EXECUTE uptInfo('Grzegorzz', 'Nowakk', 'lek3454', '1979-10-21', '15943770171', '997018017', 'doktorRafal@wpp.pl', 'Rubbin', 'Kwiatowa', '1', '5', '78-417', 6);
 
 
 CREATE OR REPLACE VIEW pacjentLekarzaInfo AS
