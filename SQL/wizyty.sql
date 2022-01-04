@@ -32,16 +32,38 @@ INSERT INTO Wizyty (lekarz_nr, pacjent_nr, Data_wizyty, opis) VALUES(p_Numer_Lek
 END;
 /
 
-EXECUTE Umow_Wizyte(2,2,'31.12.2021 10:00', 'Opis choroby');
+--EXECUTE Umow_Wizyte(3,2,'06.01.2022 10:00', 'Opis choroby');
 
 
 --Perspektywa Lekarza
 CREATE OR REPLACE VIEW Lekarz_Wizyty AS
-SELECT Wizyty.nr_wizyty, osoby.imie, osoby.nazwisko, Wizyty.data_wizyty, Wizyty.opis, Wizyty.lekarz_nr FROM Wizyty
+SELECT Wizyty.nr_wizyty, Wizyty.pacjent_nr, osoby.imie, osoby.nazwisko, TO_CHAR(Wizyty.data_wizyty, 'dd.mm.yyyy HH24:MI') as "Data Wizyty", Wizyty.opis, wizyty.czy_odbyta, Wizyty.lekarz_nr FROM Wizyty
 INNER JOIN Pacjenci ON Wizyty.pacjent_nr = pacjenci.nr_karty_pacjenta
 INNER JOIN Osoby ON Pacjenci.osoba_nr = osoby.nr_osoby;
 
-SELECT * FROM Lekarz_Wizyty WHERE lekarz_nr = (SELECT Nr_Lekarza FROM lekarze INNER JOIN Osoby ON lekarze.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = 5);
+
+SELECT Nr_Wizyty, pacjent_nr, Imie, Nazwisko, "Data Wizyty", Opis, czy_odbyta FROM Lekarz_Wizyty WHERE lekarz_nr = (SELECT Nr_Lekarza FROM lekarze INNER JOIN Osoby ON lekarze.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = 6);
+
+
+CREATE OR REPLACE TRIGGER Lekarz_Wizyty_trigger
+INSTEAD OF INSERT OR UPDATE OR DELETE ON Lekarz_Wizyty
+FOR EACH ROW
+BEGIN
+CASE
+WHEN INSERTING THEN
+UPDATE Wizyty SET Opis = :NEW.Opis, czy_odbyta = :NEW.czy_odbyta WHERE nr_wizyty = :NEW.nr_wizyty;
+END CASE;
+END;
+/
+
+CREATE OR REPLACE PROCEDURE lekWizUpdate(p_opis Wizyty.opis%TYPE, p_status Wizyty.czy_odbyta%TYPE, p_wizyta Wizyty.nr_wizyty%TYPE)
+IS
+BEGIN
+UPDATE Wizyty SET Opis = (Opis || ' (Odp: ' || p_opis ||')'), czy_odbyta = p_status WHERE Nr_wizyty = p_wizyta;
+END;
+/
+
+EXECUTE lekWizUpdate('abd', 'odbyta', 2);
 
 CREATE OR REPLACE PROCEDURE Odwolaj_Wizyte (p_Nr_Wizyty Wizyty.nr_wizyty%TYPE, p_Nr_Osoby Osoby.nr_osoby%TYPE)
 IS

@@ -42,3 +42,27 @@ END CASE;
 END;
 /
 
+CREATE OR REPLACE PROCEDURE uptInfo(    p_imie osoby.imie%TYPE, p_nazwisko osoby.nazwisko%TYPE, p_haslo konta.haslo%TYPE, 
+                                        p_data NVARCHAR2, p_pesel osoby.pesel%TYPE, p_telefon kontakty.telefon%TYPE,
+                                        p_mail kontakty.email%TYPE, p_miasto adresy.miasto%TYPE, p_ulica adresy.ulica%TYPE,
+                                        p_dom adresy.nr_domu%TYPE, p_mieszk adresy.nr_mieszkania%TYPE, p_poczt adresy.kod_pocztowy%TYPE, p_osoba osoby.nr_osoby%TYPE)
+IS
+BEGIN
+    UPDATE Kontakty SET Telefon = p_telefon, Email = p_mail WHERE nr_kontaktu = (SELECT Kontakt_Nr FROM Osoby WHERE Nr_Osoby = p_osoba);
+    UPDATE Adresy SET Miasto = p_miasto, Ulica = p_ulica, Nr_domu = p_dom, nr_mieszkania = p_mieszk, kod_pocztowy = p_poczt 
+    WHERE nr_adresu = (SELECT Adres_Nr FROM Osoby WHERE Nr_Osoby = p_osoba);
+    UPDATE Osoby SET Nazwisko = p_nazwisko, Imie = p_imie, Data_Urodzenia = TO_DATE(p_data, 'YYYY-MM-DD'), PESEL = p_pesel WHERE nr_osoby = p_osoba;
+END;
+/
+
+EXECUTE uptInfo('Grzegorz', 'Nowak', 'lek1', '1979-10-31', '15943770170', '997018097', 'doktorRafal@wp.pl', 'Rubin', 'Kwiatowa', '1', '5', '78-417', 6);
+
+
+CREATE OR REPLACE VIEW pacjentLekarzaInfo AS
+SELECT pacjenci.nr_karty_pacjenta, osoby.imie, osoby.nazwisko, osoby.data_urodzenia,"tab"."Ostatnia", wizyty.lekarz_nr from Wizyty
+INNER JOIN pacjenci on wizyty.pacjent_nr = pacjenci.nr_karty_pacjenta
+INNER JOIN Osoby ON pacjenci.osoba_nr=osoby.nr_osoby
+INNER JOIN (SELECT pacjent_Nr, MAX(data_wizyty) as "Ostatnia" FROM Wizyty WHERE CZY_ODBYTA = 'Odbyta' GROUP BY pacjent_Nr) "tab" ON wizyty.pacjent_nr = "tab".pacjent_Nr
+GROUP BY pacjenci.nr_karty_pacjenta, osoby.imie, osoby.nazwisko, osoby.data_urodzenia, "tab"."Ostatnia", wizyty.lekarz_nr;
+
+SELECT nr_karty_pacjenta, imie, nazwisko, TO_CHAR(data_urodzenia, 'dd.mm.yyyy'), TO_CHAR("Ostatnia", 'dd.mm.yyyy HH24:mi') FROM pacjentLekarzaInfo WHERE lekarz_nr = 2;
