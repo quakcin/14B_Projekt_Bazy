@@ -157,19 +157,24 @@ const invokeHomePage = function ()
   window.location.href = './index';
 }
 
+const hideAllPanelsExcept = function (type)
+{
+  for (let elem of document.getElementsByClassName('db-panel'))
+    elem.setAttribute("style", "display: none;");
+  
+  const panel = document.getElementById(type);
+  if (panel)
+    panel.setAttribute("style", "");        
+}
+
 const menuAction = function (sender)
 {
   console.log(sender);
   const type = sender.dataset['type'];
   const name = sender.dataset['name'];
 
-  for (let elem of document.getElementsByClassName('db-panel'))
-    elem.setAttribute("style", "display: none;");
+  hideAllPanelsExcept(type);
 
-  const panel = document.getElementById(type);
-  if (panel)
-    panel.setAttribute("style", "");    
-  
   if (type == P_EDIT)
     invokeEditor(name, G_PERSON_ID);
   else if (type == P_SEARCH)
@@ -318,31 +323,38 @@ const initPacjent = function ()
       {n: "Pacjent", s: 60}
     ],
     {
-    name: "Usun",
-    action: (e) => {
-      const items = uncomplexResult(e.target);
-      dbReq((e) => {
-        console.log(e);
-        if (e.success == false)
-          alert("Serwer nie odpowiada!");
-        performSearch();
-      }, "odwolajWizyte", ["nrwiz", items[0]]);
+      name: "Usun",
+      action: (e) =>
+      {
+        const items = uncomplexResult(e.target);
+        dbReq((e) => {
+          console.log(e);
+          if (e.success == false)
+            alert("Serwer nie odpowiada!");
+          performSearch();
+        }, "odwolajWizyte", ["nrwiz", items[0]]);
+      }
     }
-  });
+  );
   addResult("pacRecepty", "szukajRecepty",
     [
       {n: 'Nr Recepty', s: 110},
-      {n: 'Wizyta', s: 50},
-      {n: 'Nazwa Leku', s: 150},
+      {n: 'Wizyta', s: 80},
+      {n: 'Nazwa Leku', s: 200},
       {n: 'Imie', s: 130},
       {n: 'Nazwisko', s: 130},
-      {n: 'Data Waznosci', s: 110},
-      {n: 'Pacjent', s: 0},
+      {n: 'Data Waznosci', s: 150}
     ],
     {
       name: 'Apteka',
-      action: (e) => {
-        console.log("APTEKA", e);
+      action: (e) =>
+      {
+        const items = uncomplexResult(e.target)[2];
+        const drugs = items.split(", ");
+        for (let drug of drugs)
+          window.open(`https://www.doz.pl/apteka/szukaj?search=${drug}`, '_blank').focus();
+        // -- TO-DO: Przerobic na takie samo dzialanie, ale na
+        //           naszej stronie w naszej bazie lekow!
       }
     }
   );
@@ -371,6 +383,75 @@ const initPacjent = function ()
 
 
 // ---------------------------------------------------------------
+// -- Tworzenie Dashboarda dla: Lekarza
+// ---------------------------------------------------------------
+
+const initLekarz = function ()
+{
+  addScheme("lekKonto", [
+    {n: "imie", t: "text"},
+    {n: "nazwisko", t: "text"},
+    {n: "haslo", t: "password"},
+    {n: "data_uro", t: "date"},
+    {n: "pesel", t: "text"},
+    {n: "telefon", t: "text"},
+    {n: "email", t: "text"},
+    {n: "miasto", t: "text"},
+    {n: "ulica", t: "text"},
+    {n: "nr_domu", t: "text"},
+    {n: "nr_lokalu", t: "text"},
+    {n: "kod_poczt", t: "text"}
+  ]);
+  addScheme("lekEdycjaWizyty", [
+    {n: "Zalecenia", t: "text"},
+    {n: "NowyStatus", t: "text"}
+  ]);
+  
+  addResult("lekWizyty", "szukajWizyty",
+    [
+      {n: "Numer", s: 70},
+      {n: "Pacjent", s: 70},
+      {n: "Imie", s: 120},
+      {n: "Nazwisko", s: 120},
+      {n: "Data", s: 180},
+      {n: "Opis", s: 350},
+      {n: "Status", s: 130}
+    ],
+    {
+      name: "Edytuj",
+      action: (e) =>
+      {
+        const nrWiz = uncomplexResult(e.target)[0];
+        hideAllPanelsExcept(P_EDIT);
+        invokeEditor("lekEdycjaWizyty", nrWiz);
+      }
+    }
+  );  
+  addResult("lekPacjenci", "szukajPacjentow",
+    [
+      {n: "Numer", s: 70},
+      {n: "Imie", s: 120},
+      {n: "Nazwisko", s: 120},
+      {n: "Data Urodzenia", s: 180},
+      {n: "Ostatnia Wizyta", s: 180},      
+    ],
+    {
+      name: "Wiecej",
+      action: (e) =>
+      {
+        console.log("PODGLAD", e);
+      }
+    }
+  );  
+
+  addPanel("Strona Glowna", "n/a", P_HOMEPAGE);
+  addPanel("Moje Konto", "lekKonto", P_EDIT);
+  addPanel("Moje Wizyty", "lekWizyty", P_SEARCH);
+  addPanel("Moi Pacjenci", "lekPacjenci", P_SEARCH);    
+  addPanel("Wyloguj", "n/a", P_LOGOUT);
+}
+
+// ---------------------------------------------------------------
 // -- Decyzja jak wyrenderowac strone
 // ---------------------------------------------------------------
 
@@ -382,6 +463,8 @@ document.body.onload = (e) => {
       G_PERSON_ID = e.nrOsoby;
       if (e.acType == 'pacjent')
         initPacjent();
+      else if (e.acType == 'lekarz')
+        initLekarz();      
     }
   }, "ping");
 }

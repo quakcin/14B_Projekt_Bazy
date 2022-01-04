@@ -145,14 +145,32 @@
     }
   }
 
+  // -- szukamy klucza $key z widoku $view w polach $fields
+  function packSearchQuerry ($key, $view, $fields)
+  {
+    $key = strtolower($key);
+    $querry = "SELECT * FROM " . $view . " WHERE (";
+    foreach ($fields as $index => $field)
+      $querry .= (
+        "LOWER(" . $field . ") LIKE ('%" . $key . "%') " . (($index !== array_key_last($fields)) ? "OR " : ")")
+      );
+    
+    global $retPacket;
+    return $querry;
+  }
+  
+  // -------------------------------------
+  // -- Uniwersalne (Konto):
+  // -------------------------------------
+
+  // Perm: wszyscy
   function serverPing()
   {
     global $retPacket;
     $retPacket['ip'] = $_SERVER['REMOTE_ADDR'];
   }
 
-  // -- niezaleznie od rodzaju konta, logowanie 
-  //    po stronie sql wyglada tak samo
+  // Perm: niezalogowani
   function logowanie ()
   {
     global $retPacket;
@@ -200,12 +218,14 @@
     packetThrow('Failed to login!', []);
   }
 
+  // Perm: Admin, Lekarz, Pacjent
   function wylogowywanie ()
   {
     global $retPacket;
     dbRequire("delete from sesje where token = '" . $retPacket['token'] . "'");
   }
-
+  
+  // Perm: niezarejestrowani
   function rejestracja ()
   {
     global $retPacket;
@@ -218,44 +238,73 @@
     $retDb = $buff;
   }
 
-  function konto_info ()
-  {
-    global $retDb;
-    global $retPacket;
-    $buff = dbRequire("SELECT * FROM Pacjenci_view WHERE nr_osoby=" . $retPacket['nrOsoby']);
-
-    // TO-DO: --> $buff = dbRequire("call dane_osoby_proc(" . $retPacket['nrOsoby'] . ")");
-    $retDb = $buff;
-  }
-
-  // Perm: Pacjenci
-  function req_pacKonto ()
+  // Perm: Admin, Lekarz, Pacjent
+  function req_ac_info()
   {
     global $retPacket;
     global $retDb;
-    $retDb = dbRequire("select * from reqPacjenci where nr_osoby = " . $retPacket['nrOsoby']);
+    $retDb = dbRequire("select * from reqInfo where nr_osoby = " . $retPacket['nrOsoby']);    
   }
 
-  // Perm: Pacjenci
-  function upt_pacKonto ()
+  // Perm: Admin, Lekarz, Pacjent
+  function upt_ac_info()
   {
     global $retPacket;
-    dbRequire("UPDATE Pacjenci_view SET imie = '" . $_GET["imie"] . "', nazwisko = '" . $_GET["nazwisko"] . "', haslo = '" . $_GET["haslo"] . "', data_urodzenia = to_date('" . $_GET["data_uro"] . "', 'YYYY-MM-DD'), pesel = '" . $_GET["pesel"] . "', telefon = '" . $_GET["telefon"] . "', email = '" . $_GET["email"] . "', miasto = '" . $_GET["miasto"] . "', ulica = '" . $_GET["ulica"] . "', NR_DOMU = '" . $_GET["nr_domu"] . "', NR_MIESZKANIA = " . ($_GET["nr_lokalu"] == "" ? "NULL" : "'" . $_GET["nr_lokalu"] . "'") . ", KOD_POCZTOWY = '" . $_GET["kod_poczt"] . "' WHERE nr_osoby = " . $retPacket['nrOsoby']);
+    $qr = "CALL uptInfo('" . $_GET["imie"] . "', '" . $_GET["nazwisko"] . "', '" . $_GET["haslo"] . "', '" . $_GET["data_uro"] . "', '" . $_GET["pesel"] . "', '" . $_GET["telefon"] . "', '" . $_GET["email"] . "', '" . $_GET["miasto"] . "', '" . $_GET["ulica"] . "', '" . $_GET["nr_domu"] . "', " . ($_GET["nr_lokalu"] == "" ? "NULL" : "'" . $_GET["nr_lokalu"] . "'") . ", '" . $_GET["kod_poczt"] . "', " . $retPacket['nrOsoby'] . ")";
+    $retPacket['qr'] = $qr;
+    dbRequire($qr);
+  }
+  
+  // -------------------------------------
+  // -- Tylko Panel Lekarza:
+  // -------------------------------------
+ 
+  function szukajWizytyLekarza ()
+  {
+    global $retPacket;
+    global $retDb;
+
+    $qr = packSearchQuerry($_GET["key"], "Lekarz_Wizyty",
+      ["Nr_Wizyty", "Imie", "Nazwisko", "\"Data Wizyty\"", "Opis", "czy_odbyta"]
+    );  
+    $qr .= " AND lekarz_nr = (SELECT Nr_Lekarza FROM lekarze INNER JOIN Osoby ON lekarze.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = " . $retPacket['nrOsoby'] . ")";
+    $qr = str_replace("*", "Nr_Wizyty, pacjent_nr, Imie, Nazwisko, \"Data Wizyty\", Opis, czy_odbyta", $qr);
+  
+    $retDb = dbRequire($qr);
   }
 
-  // -- szukamy klucza $key z widoku $view w polach $fields
-  function packSearchQuerry ($key, $view, $fields)
+  function req_lekEdycjaWizyty ()
   {
-    $key = strtolower($key);
-    $querry = "SELECT * FROM " . $view . " WHERE (";
-    foreach ($fields as $index => $field)
-      $querry .= (
-        "LOWER(" . $field . ") LIKE ('%" . $key . "%') " . (($index !== array_key_last($fields)) ? "OR " : ")")
-      );
-    
-    global $retPacket;
-    return $querry;
+    global $retDb;
+    $retDb = dbRequire("SELECT '', czy_odbyta from wizyty where nr_wizyty = " . $_GET['p_id']);      
   }
+
+  function upt_lekEdycjaWizyty ()
+  {
+    global $retDb;
+    global $retPacket;
+    $qr = "CALL lekWizUpdate('" . $_GET["Zalecenia"] . "', '" . $_GET["NowyStatus"] . "', " . $_GET["p_id"] . ")";
+    $retPacket['qr'] = $qr;
+    dbRequire($qr);
+  }
+
+  function szukajPacjentow ()
+  {
+    global $retPacket;
+    global $retDb;
+
+    $qr = packSearchQuerry($_GET["key"], "pacjentLekarzaInfo",
+      ["nr_karty_pacjenta", "imie", "nazwisko", "data_urodzenia", "\"Ostatnia\""]
+    );  
+    $qr .= " AND lekarz_nr = (SELECT Nr_Lekarza FROM lekarze INNER JOIN Osoby ON lekarze.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = " . $retPacket['nrOsoby'] . ")";
+    $qr = str_replace("*", "nr_karty_pacjenta, imie, nazwisko, TO_CHAR(data_urodzenia, 'dd.mm.yyyy'), TO_CHAR(\"Ostatnia\", 'dd.mm.yyyy HH24:mi')", $qr);
+    $retDb = dbRequire($qr);    
+  }
+      
+  // -------------------------------------
+  // -- Tylko Panel Pacjenta:
+  // -------------------------------------
+
 
   function szukajPacjenta ()  // -- TO-DO: Dodac Inne Pola do szukajki
   {
@@ -296,6 +345,11 @@
     $retDb = dbRequire("SELECT Nazwa_Specjalizacji FROM Specjalizacje");
   }
 
+  // -------------------------------------
+  // -- Recepty:
+  // -------------------------------------
+
+  // Perm: Pacjenci
   function szukajRecepty ()
   {
     global $retPacket;
@@ -303,7 +357,10 @@
     $qr = packSearchQuerry($_GET["key"], "pacjent_recepty",
       ["nr_recepty", "nr_wizyty", "nazwa_leku", "imie", "nazwisko", "data_waznosci"]
     );
-    $qr .= " AND pacjent_nr = (SELECT NR_KARTY_PACJENTA FROM Pacjenci INNER JOIN Osoby ON pacjenci.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = " . $retPacket['nrOsoby'] . ")";
+    $qr .= " AND pacjent_nr = (SELECT NR_KARTY_PACJENTA FROM Pacjenci INNER JOIN Osoby ON pacjenci.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = " . $retPacket['nrOsoby'] . ") GROUP BY nr_recepty, nr_wizyty, imie, nazwisko, data_waznosci";
+
+    $qr = str_replace("*", "nr_recepty, nr_wizyty, LISTAGG(nazwa_leku,', ') AS \"Nazwa Leku\" , Imie, nazwisko, TO_CHAR(data_waznosci, 'dd/mm/yyyy') AS \"Data Waznosci\"", $qr);
+  
     $retPacket['qr'] = $qr;
     $retDb = dbRequire($qr);
   }
@@ -358,13 +415,21 @@
     new Command("indexSpec", "indexSpecjalizacje", "lekarz", []),
     new Command("indexSpec", "indexSpecjalizacje", "pacjent", []),
 
-    // UWAGA: Polecenia Tylko Dla Pacjenta, p_id nie wymagane!
-    new Command("req_pacKonto", "req_pacKonto", "pacjent", []),
-    new Command("upt_pacKonto", "upt_pacKonto", "pacjent", ["imie", "nazwisko","haslo","data_uro", "pesel","telefon","email","miasto","ulica","nr_domu","nr_lokalu","kod_poczt"]),
+    // Perm: Zalogowani
+    new Command("req_pacKonto", "req_ac_info", "pacjent", []),
+    new Command("req_lekKonto", "req_ac_info", "lekarz",  []),
+    new Command("req_admKonto", "req_ac_info", "admin",   []),  
+    new Command("upt_pacKonto", "upt_ac_info", "pacjent", ["imie", "nazwisko","haslo","data_uro", "pesel","telefon","email","miasto","ulica","nr_domu","nr_lokalu","kod_poczt"]),
+    new Command("upt_lekKonto", "upt_ac_info", "lekarz",  ["imie", "nazwisko","haslo","data_uro", "pesel","telefon","email","miasto","ulica","nr_domu","nr_lokalu","kod_poczt"]),
+    new Command("upt_admKonto", "upt_ac_info", "admin",   ["imie", "nazwisko","haslo","data_uro", "pesel","telefon","email","miasto","ulica","nr_domu","nr_lokalu","kod_poczt"]),  
 
-    // TO-DO: new Command("szukajPacjenta", "szukajPacjenta", "admin", ["key"]),
-    // TO-DO: new Command("szukajPacjenta", "szukajPacjenta", "lekarz", ["key"]),
+    // Perm: Lekarze
+    new Command("szukajWizyty", "szukajWizytyLekarza", "lekarz", ["key"]),
+    new Command("req_lekEdycjaWizyty", "req_lekEdycjaWizyty", "lekarz", ["p_id"]),
+    new Command("upt_lekEdycjaWizyty", "upt_lekEdycjaWizyty", "lekarz", ["p_id", "Zalecenia", "NowyStatus"]),    
+      
 
+    // Perm: Pacjencji
     new Command("szukajWizyty", "szukajWizytyPacjent", "pacjent", ["key"]),
     new Command("odwolajWizyte", "odwolajWizytePacjent", "pacjent", ["nrwiz"]),
     new Command("szukajRecepty", "szukajRecepty", "pacjent", ["key"]),
@@ -374,7 +439,9 @@
     new Command("dostepniLekarze", "dostepniLekarze", "pacjent", ["spec"]),
     new Command("czyLekarzDostepny", "czyLekarzDostepny", "pacjent", ["lekarz", "time"]),    
     new Command("dodajWizyte", "dodajWizyte", "pacjent", ["lekarz", "time", "opis"]),    
-  
+    new Command("szukajPacjentow", "szukajPacjentow", "lekarz", ["key"]),
+
+    // -- Logowanie:  
     new Command("dropSess", "wylogowywanie", "pacjent", []),
     new Command("dropSess", "wylogowywanie", "lekarz", []),
     new Command("dropSess", "wylogowywanie", "admin", []),
