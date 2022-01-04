@@ -75,25 +75,25 @@ INSERT INTO dostepne_godz VALUES ('14:30');
 INSERT INTO dostepne_godz VALUES ('16:00');
 INSERT INTO dostepne_godz VALUES ('17:30');
 INSERT INTO dostepne_godz VALUES ('19:00');
-CREATE OR REPLACE PROCEDURE dodaj_wizyte_random(p_il NUMBER)
+
+CREATE OR REPLACE PROCEDURE dodaj_wizyte_random(p_ilosc NUMBER)
 IS
 dni NVARCHAR2(80);
 godziny NVARCHAR2(80);
 data_wizyty NVARCHAR2(80);
 BEGIN
-FOR I IN 1..p_il LOOP
-SELECT to_char(sysdate + round(dbms_random.VALUE(1,30)),'DD.MM.YYYY') INTO dni FROM dual;
-SELECT * INTO godziny FROM(SELECT * FROM dostepne_godz ORDER BY DBMS_RANDOM.RANDOM) WHERE  ROWNUM < 2;
-data_wizyty := (dni||' '||godziny);
-INSERT INTO Wizyty (lekarz_nr, pacjent_nr, Data_wizyty) VALUES(round(DBMS_RANDOM.VALUE(1,4)),round(DBMS_RANDOM.VALUE(1,5)),
-TO_DATE(data_wizyty,'DD.MM.YYYY HH24:MI'));
+FOR i IN 1..p_ilosc LOOP
+    SELECT to_char(sysdate + round(dbms_random.VALUE(0,60)),'DD.MM.YYYY') INTO dni FROM dual;
+    SELECT * INTO godziny FROM(SELECT * FROM dostepne_godz ORDER BY DBMS_RANDOM.RANDOM) WHERE  ROWNUM < 2;
+    data_wizyty := (dni||' '||godziny);
+    INSERT INTO Wizyty (lekarz_nr, pacjent_nr, Data_wizyty) VALUES(round(DBMS_RANDOM.VALUE(1,(SELECT MAX(Nr_Lekarza) FROM Lekarze))),round(DBMS_RANDOM.VALUE(1,(SELECT MAX(Nr_Karty_Pacjenta) FROM Pacjenci))),
+    TO_DATE(data_wizyty,'DD.MM.YYYY HH24:MI'));
 END LOOP;
+UPDATE Wizyty set czy_odbyta = 'Odbyta' WHERE data_wizyty < sysdate;
 END;
 /
 EXECUTE dodaj_wizyte_random(30);
 
 
-
-DROP TABLE dostepne_godz;
 DROP PROCEDURE dodaj_wizyte_random;
 --SELECT nr_wizyty, lekarz_nr, pacjent_nr, TO_CHAR(data_wizyty, 'dd.mm.yyyy HH24:mi'), opis FROM wizyty;
