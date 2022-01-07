@@ -300,11 +300,19 @@
     $qr = str_replace("*", "nr_karty_pacjenta, imie, nazwisko, TO_CHAR(data_urodzenia, 'dd.mm.yyyy'), TO_CHAR(\"Ostatnia\", 'dd.mm.yyyy HH24:mi')", $qr);
     $retDb = dbRequire($qr);    
   }
-      
+
+  // Perm: Lekarz
+  function odwolajWizyteLekarze()
+  {
+    global $retPacket;
+    $nrWizyty = $_GET["nrwiz"];
+    dbRequire("CALL OdwolajWizyteLek(" . $nrWizyty . ")");
+  }
+
+        
   // -------------------------------------
   // -- Tylko Panel Pacjenta:
   // -------------------------------------
-
 
   function szukajPacjenta ()  // -- TO-DO: Dodac Inne Pola do szukajki
   {
@@ -336,7 +344,7 @@
   {
     global $retPacket;
     $nrWizyty = $_GET["nrwiz"];
-    dbRequire("CALL odwolaj_wizyte(" . $nrWizyty . "," . $retPacket['nrOsoby'] . ")");
+    dbRequire("CALL OdwolajWizytePac(" . $nrWizyty . "," . $retPacket['nrOsoby'] . ")");
   }
 
   function indexSpecjalizacje ()
@@ -427,7 +435,7 @@
     new Command("szukajWizyty", "szukajWizytyLekarza", "lekarz", ["key"]),
     new Command("req_lekEdycjaWizyty", "req_lekEdycjaWizyty", "lekarz", ["p_id"]),
     new Command("upt_lekEdycjaWizyty", "upt_lekEdycjaWizyty", "lekarz", ["p_id", "Zalecenia", "NowyStatus"]),    
-      
+    new Command("odwolajWizyte", "odwolajWizyteLekarze", "lekarz", ["nrwiz"]),      
 
     // Perm: Pacjencji
     new Command("szukajWizyty", "szukajWizytyPacjent", "pacjent", ["key"]),

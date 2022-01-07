@@ -21,14 +21,17 @@ let G_PERSON_ID = null;
 const cSchemes = []; // -- dla edytora
 const cResults = []; // -- dla szukajki
 
-const addScheme = function (name, schemes)
+// -- Schematy dla Edytora
+const addScheme = function (name, schemes, buttons = [])
 {
   cSchemes.push({
     name: name,
     schemes: schemes,
+    buttons: buttons
   });
 }
 
+// -- Schematy dla Szukajki
 const addResult = function (name, sCommand, fields, action = null)
 {
   cResults.push({
@@ -89,11 +92,6 @@ const editorCommit = function (e, p_id)
     
 }
 
-// -- UWAGA: Wywolwyanie funkcji z p_id po stronie
-//    pacjenta i czasem lekarza, nie wplywa na wynik
-//    po stronie serwera. Serwer odpowiednio dobiera
-//    z ktorego p_id ma skorzystac (p_id := nrOsoby)
-
 const invokeSearch = function (name, p_id)
 {
   // -- remember: name and personal id
@@ -119,7 +117,8 @@ const invokeEditor = function (name, p_id)
     
     const self = document.getElementById(P_EDIT);
     const scheme = findScheme(name).schemes;
-
+    const cBtns = findScheme(name).buttons;
+    
     while (self.firstChild)
       self.removeChild(self.lastChild);
 
@@ -128,15 +127,31 @@ const invokeEditor = function (name, p_id)
     {
       const wrapper = document.createElement('div');
       const label = document.createElement('div');
-      const inp = document.createElement('input');
-      inp.setAttribute('type', item.t);      
-      inp.setAttribute('id', `form_${item.n}`);
-
-      inp.setAttribute('value', e.db[0][dbIter++]);
       label.textContent = item.n;
-      wrapper.appendChild(label);
-      wrapper.appendChild(inp);
-      self.appendChild(wrapper);
+      wrapper.appendChild(label);      
+      if (item.t == 'select')
+      {
+        const inp = document.createElement('select');
+        inp.setAttribute('id', `form_${item.n}`); // IMPORTANT        
+        for (let opt of item.opt)
+        {
+          const cOpt = document.createElement('option');
+          cOpt.value = opt;
+          cOpt.innerText = opt;
+          inp.appendChild(cOpt);
+        }
+        inp.value = e.db[0][dbIter++];
+        wrapper.appendChild(inp);
+      }
+      else
+      {
+        const inp = document.createElement('input');
+        inp.setAttribute('type', item.t);      
+        inp.setAttribute('id', `form_${item.n}`); // IMPORTANT
+        inp.setAttribute('value', e.db[0][dbIter++]);
+        wrapper.appendChild(inp);
+      } 
+      self.appendChild(wrapper);     
     }
 
     // -- Przycisk do zatwierdzenia zmian!
@@ -149,6 +164,19 @@ const invokeEditor = function (name, p_id)
     fin.onclick = (e) => {
       editorCommit(e.target, p_id);
     }
+
+    // -- Przyciski dodatkowe (ze schematu)
+    for (let btn of cBtns)
+    {
+      const bt = document.createElement('input');
+      bt.setAttribute('type', 'button');
+      bt.setAttribute('value', btn.val);
+      self.appendChild(bt);
+      bt.onclick = (e) => {
+        btn.evt(p_id);
+      };
+    }
+    
   }, `req_${name}`, ["p_id", p_id]);
 }
 
@@ -323,7 +351,7 @@ const initPacjent = function ()
       {n: "Pacjent", s: 60}
     ],
     {
-      name: "Usun",
+      name: "Odwolaj",
       action: (e) =>
       {
         const items = uncomplexResult(e.target);
@@ -372,7 +400,13 @@ const initPacjent = function ()
     {n: "nr_domu", t: "text"},
     {n: "nr_lokalu", t: "text"},
     {n: "kod_poczt", t: "text"}
-  ]);
+  ],
+  [
+    {val: "Test", evt: (e) => {
+      console.log(e);
+    }}
+  ] 
+  );
   // -- Panels:
   addPanel("Strona Glowna", "n/a", P_HOMEPAGE);
   addPanel("Moje Konto", "pacKonto", P_EDIT);
@@ -404,7 +438,19 @@ const initLekarz = function ()
   ]);
   addScheme("lekEdycjaWizyty", [
     {n: "Zalecenia", t: "text"},
-    {n: "NowyStatus", t: "text"}
+    {n: "NowyStatus", t: "select", opt: ["Odbyta",  "Zaplanowana", "Odwołana", "Przeniesiona"]}
+  ], [
+    {val: "Dodaj Recepte", evt: (p_id) => {
+      alert("TO-DO: Dodaj, dodawanie recept!");
+    }},
+    {val: "Odwolaj", evt: (p_id) => {
+      dbReq((e) => {
+        if (e.success)
+          alert("Odwolano Wizyte!");
+        else
+          alert("Server nie odpowiada!");
+      }, "odwolajWizyte", ["nrwiz", p_id]);
+    }}    
   ]);
   
   addResult("lekWizyty", "szukajWizyty",
