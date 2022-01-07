@@ -1,7 +1,10 @@
-INSERT INTO Recepty (Wizyta_Nr) VALUES (32); 
-INSERT INTO Lek_Na_Recepte(Recepta_Nr, Lek_Nr) VALUES (5,4);
-INSERT INTO Lek_Na_Recepte(Recepta_Nr, Lek_Nr) VALUES (5,5);
-INSERT INTO Lek_Na_Recepte(Recepta_Nr, Lek_Nr) VALUES (5,6);
+INSERT INTO Recepty (Wizyta_Nr) VALUES (3); 
+INSERT INTO Lek_Na_Recepte(Recepta_Nr, Lek_Nr) VALUES (3,18);
+INSERT INTO Lek_Na_Recepte(Recepta_Nr, Lek_Nr) VALUES (3,13);
+INSERT INTO Lek_Na_Recepte(Recepta_Nr, Lek_Nr) VALUES (3,16);
+INSERT INTO Lek_Na_Recepte(Recepta_Nr, Lek_Nr) VALUES (3,17);
+
+
 
 
 CREATE OR REPLACE VIEW Pacjent_Recepty AS

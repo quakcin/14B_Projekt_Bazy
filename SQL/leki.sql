@@ -109,7 +109,7 @@ INSERT INTO Leki_view VALUES (NULL, 'Boiron Camilia, roztwór doustny, 30 minims
 INSERT INTO Leki_view VALUES (NULL, 'Canpol babies, wielofunkcyjne podkłady higieniczne, jednorazowe, 10 szt.', 'akcesoria, środki higieniczne', 8, 13.49, 'https://www.doz.pl/apteka/p124752-Canpol_babies_wielofunkcyjne_podklady_higieniczne_jednorazowe_10_szt.', 'https://azcdn.doz.pl/image/d/product/200a704d-scale-180x180.webp');
 INSERT INTO Leki_view VALUES (NULL, 'Gynoxin Uno, 600 mg, kapsułki dopochwowe, miękkie, 1 szt.', 'kapsułki, grzybica, stan zapalny, upławy', 9, 32.99, 'https://www.doz.pl/apteka/p5514-Gynoxin_Uno_600_mg_kapsulki_dopochwowe_miekkie_1_szt.', 'https://azcdn.doz.pl/image/d/product/69ad4b0e-scale-180x180.webp');
 INSERT INTO Leki_view VALUES (NULL, 'Dermena Hair Care, szampon hamujący wypadanie włosów, 200 ml', 'szampon, podrażnienie, wypadanie włosów, łysienie, dla alergików', 10, 19.49, 'https://www.doz.pl/apteka/p4940-Dermena_Hair_Care_szampon_hamujacy_wypadanie_wlosow_200_ml', 'https://azcdn.doz.pl/image/d/product/4c369a16-scale-180x180.webp');
-INSERT INTO Leki_view VALUES (NULL, 'ZIELNIK DOZ Cytrynówki, cukierki cytrynowe z miodem, 50 g', 'cukierki, cytrynowy', 1, Od 1.50, 'https://www.doz.pl/apteka/p133519-ZIELNIK_DOZ_Cytrynowki_cukierki_cytrynowe_z_miodem_50_g#krotsze_daty', 'https://azcdn.doz.pl/image/d/product/7a4a8a37-scale-180x180.webp');
+INSERT INTO Leki_view VALUES (NULL, 'ZIELNIK DOZ Cytrynówki, cukierki cytrynowe z miodem, 50 g', 'cukierki, cytrynowy', 1, 1.50, 'https://www.doz.pl/apteka/p133519-ZIELNIK_DOZ_Cytrynowki_cukierki_cytrynowe_z_miodem_50_g#krotsze_daty', 'https://azcdn.doz.pl/image/d/product/7a4a8a37-scale-180x180.webp');
 INSERT INTO Leki_view VALUES (NULL, 'Emolium Dermocare, emulsja do kąpieli od 1. dnia życia, 400 ml', 'Specyfika:Dla alergików,Bez parabenów', 2, 33.49, 'https://www.doz.pl/apteka/p67562-Emolium_Dermocare_emulsja_do_kapieli_od_1._dnia_zycia_400_ml', 'https://azcdn.doz.pl/image/d/product/0c251a83-scale-180x180.webp');
 INSERT INTO Leki_view VALUES (NULL, 'Xylometazolin VP, 0.1%, krople do nosa, 10 ml', 'ksylometazolina, krople, alergia, katar', 3, 4.49, 'https://www.doz.pl/apteka/p3023-Xylometazolin_VP_0.1_krople_do_nosa_10_ml', 'https://azcdn.doz.pl/image/d/product/d6f6c22c-scale-180x180.webp');
 INSERT INTO Leki_view VALUES (NULL, 'Acatar Control, 0,5 mg/ml (0,05%), aerozol do nosa, 15 ml', 'oksymetazolina, aerozol, alergia, katar, uczulenie', 4, 14.99, 'https://www.doz.pl/apteka/p7351-Acatar_Control_05_mgml_005_aerozol__do_nosa_15_ml', 'https://azcdn.doz.pl/image/d/product/f26d0182-scale-180x180.webp');
@@ -6308,5 +6308,5 @@ INSERT INTO Leki_view VALUES (NULL, 'Pasta cynkowa 20 g AVENA', 'Pasta cynkowa 2
 
 
 
-SELECT count(nr_leku) FROM Leki_view where ZDJECIE IS NULL;
+SELECT * FROM Leki_view where ROWNUM <100;
 --DELETE Leki_view;

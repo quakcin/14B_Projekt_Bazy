@@ -65,49 +65,23 @@ END;
 
 EXECUTE lekWizUpdate('abd', 'odbyta', 2);
 
-CREATE OR REPLACE PROCEDURE Odwolaj_Wizyte (p_Nr_Wizyty Wizyty.nr_wizyty%TYPE, p_Nr_Osoby Osoby.nr_osoby%TYPE)
+
+CREATE OR REPLACE PROCEDURE OdwolajWizytePac (p_Nr_Wizyty Wizyty.nr_wizyty%TYPE, p_Nr_Osoby Osoby.nr_osoby%TYPE)
 IS
 BEGIN
-DELETE FROM Wizyty WHERE nr_wizyty =  p_Nr_Wizyty AND pacjent_nr = (SELECT Nr_Karty_Pacjenta  FROM Pacjenci WHERE osoba_nr = p_Nr_Osoby);
+UPDATE Wizyty SET Opis='(Odp: Pacjent odwołał wizytę)', Czy_Odbyta = 'Odwołana' 
+WHERE (nr_wizyty =  p_Nr_Wizyty AND pacjent_nr = (SELECT Nr_Karty_Pacjenta  FROM Pacjenci WHERE osoba_nr = p_Nr_Osoby)) AND (Czy_Odbyta = 'Zaplanowana' OR Czy_Odbyta = 'Przeniesiona');
 END;
 /
 
---EXECUTE Odwolaj_Wizyte(2,2);
+EXECUTE OdwolajWizytePac(6,5);
 
-CREATE OR REPLACE FUNCTION pacjent_odwiedziny_fun (nr_pacjenta pacjenci.NR_KARTY_PACJENTA%type)
-RETURN NUMBER
+CREATE OR REPLACE PROCEDURE OdwolajWizyteLek (p_Nr_Wizyty Wizyty.nr_wizyty%TYPE)
 IS
-CURSOR dane IS
-SELECT osoby.imie, osoby.nazwisko, nr_wizyty from wizyty
-    INNER JOIN pacjenci ON  pacjenci.NR_KARTY_PACJENTA=nr_pacjenta
-    INNER JOIN osoby ON osoby.nr_osoby = pacjenci.osoba_nr
-    WHERE pacjent_nr=nr_pacjenta AND czy_odbyta='Odbyta';
-v_odwiedziny NUMBER :=0;
 BEGIN
-FOR rec IN dane LOOP
-v_odwiedziny := v_odwiedziny + 1;
-END LOOP;
-RETURN v_odwiedziny;
+UPDATE Wizyty SET Opis='(Odp: Lekarz odwołał wizytę)', Czy_Odbyta = 'Odwołana' WHERE nr_wizyty =  p_Nr_Wizyty AND (Czy_Odbyta = 'Zaplanowana' OR Czy_Odbyta = 'Przeniesiona');
 END;
 /
---SELECT pacjent_odwiedziny_fun(1) from dual;
 
-CREATE OR REPLACE FUNCTION pacjent_ost_wizyta (nr_pacjenta pacjenci.NR_KARTY_PACJENTA%type)
-RETURN DATE
-IS
-CURSOR dane IS
-SELECT osoby.imie, osoby.nazwisko, nr_wizyty, data_wizyty from wizyty
-    INNER JOIN pacjenci ON  pacjenci.NR_KARTY_PACJENTA=nr_pacjenta
-    INNER JOIN osoby ON osoby.nr_osoby = pacjenci.osoba_nr
-    WHERE pacjent_nr=nr_pacjenta AND czy_odbyta='Odbyta';
-v_max_data DATE := TO_DATE('01/01/1000','DD/MM/YYYY');
-BEGIN
-FOR rec IN dane LOOP
-IF(rec.data_wizyty > v_max_data) THEN
-    v_max_data:=rec.data_wizyty;
-END IF;
-END LOOP;
-RETURN v_max_data;
-END;
-/
---SELECT pacjent_ost_wizyta(1) from dual;
+EXECUTE OdwolajWizyteLek(6);
+
