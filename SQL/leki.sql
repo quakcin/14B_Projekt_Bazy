@@ -1,3 +1,4 @@
+-- Test: Naprawianie Kodowania
 CREATE OR REPLACE VIEW Leki_view AS
 SELECT leki.nr_leku, leki.nazwa_leku, leki.opis, leki.producent_nr, leki_z_apteki.cena, leki_z_apteki.odnosnik, leki_z_apteki.zdjecie FROM LEKI
 INNER JOIN leki_z_apteki ON leki.nr_leku = leki_z_apteki.lek_nr;
