@@ -127,8 +127,16 @@ const invokeEditor = function (name, p_id)
     {
       const wrapper = document.createElement('div');
       const label = document.createElement('div');
-      label.textContent = item.n;
-      wrapper.appendChild(label);      
+
+      if ("l" in item)
+        label.textContent = item.l;
+      else
+        label.textContent = item.n;
+      
+      wrapper.appendChild(label);
+
+      // item.n - name (parm), item.t - type, item.l - label 
+      
       if (item.t == 'select')
       {
         const inp = document.createElement('select');
@@ -388,18 +396,18 @@ const initPacjent = function ()
   );
   // -- Schematy Dla Edytora:
   addScheme("pacKonto", [
-    {n: "imie", t: "text"},
-    {n: "nazwisko", t: "text"},
-    {n: "haslo", t: "password"},
-    {n: "data_uro", t: "date"},
-    {n: "pesel", t: "text"},
-    {n: "telefon", t: "text"},
-    {n: "email", t: "text"},
-    {n: "miasto", t: "text"},
-    {n: "ulica", t: "text"},
-    {n: "nr_domu", t: "text"},
-    {n: "nr_lokalu", t: "text"},
-    {n: "kod_poczt", t: "text"}
+    {n: "imie", l: "Imię", t: "text"},
+    {n: "nazwisko", l: "Nazwisko", t: "text"},
+    {n: "haslo", l: "Hasło", t: "password"},
+    {n: "data_uro", l: "Data urodzenia", t: "date"},
+    {n: "pesel", l: "Pesel", t: "text"},
+    {n: "telefon", l: "Telefon", t: "text"},
+    {n: "email", l: "E-Mail", t: "text"},
+    {n: "miasto", l: "Miasto", t: "text"},
+    {n: "ulica", l: "Ulica", t: "text"},
+    {n: "nr_domu", l: "Numer domu", t: "text"},
+    {n: "nr_lokalu", l: "Numer lokalu / mieszkania", t: "text"},
+    {n: "kod_poczt", l: "Kod pocztowy", t: "text"}
   ],
   [
     {val: "Test", evt: (e) => {
@@ -423,22 +431,22 @@ const initPacjent = function ()
 const initLekarz = function ()
 {
   addScheme("lekKonto", [
-    {n: "imie", t: "text"},
-    {n: "nazwisko", t: "text"},
-    {n: "haslo", t: "password"},
-    {n: "data_uro", t: "date"},
-    {n: "pesel", t: "text"},
-    {n: "telefon", t: "text"},
-    {n: "email", t: "text"},
-    {n: "miasto", t: "text"},
-    {n: "ulica", t: "text"},
-    {n: "nr_domu", t: "text"},
-    {n: "nr_lokalu", t: "text"},
-    {n: "kod_poczt", t: "text"}
+    {n: "imie", l: "Imię", t: "text"},
+    {n: "nazwisko", l: "Nazwisko", t: "text"},
+    {n: "haslo", l: "Hasło", t: "password"},
+    {n: "data_uro", l: "Data urodzenia", t: "date"},
+    {n: "pesel", l: "Pesel", t: "text"},
+    {n: "telefon", l: "Telefon", t: "text"},
+    {n: "email", l: "E-Mail", t: "text"},
+    {n: "miasto", l: "Miasto", t: "text"},
+    {n: "ulica", l: "Ulica", t: "text"},
+    {n: "nr_domu", l: "Numer domu", t: "text"},
+    {n: "nr_lokalu", l: "Numer lokalu / mieszkania", t: "text"},
+    {n: "kod_poczt", l: "Kod pocztowy", t: "text"}
   ]);
   addScheme("lekEdycjaWizyty", [
-    {n: "Zalecenia", t: "text"},
-    {n: "NowyStatus", t: "select", opt: ["Odbyta",  "Zaplanowana", "Odwołana", "Przeniesiona"]}
+    {n: "Zalecenia", l: "Zalecenia", t: "text"},
+    {n: "NowyStatus", l: "Status wizyty", t: "select", opt: ["Odbyta",  "Zaplanowana", "Odwołana", "Przeniesiona"]}
   ], [
     {val: "Dodaj Recepte", evt: (p_id) => {
       alert("TO-DO: Dodaj, dodawanie recept!");
