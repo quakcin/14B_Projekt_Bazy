@@ -10,13 +10,14 @@ Zespół pracujący nad projektem:
 
 | Kategoria | Uzyskane | Wymagane | Status             |
 | :-------: | :------: | :------: | :----------------: |
-| Tabele    | 15       | 12       | :white_check_mark: |
+| Tabele    | 14       | 12       | :white_check_mark: |
 | Triggery  | 7        | 3        | :white_check_mark: |
-| Widoki    | 7        | 6        | :white_check_mark: |
-| Inserty   | 58       | ~180     |                    |
-| Kursory   | 0        | 4        |                    |
-| Sekwencje | 6        |          |                    |
-| Procedury | 3        |          |                    |
+| Widoki    | 8        | 6        | :white_check_mark: |
+| Inserty   | 6262     | ~180     | :white_check_mark: |
+| Kursory   | 4        | 4        | :white_check_mark: |
+| Sekwencje | 7        |          |                    |
+| Procedury | 8        |          |                    |
+| Funkcje   | 1        |          |                    |
 | Planiści  | 1        |          |                    |
 
 
