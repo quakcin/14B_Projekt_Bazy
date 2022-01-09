@@ -3,6 +3,7 @@ body
 	background-color: #0d1117;
 	color:white;
 }
+
 .navbar 
 {
   background-color: #161b22;
@@ -17,6 +18,21 @@ body
 {
 	background-color: #161b22;
 	color: #7b8187;
+}
+.logo
+{
+	width: 40px;
+	height: 40px;
+	margin: auto;
+	border-radius: 50%;
+}
+.logo:hover
+{
+	opacity: 0.9;
+}
+.nav-bar
+{
+
 }
 .wrapper
 {
@@ -53,7 +69,7 @@ input[type=button]:hover
 }
 .content
 {
-	flex: 80%;
+	flex: 85%;
 	background-color: #010409;
 	border-top: 1px solid;
 	border-color: #151920;
@@ -90,3 +106,19 @@ input[type=button]:hover
 {
 	min-width: 100%;
 }
+#serch-wrap
+{
+	border-bottom: 1px solid #30363d;
+}
+.row:nth-child(1)
+{
+	border-top: 1px solid #30363d;
+	border-bottom: 1px solid #30363d;
+}
+.row:not( .row:nth-child(1) )
+{
+	border-bottom: 1px solid #30363d;
+	background-color: #0d1117;
+	
+}
+
