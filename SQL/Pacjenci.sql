@@ -49,3 +49,4 @@ SELECT  osoby.imie, osoby.nazwisko, Konta.haslo, TO_CHAR(osoby.data_urodzenia, '
 SELECT * FROM reqInfo WHERE nr_osoby = 2;
 
 SELECT imie, nazwisko, haslo, "Data", pesel, telefon, email, miasto, ulica, nr_domu, nr_mieszkania, kod_pocztowy FROM reqPacjenci WHERE nr_osoby = 2;
+--DELETE FROM Pacjenci_view WHERE nr_osoby = 5;

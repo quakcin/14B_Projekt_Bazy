@@ -77,6 +77,7 @@ BEGIN
     UPDATE Lekarze SET Ostatnia_Recepta = v_recepta WHERE Osoba_Nr = p_lekarz;
 END;
 /
+
 CREATE OR REPLACE PROCEDURE DodajRecepte_z_Wizyty(p_lekarz wizyty.lekarz_nr%TYPE, p_wizyta wizyty.nr_wizyty%TYPE, p_DataWystawienia recepty.data_wystawienia%TYPE, p_DataWaznosci recepty.data_waznosci%TYPE, p_Zalecenia recepty.zalecenia%type)
 IS
 v_recepta recepty.nr_recepty%TYPE;

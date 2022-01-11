@@ -150,7 +150,7 @@ Data_Wizyty DATE NOT NULL,
 Opis NVARCHAR2(256),
 Czy_Odbyta NVARCHAR2(16) DEFAULT 'Zaplanowana',
 CONSTRAINT Lekarz_fk_Wizyty FOREIGN KEY(Lekarz_Nr) REFERENCES Lekarze(Nr_Lekarza),
-CONSTRAINT Pacjent_fk_Wizyty FOREIGN KEY(Pacjent_Nr) REFERENCES Pacjenci(Nr_Karty_Pacjenta)
+CONSTRAINT Pacjent_fk_Wizyty FOREIGN KEY(Pacjent_Nr) REFERENCES Pacjenci(Nr_Karty_Pacjenta) ON DELETE CASCADE
 );
 
 CREATE OR REPLACE TRIGGER check_dates_trigger
