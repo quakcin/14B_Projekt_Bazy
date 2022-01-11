@@ -91,7 +91,7 @@
 
   //  -- Polaczenie Z Baza
 
-  $db = @oci_connect("system", "root", "localhost/xe");
+  $db = @oci_connect("system", "1234", "localhost/xe");
 
   if (!$db)
     packetThrow((oci_error())['message'], []);
@@ -317,7 +317,30 @@
 
   function upt_dodajRecepte()
   {
-    dbRequire("INSERT INTO Recepty (Wizyta_Nr, Data_Wystawienia, Data_Waznosci, Zalecenia) VALUES (" . $_GET["p_id"] . ", TO_DATE('" . $_GET["poczatek"] . "', 'yyyy-MM-dd'), TO_DATE('" . $_GET["waznosc"] . "', 'yyyy-MM-dd'), '" . $_GET["zalecenia"] . "')");
+    global $retPacket;
+    dbRequire("CALL DodajRecepte_z_Wizyty(" . $retPacket['nrOsoby'] . ", " . $_GET["p_id"] . ", TO_DATE('" . $_GET["poczatek"] . "', 'yyyy-MM-dd'), TO_DATE('" . $_GET["waznosc"] . "', 'yyyy-MM-dd'), '" . $_GET["zalecenia"] . "')");
+  }
+
+  function szukajReceptyLekarza()
+  {
+    global $retPacket;
+    global $retDb;
+
+    $qr = packSearchQuerry($_GET["key"], "Lekarz_Recepty",
+      ["nr_recepty", "nr_wizyty", "zalecenia", "nazwa_leku", "imie", "nazwisko", "data_waznosci"]
+    );
+
+    $qr = str_replace("*", "nr_recepty, Nr_Wizyty, LISTAGG(nazwa_leku, ', ') as \"Nazwa Leku\", zalecenia, Imie, Nazwisko, TO_CHAR(data_waznosci, 'dd/mm/yyyy') as \"Data Waznosci\"", $qr); 
+    $qr .= " AND lekarz_nr = (SELECT Nr_Lekarza FROM lekarze INNER JOIN Osoby ON Lekarze.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = " . $retPacket['nrOsoby'] . ") GROUP BY nr_recepty, nr_wizyty, imie, nazwisko, data_waznosci, zalecenia";
+
+    $retPacket['qr'] = $qr;  
+    $retDb = dbRequire($qr);
+  }
+
+  function zaznaczRecepte()
+  {
+    global $retPacket;
+    dbRequire("CALL ZaznaczRecepte(" . $retPacket['nrOsoby'] . ", " . $_GET["wiz"] . ")");
   }
           
   // -------------------------------------
@@ -329,7 +352,6 @@
     $qr = packSearchQuerry($_GET["key"], "pacjenci_view",
       ["imie", "nazwisko"]
     );
-    $buff = dbRequire($qr);
     global $retDb;
     $retDb = $buff;
   }
@@ -364,7 +386,7 @@
   }
 
   // Perm: Pacjenci
-  function szukajRecepty ()
+  function szukajReceptyPacjenta ()
   {
     global $retPacket;
     global $retDb;
@@ -377,6 +399,12 @@
   
     $retPacket['qr'] = $qr;
     $retDb = dbRequire($qr);
+  }
+
+  function pacjentUsunKonto()
+  {
+    global $retPacket;
+    dbRequire("delete from Pacjenci_view where nr_osoby = " . $retPacket['nrOsoby']);
   }
 
   // -------------------------------------
@@ -444,19 +472,19 @@
     new Command("odwolajWizyte", "odwolajWizyteLekarze", "lekarz", ["nrwiz"]),      
     new Command("req_dodajRecepte", "req_dodajRecepte", "lekarz", ["p_id"]),
     new Command("upt_dodajRecepte", "upt_dodajRecepte", "lekarz", ["p_id", "poczatek", "waznosc", "zalecenia"]),  
-
+    new Command("dodajWizyte", "dodajWizyte", "pacjent", ["lekarz", "time", "opis"]),    
+    new Command("szukajPacjentow", "szukajPacjentow", "lekarz", ["key"]),
+    new Command("szukajRecept", "szukajReceptyLekarza", "lekarz", ["key"]),  
+    new Command("zaznaczRecepte", "zaznaczRecepte", "lekarz", ["wiz"]),  
   
     // Perm: Pacjencji
     new Command("szukajWizyty", "szukajWizytyPacjent", "pacjent", ["key"]),
     new Command("odwolajWizyte", "odwolajWizytePacjent", "pacjent", ["nrwiz"]),
-    new Command("szukajRecepty", "szukajRecepty", "pacjent", ["key"]),
-
-    // -- Wizyty:
+    new Command("szukajRecepty", "szukajReceptyPacjenta", "pacjent", ["key"]),
     new Command("rodzajeLekarzy", "rodzajeLekarzy", "pacjent", []),
     new Command("dostepniLekarze", "dostepniLekarze", "pacjent", ["spec"]),
     new Command("czyLekarzDostepny", "czyLekarzDostepny", "pacjent", ["lekarz", "time"]),    
-    new Command("dodajWizyte", "dodajWizyte", "pacjent", ["lekarz", "time", "opis"]),    
-    new Command("szukajPacjentow", "szukajPacjentow", "lekarz", ["key"]),
+    new Command("pacjentUsunKonto", "pacjentUsunKonto", "pacjent", []),    
 
     // -- Logowanie:  
     new Command("dropSess", "wylogowywanie", "pacjent", []),

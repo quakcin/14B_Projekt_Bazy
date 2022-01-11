@@ -461,7 +461,16 @@ const initPacjent = function ()
   ],
   [
     {val: "Usuń Konto", evt: (e) => {
-      alert("TO-DO");
+      const sec = parseInt(Math.random() * 999) % 888 + 111;
+      if (sec == prompt(`Wpisz ${sec} aby usnąć konto!`))
+        dbReq((e) => {
+          if (e.success == false)
+            alert("Nie udało się usunąć konta!");
+          else
+            window.location.href = './index';
+        }, "pacjentUsunKonto");
+      else
+        alert("Kod się nie zgadza!");
     }}
   ] 
   );
@@ -547,19 +556,25 @@ const initLekarz = function ()
       }
     }
   );
-  addResult("recLekarze", "zaznaczRecepte",
+  addResult("recLekarze", "szukajRecept",
     [
       {n: "Numer", s: 70},
+      {n: "Wizyta", s: 70},
+      {n: "Lek / Leki", s: 200},
+      {n: "Zalecenia", s: 200},            
       {n: "Imie", s: 120},
       {n: "Nazwisko", s: 120},
-      {n: "Data Urodzenia", s: 180},
-      {n: "Ostatnia Wizyta", s: 180},      
+      {n: "Data Waznosci", s: 180},      
     ],
     {
       name: "Zaznacz",
       action: (e) =>
       {
-        console.log("ZAZNACZANIE RECEPTY, Przenoszenie do apteki... TO-DO", e);
+        const wiz = uncomplexResult(e.target)[1];
+        dbReq((e) => {
+          if (e.success == false)
+            alert("Nie Udało się zaznaczyć wizyty!");
+        }, "zaznaczRecepte", ["wiz", wiz]);
       }
     }
   );
