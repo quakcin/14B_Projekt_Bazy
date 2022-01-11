@@ -22,7 +22,7 @@ WHEN INSERTING THEN
     INSERT INTO Kontakty VALUES (KONTAKTY_SEQUENCE.NEXTVAL, :NEW.Telefon, :NEW.Email);
     INSERT INTO Osoby VALUES (OSOBY_SEQUENCE.NEXTVAL, :NEW.Nazwisko, :NEW.Imie, :NEW.Data_Urodzenia, :NEW.PESEL, ADRESY_SEQUENCE.currval, KONTAKTY_SEQUENCE.currval);
     SELECT Nr_Specjalizacji INTO v_Nr_Specjalizacji FROM Specjalizacje WHERE nazwa_specjalizacji=:NEW.nazwa_specjalizacji;
-    INSERT INTO Lekarze VALUES (Lekarze_sequence.NEXTVAL, OSOBY_SEQUENCE.currval, v_nr_specjalizacji);
+    INSERT INTO Lekarze VALUES (Lekarze_sequence.NEXTVAL, OSOBY_SEQUENCE.currval, v_nr_specjalizacji, NULL);
     INSERT INTO Konta VALUES (KONTA_SEQUENCE.NEXTVAL, :NEW.Login, :NEW.Haslo, 'lekarz', OSOBY_SEQUENCE.CURRVAL);
 WHEN UPDATING THEN
     UPDATE Adresy SET Miasto = :NEW.Miasto, Ulica = :NEW.Ulica, Nr_Domu = :NEW.Nr_Domu, Nr_Mieszkania = :NEW.Nr_Mieszkania, Kod_Pocztowy = :NEW.Kod_Pocztowy WHERE Nr_Adresu = (SELECT Adres_Nr FROM Osoby WHERE Nr_Osoby = :NEW.Nr_Osoby);
@@ -67,3 +67,22 @@ INNER JOIN (SELECT pacjent_Nr, MAX(data_wizyty) as "Ostatnia" FROM Wizyty WHERE 
 GROUP BY pacjenci.nr_karty_pacjenta, osoby.imie, osoby.nazwisko, osoby.data_urodzenia, "tab"."Ostatnia", wizyty.lekarz_nr;
 
 SELECT nr_karty_pacjenta, imie, nazwisko, TO_CHAR(data_urodzenia, 'dd.mm.yyyy'), TO_CHAR("Ostatnia", 'dd.mm.yyyy HH24:mi') FROM pacjentLekarzaInfo WHERE lekarz_nr = 2;
+
+
+CREATE OR REPLACE PROCEDURE ZaznaczRecepte(p_lekarz wizyty.lekarz_nr%TYPE, p_Wizyta wizyty.nr_wizyty%TYPE)
+IS
+v_recepta recepty.nr_recepty%TYPE;
+BEGIN
+    SELECT Nr_Recepty INTO v_recepta FROM Recepty WHERE wizyta_nr = p_wizyta;
+    UPDATE Lekarze SET Ostatnia_Recepta = v_recepta WHERE Osoba_Nr = p_lekarz;
+END;
+/
+CREATE OR REPLACE PROCEDURE DodajRecepte_z_Wizyty(p_lekarz wizyty.lekarz_nr%TYPE, p_wizyta wizyty.nr_wizyty%TYPE, p_DataWystawienia recepty.data_wystawienia%TYPE, p_DataWaznosci recepty.data_waznosci%TYPE, p_Zalecenia recepty.zalecenia%type)
+IS
+v_recepta recepty.nr_recepty%TYPE;
+BEGIN
+    INSERT INTO Recepty (Wizyta_Nr, Data_Wystawienia, Data_Waznosci, Zalecenia) VALUES (p_wizyta, p_DataWystawienia, p_DataWaznosci, p_Zalecenia);
+    SELECT Nr_Recepty INTO v_recepta FROM Recepty WHERE wizyta_nr = p_wizyta;
+    UPDATE Lekarze SET Ostatnia_Recepta = v_recepta WHERE Osoba_Nr = p_lekarz;
+END;
+/
