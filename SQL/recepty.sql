@@ -17,7 +17,4 @@ INNER JOIN Osoby ON osoby.nr_osoby = lekarze.osoba_nr;
 
 /*SELECT * FROM Pacjent_Recepty WHERE pacjent_nr = (SELECT NR_KARTY_PACJENTA FROM Pacjenci INNER JOIN Osoby ON pacjenci.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = 2);*/
 
-
-
-SELECT TO_CHAR(SYSDATE, 'yyyy-MM-dd') , TO_CHAR(SYSDATE+30, 'yyyy-MM-dd'), '' FROM DUAL; 
- 
+/*SELECT TO_CHAR(SYSDATE, 'yyyy-MM-dd') , TO_CHAR(SYSDATE+30, 'yyyy-MM-dd'), '' FROM DUAL; */
