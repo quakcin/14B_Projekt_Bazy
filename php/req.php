@@ -362,7 +362,7 @@
     global $retPacket;
     global $retDb;
     $qr = packSearchQuerry($_GET["key"], "pacjent_wizyty",
-      ["imie", "nazwisko", "nazwa_specjalizacji", '"Data_Wizyty"', "nr_wizyty"]
+      ["imie", "nazwisko", "nazwa_specjalizacji", '"Data_Wizyty"', "nr_wizyty", "opis", "czy_odbyta"]
     );
 
     $qr .= " AND pacjent_nr = (SELECT NR_KARTY_PACJENTA FROM Pacjenci INNER JOIN Osoby ON pacjenci.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = " . $retPacket['nrOsoby'] . ")";

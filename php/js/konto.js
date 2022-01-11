@@ -583,7 +583,9 @@ const initLekarz = function ()
     {n: "waznosc", l: "Ważna do", t: "date"},
     {n: "zalecenia", l: "Zalecenia / Dawkowanie", t: "text"}
   ], [/* Bez Dodatkowych Przycisków */], (e) => {
-    alert("Dodano Recepte, TO-DO!");
+    // -- Recepte dodaje edytor przez upt_dodajRecepte
+    //    Ta funkcja obsluguje to co sie ma stać potem.
+    alert("Dodano Recepte, Teraz zrób coś!");
   });
   addPanel("Strona Glowna", "n/a", P_HOMEPAGE);
   addPanel("Moje Konto", "lekKonto", P_EDIT);
