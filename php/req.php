@@ -309,7 +309,17 @@
     dbRequire("CALL OdwolajWizyteLek(" . $nrWizyty . ")");
   }
 
-        
+  function req_dodajRecepte()
+  {
+    global $retDb;
+    $retDb = dbRequire("SELECT TO_CHAR(SYSDATE, 'yyyy-MM-dd'), TO_CHAR(SYSDATE+30, 'yyyy-MM-dd'), '' FROM DUAL");
+  }
+
+  function upt_dodajRecepte()
+  {
+    dbRequire("INSERT INTO Recepty (Wizyta_Nr, Data_Wystawienia, Data_Waznosci, Zalecenia) VALUES (" . $_GET["p_id"] . ", TO_DATE('" . $_GET["poczatek"] . "', 'yyyy-MM-dd'), TO_DATE('" . $_GET["waznosc"] . "', 'yyyy-MM-dd'), '" . $_GET["zalecenia"] . "')");
+  }
+          
   // -------------------------------------
   // -- Tylko Panel Pacjenta:
   // -------------------------------------
@@ -353,21 +363,17 @@
     $retDb = dbRequire("SELECT Nazwa_Specjalizacji FROM Specjalizacje");
   }
 
-  // -------------------------------------
-  // -- Recepty:
-  // -------------------------------------
-
   // Perm: Pacjenci
   function szukajRecepty ()
   {
     global $retPacket;
     global $retDb;
     $qr = packSearchQuerry($_GET["key"], "pacjent_recepty",
-      ["nr_recepty", "nr_wizyty", "nazwa_leku", "imie", "nazwisko", "data_waznosci"]
+      ["nr_recepty", "nr_wizyty", "nazwa_leku", "zalecenia", "imie", "nazwisko", "data_waznosci"]
     );
-    $qr .= " AND pacjent_nr = (SELECT NR_KARTY_PACJENTA FROM Pacjenci INNER JOIN Osoby ON pacjenci.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = " . $retPacket['nrOsoby'] . ") GROUP BY nr_recepty, nr_wizyty, imie, nazwisko, data_waznosci";
+    $qr .= " AND pacjent_nr = (SELECT NR_KARTY_PACJENTA FROM Pacjenci INNER JOIN Osoby ON pacjenci.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = " . $retPacket['nrOsoby'] . ") GROUP BY nr_recepty, nr_wizyty, zalecenia, imie, nazwisko, data_waznosci";
 
-    $qr = str_replace("*", "nr_recepty, nr_wizyty, LISTAGG(nazwa_leku,', ') AS \"Nazwa Leku\" , Imie, nazwisko, TO_CHAR(data_waznosci, 'dd/mm/yyyy') AS \"Data Waznosci\"", $qr);
+    $qr = str_replace("*", "nr_recepty, nr_wizyty, LISTAGG(nazwa_leku,', ') AS \"Nazwa Leku\" , zalecenia, Imie, nazwisko, TO_CHAR(data_waznosci, 'dd/mm/yyyy') AS \"Data Waznosci\"", $qr);
   
     $retPacket['qr'] = $qr;
     $retDb = dbRequire($qr);
@@ -436,7 +442,10 @@
     new Command("req_lekEdycjaWizyty", "req_lekEdycjaWizyty", "lekarz", ["p_id"]),
     new Command("upt_lekEdycjaWizyty", "upt_lekEdycjaWizyty", "lekarz", ["p_id", "Zalecenia", "NowyStatus"]),    
     new Command("odwolajWizyte", "odwolajWizyteLekarze", "lekarz", ["nrwiz"]),      
+    new Command("req_dodajRecepte", "req_dodajRecepte", "lekarz", ["p_id"]),
+    new Command("upt_dodajRecepte", "upt_dodajRecepte", "lekarz", ["p_id", "poczatek", "waznosc", "zalecenia"]),  
 
+  
     // Perm: Pacjencji
     new Command("szukajWizyty", "szukajWizytyPacjent", "pacjent", ["key"]),
     new Command("odwolajWizyte", "odwolajWizytePacjent", "pacjent", ["nrwiz"]),

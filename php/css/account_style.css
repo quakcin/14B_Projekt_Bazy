@@ -76,7 +76,8 @@ input[type=button]:hover
 }
 .content input[type=button]
 {
-	max-width: 8%;
+  /* Psuje Przyciski, Trzeba Rodzelic na pod klase  */
+	----max-width: 8%;
 	height: 35px;
 }
 .content input[type=text]

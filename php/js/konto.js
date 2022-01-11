@@ -20,7 +20,6 @@ let G_PERSON_ID = null;
 // -- Init: Schematy Bazy:
 const cSchemes = []; // -- dla edytora
 const cResults = []; // -- dla szukajki
-const cInserts = []; // -- dla insertera
 
 // -- Edytor pobiera dane z serwera za pomocą funkcji `req_${name}`
 //    i aktualizuje je za pomocą `upt_${name}`. Rendereuje je w
@@ -36,13 +35,14 @@ const cInserts = []; // -- dla insertera
 //    Wciśnięcie przyciska wywoła podaną funkcję z parametrem
 //    p_id z jakim panel został wywołany.
 
-const addScheme = function (name, title, schemes, buttons = [])
+const addScheme = function (name, title, schemes, buttons = [], proxy = null)
 {
   cSchemes.push({
     name: name,
     title: title,
     schemes: schemes,
-    buttons: buttons
+    buttons: buttons,
+    proxy: proxy
   });
 }
 
@@ -62,26 +62,6 @@ const addResult = function (name, sCommand, fields, action = null)
     sCommand: sCommand,
     fields: fields,
     action: action
-  });
-}
-
-// -- Inserter wywoluje funkcje po stronie serwera: ins_${name}
-//    jako parametry przekazuje wartosci z forma wygenerowanego
-//    przy pomocy tablic fields
-//
-//    Struktura obiektów tablicy fields:
-//    {n: NazwaPola, l: Label, t: Typ}
-//
-//     Wywoluje succ lub err, zaleznie od rezultatu dzialania.
-
-const addInsertion = function (name, title, fields, succ, err)
-{
-  cInserts.push({
-    name: name,
-    title: title,
-    fields: fields,
-    succ: succ,
-    err: err
   });
 }
 
@@ -106,21 +86,12 @@ const findResultScheme = function (name)
   return null;
 }
 
-const findInsertionScheme = function (name)
-{
-  for (let res of cInserts)
-    if (res.name == name)
-      return res;
-  return null;
-}
-
 // --------------------------------------------------
 // -- Definicje rodzajów paneli
 // --------------------------------------------------
 
 const P_EDIT     = 'db-edit';         // -- Edytor Danych
 const P_SEARCH   = 'db-search';       // -- Wyszukiwarka
-const P_INSERTER = 'db-insert';       // -- Dodawanie Danych
 const P_LOGOUT   = 'other-log-out';   // -- Wylogowywanie
 const P_HOMEPAGE = 'other-home';      // -- Strona Główna
 const cPanels    = [];
@@ -143,7 +114,10 @@ const editorCommit = function (e, p_id)
     console.log(e);
     if (e.success)
     {
-      alert("Dokonano Zmian!");
+      if (scheme.proxy)
+        scheme.proxy(e);
+      else
+        alert("Dokonano Zmian!");
       return;
     }
     console.log(e);
@@ -155,57 +129,6 @@ const editorCommit = function (e, p_id)
 // --------------------------------------------------
 // -- Wywołania Paneli
 // --------------------------------------------------
-
-const invokeInserter = function (name, p_id)
-{
-  const self = document.getElementById("db-insert");
-  const scheme = findInsertionScheme(name);
-
-  while (self.firstChild)
-    self.removeChild(self.lastChild);
-  
-  const title = document.createElement('div');
-  title.setAttribute('class', 'db-form-title');
-  title.innerText = scheme.title;
-  self.appendChild(title);
-  
-  for (let field of scheme.fields)
-  {
-    const label = document.createElement('div');
-    label.innerText = field.l;
-    self.appendChild(label);
-    
-    const item = document.createElement('input');
-    item.setAttribute('type', field.t);
-    item.setAttribute('data-name', field.n);
-    item.setAttribute('class', 'db-insert-field');
-    if ('d' in field)
-      item.value = field.d;
-    self.appendChild(item);
-  }
-
-  const btn = document.createElement('input');
-  btn.setAttribute('type', 'button');
-  btn.setAttribute('value', 'Dodaj');
-  self.appendChild(btn);  
-  btn.onclick = (e) => {
-    let parms = [];
-    for (let itm of document.getElementsByClassName("db-insert-field"))
-    {
-      parms.push(itm.dataset['name']);
-      parms.push(itm.value);
-    }
-    parms.push('p_id');
-    parms.push(p_id);
-    dbReq((e) => {
-      if (e.success)
-        scheme.succ(e);
-      else
-        scheme.err(e);
-    }, `ins_${scheme.name}`, parms);
-  };
-  
-}
 
 const invokeSearch = function (name, p_id)
 {
@@ -340,8 +263,6 @@ const menuAction = function (sender)
     invokeEditor(name, G_PERSON_ID);
   else if (type == P_SEARCH)
     invokeSearch(name, G_PERSON_ID);
-  else if (type == P_INSERTER)
-    invokeInserter(name, G_PERSON_ID);
   else if (type == P_LOGOUT)
     dbDropSession();
   else if (type == P_HOMEPAGE)
@@ -372,7 +293,8 @@ const renderCalcRowWidth = function (resScheme)
   let finWidth = 0;
   for (let field of resScheme.fields)
     finWidth += field.s;
-  finWidth += (resScheme.fields.length - 1) * 15;
+  finWidth += (resScheme.fields.length - 1) * 30;
+  return finWidth;
 }
 
 const renderSearchResult = function (dbRow, resScheme, index)
@@ -503,7 +425,8 @@ const initPacjent = function ()
     [
       {n: 'Nr Recepty', s: 110},
       {n: 'Wizyta', s: 80},
-      {n: 'Nazwa Leku', s: 200},
+      {n: 'Lek / Leki', s: 200},
+      {n: 'Zalecenia', s: 200},      
       {n: 'Imie', s: 130},
       {n: 'Nazwisko', s: 130},
       {n: 'Data Waznosci', s: 150}
@@ -537,8 +460,8 @@ const initPacjent = function ()
     {n: "kod_poczt", l: "Kod pocztowy", t: "text"}
   ],
   [
-    {val: "Test", evt: (e) => {
-      console.log(e);
+    {val: "Usuń Konto", evt: (e) => {
+      alert("TO-DO");
     }}
   ] 
   );
@@ -552,18 +475,22 @@ const initPacjent = function ()
 
 
 // ---------------------------------------------------------------
+// -- Tworzenie Dashboarda dla: Admina
+// ---------------------------------------------------------------
+
+
+const initAdmin = function ()
+{
+  // abba fatima
+}
+
+
+// ---------------------------------------------------------------
 // -- Tworzenie Dashboarda dla: Lekarza
 // ---------------------------------------------------------------
 
 const initLekarz = function ()
 {
-  addInsertion("dodajRecepte", "Tworzenie nowej recepty", [
-    {n: "expr", l: "Data Ważności", t: "date"}
-  ], (e) => {
-    alert("Pomyslnie dodano nowa recepte!");
-  }, (e) => {
-    alert(`Nie udalo sie dodac recepty: ${e.err}`);
-  });  
   addScheme("lekKonto", "Moje Konto", [
     {n: "imie", l: "Imię", t: "text"},
     {n: "nazwisko", l: "Nazwisko", t: "text"},
@@ -584,8 +511,8 @@ const initLekarz = function ()
   ], [
     {val: "Dodaj Recepte", evt: (p_id) => {
       // alert("TO-DO: Dodaj, dodawanie recept!");
-      hideAllPanelsExcept(P_INSERTER);
-      invokeInserter("dodajRecepte", p_id);
+      hideAllPanelsExcept(P_EDIT);
+      invokeEditor("dodajRecepte", p_id);
     }},
     {val: "Odwolaj", evt: (p_id) => {
       dbReq((e) => {
@@ -631,12 +558,18 @@ const initLekarz = function ()
         console.log("PODGLAD", e);
       }
     }
-  );  
+  );
+  addScheme("dodajRecepte", "Dodaj Recepte Do Wizyty", [
+    {n: "poczatek", l: "Ważna od", t: "date"},
+    {n: "waznosc", l: "Ważna do", t: "date"},
+    {n: "zalecenia", l: "Zalecenia / Dawkowanie", t: "text"}
+  ], [], (e) => {
+    alert("Dodano Recepte, TO-DO!");
+  });
   addPanel("Strona Glowna", "n/a", P_HOMEPAGE);
   addPanel("Moje Konto", "lekKonto", P_EDIT);
   addPanel("Moje Wizyty", "lekWizyty", P_SEARCH);
   addPanel("Moi Pacjenci", "lekPacjenci", P_SEARCH);
-  addPanel("[T] Dodaj Recepte", "dodajRecepte", P_INSERTER);
   addPanel("Wyloguj", "n/a", P_LOGOUT);
 }
 
