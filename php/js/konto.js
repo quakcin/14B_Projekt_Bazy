@@ -473,18 +473,6 @@ const initPacjent = function ()
   addPanel("Wyloguj", "n/a", P_LOGOUT);
 }
 
-
-// ---------------------------------------------------------------
-// -- Tworzenie Dashboarda dla: Admina
-// ---------------------------------------------------------------
-
-
-const initAdmin = function ()
-{
-  // abba fatima
-}
-
-
 // ---------------------------------------------------------------
 // -- Tworzenie Dashboarda dla: Lekarza
 // ---------------------------------------------------------------
@@ -559,24 +547,51 @@ const initLekarz = function ()
       }
     }
   );
+  addResult("recLekarze", "zaznaczRecepte",
+    [
+      {n: "Numer", s: 70},
+      {n: "Imie", s: 120},
+      {n: "Nazwisko", s: 120},
+      {n: "Data Urodzenia", s: 180},
+      {n: "Ostatnia Wizyta", s: 180},      
+    ],
+    {
+      name: "Zaznacz",
+      action: (e) =>
+      {
+        console.log("ZAZNACZANIE RECEPTY, Przenoszenie do apteki... TO-DO", e);
+      }
+    }
+  );
   addScheme("dodajRecepte", "Dodaj Recepte Do Wizyty", [
     {n: "poczatek", l: "Ważna od", t: "date"},
     {n: "waznosc", l: "Ważna do", t: "date"},
     {n: "zalecenia", l: "Zalecenia / Dawkowanie", t: "text"}
-  ], [], (e) => {
+  ], [/* Bez Dodatkowych Przycisków */], (e) => {
     alert("Dodano Recepte, TO-DO!");
   });
   addPanel("Strona Glowna", "n/a", P_HOMEPAGE);
   addPanel("Moje Konto", "lekKonto", P_EDIT);
   addPanel("Moje Wizyty", "lekWizyty", P_SEARCH);
+  addPanel("Moje Recepty", "recLekarze", P_SEARCH);    
   addPanel("Moi Pacjenci", "lekPacjenci", P_SEARCH);
   addPanel("Wyloguj", "n/a", P_LOGOUT);
+}
+
+
+// ---------------------------------------------------------------
+// -- Tworzenie Dashboarda dla: Admina
+// ---------------------------------------------------------------
+
+
+const initAdmin = function ()
+{
+  // TO-DO
 }
 
 // ---------------------------------------------------------------
 // -- Decyzja jak wyrenderowac strone
 // ---------------------------------------------------------------
-
 
 document.body.onload = (e) => {
   dbReq((e) => {

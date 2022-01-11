@@ -7,7 +7,7 @@
 
   
 ### Panel Lekarza
-- [ ] Zaznaczanie recept
+- [ ] Zaznaczanie recept !w trakcie
 - [ ] Usuwanie konta
 - [ ] Funkcjonalność przycisków w szukajce pacjentów
 
