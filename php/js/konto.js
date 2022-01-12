@@ -164,14 +164,30 @@ const invokeEditor = function (name, p_id)
     title.innerText = findScheme(name).title;
     self.appendChild(title);
     
+	// - Column div
+	const fCol = document.createElement('div');
+	fCol.setAttribute('class', 'first-column');
+	const sCol = document.createElement('div');
+	sCol.setAttribute('class', 'second-column');
+	
+	// - low button div
+	const dButton = document.createElement('div');
+	dButton.setAttribute('class', 'button-column');
+	
+	self.appendChild(fCol);
+	self.appendChild(sCol);
+	self.appendChild(dButton);
+	
     // -- fields
     
     let dbIter = 0;
+	let counter = 0;
     for (let item of scheme)
     {
       const wrapper = document.createElement('div');
       const label = document.createElement('div');
-
+	
+	  
       if ("l" in item)
         label.textContent = item.l;
       else
@@ -203,15 +219,19 @@ const invokeEditor = function (name, p_id)
         inp.setAttribute('value', e.db[0][dbIter++]);
         wrapper.appendChild(inp);
       } 
-      self.appendChild(wrapper);     
+	  
+	  if(counter < 7)
+		fCol.appendChild(wrapper);    
+	  else 
+		sCol.appendChild(wrapper);
+	  counter++;
     }
-
     // -- Przycisk do zatwierdzenia zmian!
     const fin = document.createElement('input');
     fin.setAttribute('type', 'button');
     fin.setAttribute('value', 'Zapisz');
     fin.setAttribute('data-name', name);
-    self.appendChild(fin);
+    dButton.appendChild(fin);
     
     fin.onclick = (e) => {
       editorCommit(e.target, p_id);
@@ -223,7 +243,7 @@ const invokeEditor = function (name, p_id)
       const bt = document.createElement('input');
       bt.setAttribute('type', 'button');
       bt.setAttribute('value', btn.val);
-      self.appendChild(bt);
+      dButton.appendChild(bt);
       bt.onclick = (e) => {
         btn.evt(p_id);
       };

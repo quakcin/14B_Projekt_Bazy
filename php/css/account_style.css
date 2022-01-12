@@ -62,6 +62,19 @@ input[type=button]
     border-radius:10px;
 	cursor:pointer;
 }
+input[type=password]
+{
+	width:45%;
+	height: 35px;
+	background-color:#0d1117;
+	color: white;
+	border: 1px;
+	border-style: solid;
+	border-color: #30363d;
+	
+    border-radius:10px;
+	cursor:pointer;
+}
 input[type=button]:hover
 {
 	background-color:#161b22;
@@ -103,9 +116,37 @@ input[type=button]:hover
     box-shadow: 0px 0px 5px 5px #0c2d6b;
 }
 
+#form_data_uro
+{
+	padding:10px;
+	border:none;
+	background-color:#0d1117;
+	color: white;
+	border: 1px;
+	border-style: solid;
+	border-color: #30363d;
+	padding:10px;
+    border-radius:10px;
+}
+#form_data_uro:active, #form_data_uro:hover, input[type=password]:focus
+{
+	border-color: #1f6feb;
+    outline: none;
+    box-shadow: 0px 0px 5px 5px #0c2d6b;
+}
+
+::-webkit-calendar-picker-indicator 
+{
+	background-color: white; 
+	border-radius: 5px;
+}
 #search-results input[type=button]
 {
 	min-width: 100%;
+}
+#serch-wrap  input[type=button]
+{
+	max-width: 20%;
 }
 #serch-wrap
 {
@@ -121,5 +162,60 @@ input[type=button]:hover
 	border-bottom: 1px solid #30363d;
 	background-color: #0d1117;
 	
+}
+.db-panel
+{
+	min-width: 100%;
+}
+
+.first-column
+{
+	display: table-cell;
+	width: 40%;
+	top: 0%;
+	
+}
+.second-column
+{
+	display: table-cell;
+	width: 40%;
+	
+}
+.button-column
+{	
+	display: flex;
+	top: 0%;
+	justify-content: space-between;
+	width: 170px;
+	height: 100px;
+}
+.button-column input[type=button]
+{
+	width: 70px;
+}
+
+.button-column input[type=button]:nth-child(1)
+{
+	background-color: #238636;
+	color: white;
+}
+
+.button-column input[type=button]:nth-child(1):hover
+{
+	background-color: #2cab45;
+	color: white;
+}
+
+.button-column input[type=button]:nth-child(2)
+{
+	width: 90px;
+	background-color: #a81818;
+}
+
+.button-column input[type=button]:nth-child(2):hover
+{
+	background-color: #e02828;
+	color: white;
+	border-color: #4a515c;
 }
 

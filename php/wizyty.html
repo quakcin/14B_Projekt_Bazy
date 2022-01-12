@@ -8,9 +8,23 @@
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <title> PRZYCHODNIA | WIZYTY </title>
     <meta charset="UTF-8">
+	<link rel="stylesheet" href="./css/m_style.css">
 	<link rel="stylesheet" href="./css/wiz_style.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   </head>
   <body>
+	<div class="navbar">
+		<a href="index.html">
+				<img class="logo" src="./data/img/samples/logo.png"  alt="logo" />
+			</a>
+		<div class="nav-bar">
+			<a href="konto">Moje Konto</a> 
+			<a href="wizyty"> Umuw sie na wizyte </a>
+			<a href="informator"> Informacje o Pacjencie / Lekarzu </a>
+			<a href="apteka"> Apteka </a>
+		</div>
+        
+    </div>
     <!-- Wykonwyane w klatkach/scenach -->
     <div id="div-form">
       <div id="form-description"></div>
@@ -43,6 +57,8 @@
         <input type="button" id="form-continue" value="Dalej">        
       </div>
     </div>
+
+	
     <script src="./js/api.js"></script>
     <script>    
       const stages = [{}];
@@ -222,5 +238,24 @@
       }
       
     </script>
+		<!-- /Minimalna data -->
+	<script>
+		$(function()
+		{
+			var dtToday = new Date();
+			
+			var month = dtToday.getMonth() + 1;
+			var day = dtToday.getDate();
+			var year = dtToday.getFullYear();
+			if(month < 10)
+				month = '0' + month.toString();
+			if(day < 10)
+				day = '0' + day.toString();
+			
+			var minDate= year + '-' + month + '-' + day;
+			
+			$('#meet-date').attr('min', minDate);
+		});
+	</script>
   </body>
 </html>
