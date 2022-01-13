@@ -408,6 +408,131 @@
   }
 
   // -------------------------------------
+  // -- Panel: Administratora
+  // -------------------------------------
+  
+
+  function adm_szukaj_lekarzy ()
+  {
+    global $retPacket;
+    global $retDb;
+
+    $qr = packSearchQuerry($_GET["key"], "Lekarze_view",
+      ["login", "imie", "nazwisko", "nazwa_specjalizacji", "pesel", "nr_lekarza"]
+    );  
+    $qr = str_replace("*", "login, imie, nazwisko, nazwa_specjalizacji, pesel, nr_lekarza", $qr);
+  
+    $retDb = dbRequire($qr);
+  }
+
+  function adm_szukaj_pacjentow ()
+  {
+    global $retPacket;
+    global $retDb;
+
+    $qr = packSearchQuerry($_GET["key"], "AdminView_Pacjent",
+      ["login", "imie", "nazwisko", "data_urodzenia", "pesel", "nr_karty_pacjenta"]
+    );  
+    $qr = str_replace("*", "login, imie, nazwisko, pesel, data_urodzenia, nr_karty_pacjenta", $qr);
+  
+    $retDb = dbRequire($qr);
+  }
+
+  function adm_szukaj_adminow ()
+  {
+    global $retPacket;
+    global $retDb;
+
+    $qr = packSearchQuerry($_GET["key"], "AdminView_Admin",
+      ["login", "imie", "nazwisko", "email", "nr_osoby"]
+    );
+  
+    $retDb = dbRequire($qr);
+  }
+
+  function adm_szukaj_wizyt ()
+  {
+    global $retPacket;
+    global $retDb;
+
+    $qr = packSearchQuerry($_GET["key"], "AdminView_Wizyta",
+      ["nr_wizyty", "\"Data_Wizyty\"", "opis", "czy_odbyta", "lekarz_nr",
+       "\"Imie lekarza\"", "\"Nazwisko lekarza\"", "nazwa_specjalizacji",
+       "pacjent_nr", "\"Imie pacjenta\"", "\"Nazwisko pacjenta\""
+      ]
+    );
+  
+    $retDb = dbRequire($qr);  
+  } 
+
+  function adm_szukaj_producentow ()
+  {
+    global $retPacket;
+    global $retDb;
+
+    $qr = packSearchQuerry($_GET["key"], "Producenci_Lekow_view",
+      ["nr_producenta", "nazwa_producenta", "email", "telefon"]
+    );  
+    $qr = str_replace("*", "nr_producenta, nazwa_producenta, email,  telefon", $qr);
+  
+    $retDb = dbRequire($qr);
+  }
+
+
+  function adm_szukaj_specjalizacji ()
+  {
+    global $retPacket;
+    global $retDb;
+
+    $qr = packSearchQuerry($_GET["key"], "AdminView_Specjalizacje",
+      ["nazwa_specjalizacji"]
+    );  
+  
+    $retDb = dbRequire($qr);
+  }
+
+  function adm_req_lekarz ()
+  {
+    global $retDb;
+    $retDb = dbRequire("SELECT imie, nazwisko, TO_CHAR(data_urodzenia, 'yyyy-MM-dd'), pesel, telefon, email, miasto, ulica, nr_domu, nr_mieszkania, kod_pocztowy, nazwa_specjalizacji FROM Lekarze_view WHERE Nr_lekarza = " . $_GET["p_id"]);
+  }
+
+  function adm_req_pacjent ()
+  {
+    global $retDb;
+    $retDb = dbRequire("SELECT imie, nazwisko, TO_CHAR(data_urodzenia, 'yyyy-MM-dd'), pesel, telefon, email, miasto, ulica, nr_domu, nr_mieszkania, kod_pocztowy FROM Pacjenci_view WHERE Nr_osoby = (SELECT Osoba_Nr FROM Pacjenci WHERE Nr_Karty_Pacjenta = " . $_GET["p_id"] . ")");
+  }
+
+  function adm_req_producent ()
+  {
+    global $retDb;
+    $retDb = dbRequire("SELECT nazwa_producenta, telefon, email, miasto, ulica, nr_domu, nr_mieszkania, kod_pocztowy FROM Producenci_Lekow_view WHERE nr_producenta = " . $_GET["p_id"]);
+  }
+
+  function adm_req_specjalizacja ()
+  {
+    global $retDb;
+    $retDb = dbRequire("SELECT nazwa_specjalizacji, opis FROM AdminView_Specjalizacje WHERE nazwa_specjalizacji = '" . $_GET["p_id"] . "'");
+  }  
+
+  function adm_req_wizyta ()
+  {
+    global $retDb;
+    $retDb = dbRequire("SELECT \"Data_Wizyty\", Opis, czy_odbyta, lekarz_nr, \"Imie lekarza\", \"Nazwisko lekarza\", pacjent_nr, \"Imie pacjenta\", \"Nazwisko pacjenta\" FROM AdminView_Wizyta WHERE nr_wizyty = " . $_GET["p_id"]);
+    $retDb[0][0] = str_replace(" ", "T", $retDb[0][0]);    
+  }  
+
+  function adm_reset_lekarz ()
+  {
+    dbRequire("CALL ResetHaslaLekarz(" . $_GET["p_id"] . ", " . $_GET["psswd"] . ")");
+  }
+
+  function adm_reset_pacjent ()
+  {
+    dbRequire("CALL ResetHaslaPacjent(" . $_GET["p_id"] . ", " . $_GET["psswd"] . ")");
+  }
+    
+  // -------------------------------------
   // -- Wizyty:
   // -------------------------------------
 
@@ -486,6 +611,21 @@
     new Command("czyLekarzDostepny", "czyLekarzDostepny", "pacjent", ["lekarz", "time"]),    
     new Command("pacjentUsunKonto", "pacjentUsunKonto", "pacjent", []),    
 
+    // Perm: Admin
+    new Command("resetLekarz", "adm_reset_lekarz", "admin", ["p_id", "psswd"]),
+    new Command("resetPacjent", "adm_reset_pacjent", "admin", ["p_id", "psswd"]),  
+    new Command("szukajLekarzy", "adm_szukaj_lekarzy", "admin", ["key"]),
+    new Command("szukajPacjentow", "adm_szukaj_pacjentow", "admin", ["key"]),
+    new Command("szukajAdminow", "adm_szukaj_adminow", "admin", ["key"]),
+    new Command("szukajWizyt", "adm_szukaj_wizyt", "admin", ["key"]),
+    new Command("szukajProducentow", "adm_szukaj_producentow", "admin", ["key"]),
+    new Command("szukajSpecjalizacji", "adm_szukaj_specjalizacji", "admin", ["key"]),
+    new Command("req_edLekarz", "adm_req_lekarz", "admin", ["p_id"]),
+    new Command("req_edPacjent", "adm_req_pacjent", "admin", ["p_id"]),
+    new Command("req_edProducent", "adm_req_producent", "admin", ["p_id"]),
+    new Command("req_edSpecjalizacja", "adm_req_specjalizacja", "admin", ["p_id"]),
+    new Command("req_edWizyta", "adm_req_wizyta", "admin", ["p_id"]),
+    
     // -- Logowanie:  
     new Command("dropSess", "wylogowywanie", "pacjent", []),
     new Command("dropSess", "wylogowywanie", "lekarz", []),

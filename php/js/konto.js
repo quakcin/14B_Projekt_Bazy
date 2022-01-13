@@ -215,8 +215,12 @@ const invokeEditor = function (name, p_id)
         inp.setAttribute('type', item.t);      
         inp.setAttribute('id', `form_${item.n}`); // IMPORTANT
         inp.setAttribute('value', e.db[0][dbIter++]);
+
+        if ("restrict" in item)
+          inp.setAttribute('disabled', '');
+        
         wrapper.appendChild(inp);
-      } 
+      }
 
       (scheme.indexOf(item) < 7
        ? fCol
@@ -310,7 +314,8 @@ const renderCalcRowWidth = function (resScheme)
   let finWidth = 0;
   for (let field of resScheme.fields)
     finWidth += field.s;
-  finWidth += (resScheme.fields.length - 1) * 30;
+  finWidth += 100; // TO-DO: + (resScheme.fields.length - 1) * 15;
+  console.log(finWidth);
   return finWidth;
 }
 
@@ -621,22 +626,239 @@ const szukajkiAdmina = function ()
 {
   addResult
   (
-    "", "",
+    "acLekarze", "szukajLekarzy",
     [
-      {n: "Pole", s: 100}
+      {n: "Login", s: 150},
+      {n: "Imie", s: 200},
+      {n: "Nazwisko", s: 200},
+      {n: "Specjalizacja", s: 150},     
+      {n: "Pesel", s: 130},
+      {n: "Lekarz", s: 100}      
     ],
     {
-      name: "Akcja", action: (e) =>
+      name: "Więcej", action: (e) =>
+      {
+        const nrLek = uncomplexResult(e.target).at(-1);
+        hideAllPanelsExcept(P_EDIT);
+        invokeEditor("edLekarz", nrLek);
+      }
+    }
+  );
+  addResult
+  (
+    "acPacjenci", "szukajPacjentow",
+    [
+      {n: "Login", s: 150},
+      {n: "Imie", s: 200},
+      {n: "Nazwisko", s: 200},
+      {n: "Pesel", s: 130},
+      {n: "Data Urodzenia", s: 180},      
+      {n: "Pacjent", s: 100}      
+    ],
+    {
+      name: "Więcej", action: (e) =>
+      {
+        const nrPac = uncomplexResult(e.target).at(-1);
+        hideAllPanelsExcept(P_EDIT);
+        invokeEditor("edPacjent", nrPac);
+      }
+    }
+  );
+  addResult
+  (
+    "acAdmin", "szukajAdminow",
+    [
+      {n: "Login", s: 150},
+      {n: "Imie", s: 200},
+      {n: "Nazwisko", s: 200},
+      {n: "E-Mail", s: 200},
+      {n: "P_ID", s: 80}      
+    ],
+    {
+      name: "Usuń", action: (e) =>
       {
         console.log("AKCJA");
       }
     }
   );
+  addResult
+  (
+    "wizyty", "szukajWizyt",
+    [
+      {n: "Nr", s: 80},
+      {n: "Data", s: 160},
+      {n: "Opis", s: 300},
+      {n: "Status", s: 130},
+      {n: "Lekarz", s: 80},
+      {n: "Imie", s: 150},
+      {n: "Nazwisko", s: 150},
+      {n: "Specjalizacja", s: 150},
+      {n: "Pacjent", s: 80},
+      {n: "Imie", s: 150},
+      {n: "Nazwisko", s: 150}
+    ],
+    {
+      name: "Więcej", action: (e) =>
+      {
+        const nrWiz = uncomplexResult(e.target).at(0);
+        hideAllPanelsExcept(P_EDIT);
+        invokeEditor("edWizyta", nrWiz);
+      }
+    }
+  );
+  addResult
+  (
+    "producenci", "szukajProducentow",
+    [
+      {n: "ID", s: 60},      
+      {n: "Nazwa", s: 400},
+      {n: "E-Mail", s: 300},
+      {n: "Telefon", s: 180}
+    ],
+    {
+      name: "Więcej", action: (e) =>
+      {
+        const prodID = uncomplexResult(e.target).at(0);
+        hideAllPanelsExcept(P_EDIT);
+        invokeEditor("edProducent", prodID);
+      }
+    }
+  );
+  addResult
+  (
+    "specjalizacje", "szukajSpecjalizacji",
+    [
+      {n: "Specjalizacja", s: 200},
+      {n: "Opis", s: 300},      
+      {n: "Dostępni Lekarze", s: 200}
+    ],
+    {
+      name: "Więcej", action: (e) =>
+      {
+        const nazwa = uncomplexResult(e.target).at(0);
+        hideAllPanelsExcept(P_EDIT);
+        invokeEditor("edSpecjalizacja", nazwa);
+      }
+    }
+  );  
 }
 
 const edytoryAdmina = function ()
 {
-  
+  addScheme
+  (
+    "edLekarz", "Edytowanie Danych Lekarza",
+    [
+      {n: "imie", l: "Imię", t: "text"},
+      {n: "nazw", l: "Nazwisko", t: "text"},
+      {n: "urod", l: "Data Urodzenia", t: "date"},
+      {n: "pesl", l: "Pesel", t: "text"},
+      {n: "tele", l: "Telefon", t: "text"},
+      {n: "mail", l: "E-Mail", t: "text"},
+      {n: "mias", l: "Miasto", t: "text"},
+      {n: "ulic", l: "Ulica", t: "text"},
+      {n: "ndom", l: "Nr Domu", t: "text"},
+      {n: "nlok", l: "Nr Mieszkania", t: "text"},
+      {n: "pocz", l: "Kod Pocztowy", t: "text"},
+      {n: "spec", l: "Specjalizacja", t: "select", opt: ["Alergolog", "Dentysta", "Dermatolog", "Ginekolog", "Hematolog", "Kardiolog", "Lekarz Rodzinny", "Neurolog", "Okulista", "Pediatra", "Psychiatra", "Reumatolog", "Urolog"]}
+    ],
+    [
+      {val: "Resetuj Hasło", evt: (p_id) =>
+        {
+          const newPsswd = parseInt(Math.random() * 9999) % 1000 + 1111;
+          dbReq((e) => {
+            if (e.success)
+              alert(`Nowe hasło po zresetowaniu: ${newPsswd}`);
+            else
+              alert(`Nie udało się zresetować hasła!`);
+          }, "resetLekarz", ["p_id", p_id, "psswd", newPsswd]);
+        }
+      }
+    ]
+  );
+  addScheme
+  (
+    "edPacjent", "Edytowanie Danych Pacjentów",
+    [
+      {n: "imie", l: "Imię", t: "text"},
+      {n: "nazw", l: "Nazwisko", t: "text"},
+      {n: "urod", l: "Data Urodzenia", t: "date"},
+      {n: "pesl", l: "Pesel", t: "text"},
+      {n: "tele", l: "Telefon", t: "text"},
+      {n: "mail", l: "E-Mail", t: "text"},
+      {n: "mias", l: "Miasto", t: "text"},
+      {n: "ulic", l: "Ulica", t: "text"},
+      {n: "ndom", l: "Nr Domu", t: "text"},
+      {n: "nlok", l: "Nr Mieszkania", t: "text"},
+      {n: "pocz", l: "Kod Pocztowy", t: "text"},
+    ],
+    [
+      {val: "Resetuj Hasło", evt: (p_id) =>
+        {
+          const newPsswd = parseInt(Math.random() * 9999) % 1000 + 1111;
+          dbReq((e) => {
+            if (e.success)
+              alert(`Nowe hasło po zresetowaniu: ${newPsswd}`);
+            else
+              alert(`Nie udało się zresetować hasła!`);
+          }, "resetPacjent", ["p_id", p_id, "psswd", newPsswd]);
+        }
+      }
+    ]    
+  );
+  addScheme
+  (
+    "edProducent", "Edytowanie Producentów Leków",
+    [
+      {n: "nazw", l: "Nazwa Producenta", t: "text"},
+      {n: "tele", l: "Telefon", t: "text"},
+      {n: "mail", l: "E-Mail", t: "text"},
+      {n: "mias", l: "Miasto", t: "text"},
+      {n: "ulic", l: "Ulica", t: "text"},
+      {n: "ndom", l: "Nr Domu", t: "text"},
+      {n: "nlok", l: "Nr Mieszkania", t: "text"},
+      {n: "pocz", l: "Kod Pocztowy", t: "text"}
+    ],
+  );
+  addScheme
+  (
+    "edSpecjalizacja", "Edytowanie Specjalizacji",
+    [
+      {n: "nazw", l: "Nazwa", t: "text", restrict: true},
+      {n: "opis", l: "Opis", t: "text"}
+    ],
+  );
+  addScheme
+  (
+    "edWizyta", "Edytowanie Wybranej Wizyty",
+    [
+      {n: "data", l: "Data", t: "datetime-local"},
+      {n: "opis", l: "Opis", t: "text"},
+      {n: "stat", l: "Status", t: "text"},
+      {n: "lknr", l: "Nr Lekarza", t: "number"},
+      {n: "lkim", l: "Imię", t: "text", restrict: true},
+      {n: "lknz", l: "Nazwisko", t: "text", restrict: true},
+      {n: "pcnr", l: "Nr Pacjęta", t: "number"},
+      {n: "pcim", l: "Imię", t: "text", restrict: true},
+      {n: "pcnz", l: "Nazwisko", t: "text", restrict: true}
+    ]
+  );  
+  addScheme
+  (
+    "edTMP", "Edytowanie Danych Lekarza",
+    [
+      {n: "", l: "", t: ""},
+      {n: "", l: "", t: ""},
+      {n: "", l: "", t: ""},
+      {n: "", l: "", t: ""},
+      {n: "", l: "", t: ""},
+      {n: "", l: "", t: ""},
+      {n: "", l: "", t: ""},
+      {n: "", l: "", t: ""},
+      {n: "", l: "", t: ""},
+      {n: "", l: "", t: ""},      
+    ],
+  );
 }
 
 const inserteryAdmina = function ()
@@ -650,7 +872,7 @@ const initAdmin = function ()
   addPanel("Strona Glowna", "n/a", P_HOMEPAGE);
   addPanel("Konta Lekarzy", "acLekarze", P_SEARCH);
   addPanel("Konta Pacjentów", "acPacjenci", P_SEARCH);
-  addPanel("Konta Adminów", "acAdmini", P_SEARCH);
+  addPanel("Konta Adminów", "acAdmin", P_SEARCH);
   addPanel("Wizyty", "wizyty", P_SEARCH);
   addPanel("Producenci", "producenci", P_SEARCH);
   addPanel("Specjalizacje", "specjalizacje", P_SEARCH);
