@@ -12,7 +12,7 @@ INSERT INTO Specjalizacje (Nazwa_Specjalizacji) VALUES ('Alergolog');
 INSERT INTO Specjalizacje (Nazwa_Specjalizacji) VALUES ('Reumatolog');
 INSERT INTO Specjalizacje (Nazwa_Specjalizacji) VALUES ('Hematolog');
 INSERT INTO Specjalizacje (Nazwa_Specjalizacji) VALUES ('Lekarz Rodzinny');
-select * from Specjalizacje;
+select * from Specjalizacje order by nazwa_specjalizacji;
 
 
 --Konto ADMINA

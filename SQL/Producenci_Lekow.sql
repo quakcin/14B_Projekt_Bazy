@@ -1,5 +1,5 @@
 CREATE OR REPLACE VIEW Producenci_Lekow_view AS
-SELECT producenci_lekow.nazwa_producenta, adresy.Kod_Pocztowy, adresy.miasto, 
+SELECT producenci_lekow.nr_producenta, producenci_lekow.nazwa_producenta, adresy.Kod_Pocztowy, adresy.miasto, 
     adresy.ulica, adresy.nr_domu, adresy.nr_mieszkania,
     kontakty.email, kontakty.telefon 
     FROM producenci_lekow 
