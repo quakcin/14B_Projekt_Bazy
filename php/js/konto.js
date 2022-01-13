@@ -163,31 +163,29 @@ const invokeEditor = function (name, p_id)
     title.setAttribute('class', 'db-form-title');
     title.innerText = findScheme(name).title;
     self.appendChild(title);
-    
-	// - Column div
-	const fCol = document.createElement('div');
-	fCol.setAttribute('class', 'first-column');
-	const sCol = document.createElement('div');
-	sCol.setAttribute('class', 'second-column');
-	
-	// - low button div
-	const dButton = document.createElement('div');
-	dButton.setAttribute('class', 'button-column');
-	
-	self.appendChild(fCol);
-	self.appendChild(sCol);
-	self.appendChild(dButton);
+
+    // - Column div
+    const fCol = document.createElement('div');
+    fCol.setAttribute('class', 'first-column');
+    const sCol = document.createElement('div');
+    sCol.setAttribute('class', 'second-column');
+
+    // - low button div
+    const dButton = document.createElement('div');
+    dButton.setAttribute('class', 'button-column');
+
+    self.appendChild(fCol);
+    self.appendChild(sCol);
+    self.appendChild(dButton);
 	
     // -- fields
     
     let dbIter = 0;
-	let counter = 0;
     for (let item of scheme)
     {
       const wrapper = document.createElement('div');
       const label = document.createElement('div');
-	
-	  
+
       if ("l" in item)
         label.textContent = item.l;
       else
@@ -219,12 +217,11 @@ const invokeEditor = function (name, p_id)
         inp.setAttribute('value', e.db[0][dbIter++]);
         wrapper.appendChild(inp);
       } 
-	  
-	  if(counter < 7)
-		fCol.appendChild(wrapper);    
-	  else 
-		sCol.appendChild(wrapper);
-	  counter++;
+
+      (scheme.indexOf(item) < 7
+       ? fCol
+       : sCol
+      ).appendChild(wrapper);
     }
     // -- Przycisk do zatwierdzenia zmian!
     const fin = document.createElement('input');
@@ -612,7 +609,7 @@ const initLekarz = function ()
   addPanel("Moje Wizyty", "lekWizyty", P_SEARCH);
   addPanel("Moje Recepty", "recLekarze", P_SEARCH);    
   addPanel("Moi Pacjenci", "lekPacjenci", P_SEARCH);
-  addPanel("Wyloguj", "n/a", P_LOGOUT);
+  addPanel("Wyloguj", "n/a", P_LOGOUT); 
 }
 
 
@@ -620,10 +617,44 @@ const initLekarz = function ()
 // -- Tworzenie Dashboarda dla: Admina
 // ---------------------------------------------------------------
 
+const szukajkiAdmina = function ()
+{
+  addResult
+  (
+    "", "",
+    [
+      {n: "Pole", s: 100}
+    ],
+    {
+      name: "Akcja", action: (e) =>
+      {
+        console.log("AKCJA");
+      }
+    }
+  );
+}
+
+const edytoryAdmina = function ()
+{
+  
+}
+
+const inserteryAdmina = function ()
+{
+  
+}
 
 const initAdmin = function ()
 {
-  // TO-DO
+  szukajkiAdmina(); edytoryAdmina(); inserteryAdmina();
+  addPanel("Strona Glowna", "n/a", P_HOMEPAGE);
+  addPanel("Konta Lekarzy", "acLekarze", P_SEARCH);
+  addPanel("Konta Pacjentów", "acPacjenci", P_SEARCH);
+  addPanel("Konta Adminów", "acAdmini", P_SEARCH);
+  addPanel("Wizyty", "wizyty", P_SEARCH);
+  addPanel("Producenci", "producenci", P_SEARCH);
+  addPanel("Specjalizacje", "specjalizacje", P_SEARCH);
+  addPanel("Wyloguj", "n/a", P_LOGOUT);
 }
 
 // ---------------------------------------------------------------
@@ -638,7 +669,9 @@ document.body.onload = (e) => {
       if (e.acType == 'pacjent')
         initPacjent();
       else if (e.acType == 'lekarz')
-        initLekarz();      
+        initLekarz();
+      else if (e.acType == 'admin')
+        initAdmin();
     }
   }, "ping");
 }
