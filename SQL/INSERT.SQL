@@ -51,16 +51,16 @@ INSERT INTO Lekarze_view VALUES ('Lek20', 'lek20', 'Michal', 'Wróblewski', sysd
 INSERT INTO Lekarze_view VALUES ('Lek21', 'lek21', 'Szymon', 'Szymczak', sysdate-21370, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'doktorSzymczak@wp.pl', 'Kielce', 'Czestochowska', '46', NULL, '25-987', 'Lekarz Rodzinny', NULL, NULL, NULL);
 
 --Producenci leków
-INSERT INTO Producenci_Lekow_view VALUES ('USP Zdrowie sp. z o.o.', '02-822', 'Warszawa', 'Poleczki', '35', NULL, 'hurtownia@usp.pl', '225436000');
-INSERT INTO Producenci_Lekow_view VALUES ('Mabion S.A.', '95-050', 'Konstantynów Łódzki', 'gen. Mariana Langiewicza', '60', NULL, 'info@mabion.eu', '422077890');
-INSERT INTO Producenci_Lekow_view VALUES ('Pelion S.A.', '91-342', 'Łódź', 'Zbąszyńska', '3', NULL, 'hr@pelion.eu', '422007468');
-INSERT INTO Producenci_Lekow_view VALUES ('Neuca S.A.', '87-100', 'Toruń', 'Forteczna', '35', '37', 'oferty.farmaceutyczne@neuca.pl', '800804805');
-INSERT INTO Producenci_Lekow_view VALUES ('Celon Pharma S.A.', '05-092', 'Łomianki/Kiełpin', 'Ogrodowa', '2a', NULL, 'info@celonpharma.com', '227515933');
-INSERT INTO Producenci_Lekow_view VALUES ('Farmacol S.A.', '40-431', 'Katowice', 'Szopienicka', '77', NULL, 'handlowy@farmacol.com.pl', '322080686');
-INSERT INTO Producenci_Lekow_view VALUES ('Grupa Adamed S.A.', '05-152', 'Czosnów', 'Mariana Adamkiewicza', '6a', NULL, 'adamed@adamed.com', '227327700');
-INSERT INTO Producenci_Lekow_view VALUES ('Aflofarm Farmacja Polska Sp. z o.o.', '95-200', 'Pabianice', 'Partyzancka', '133', '151', 'aflofarm@aflofarm.pl', '422253102');
-INSERT INTO Producenci_Lekow_view VALUES ('Toruńskie Zakłady Materiałów Opatrunkowych', '87-100', 'Toruń', 'Żółkiewskiego', '20', '26', 'bok@tzmo-global.com', '566123800');
-INSERT INTO Producenci_Lekow_view VALUES ('Zakłady Farmaceutyczne Polpharma S.A.', '83-200', 'Starogard Gdański', 'Pelplińska', '19', NULL, 'iod@polpharma.com', '585631600');
+INSERT INTO Producenci_Lekow_view (nazwa_producenta, kod_pocztowy, miasto, ulica,nr_domu, nr_mieszkania, email,telefon) VALUES ('USP Zdrowie sp. z o.o.', '02-822', 'Warszawa', 'Poleczki', '35', NULL, 'hurtownia@usp.pl', '225436000');
+INSERT INTO Producenci_Lekow_view (nazwa_producenta, kod_pocztowy, miasto, ulica,nr_domu, nr_mieszkania, email,telefon) VALUES ('Mabion S.A.', '95-050', 'Konstantynów Łódzki', 'gen. Mariana Langiewicza', '60', NULL, 'info@mabion.eu', '422077890');
+INSERT INTO Producenci_Lekow_view (nazwa_producenta, kod_pocztowy, miasto, ulica,nr_domu, nr_mieszkania, email,telefon) VALUES ('Pelion S.A.', '91-342', 'Łódź', 'Zbąszyńska', '3', NULL, 'hr@pelion.eu', '422007468');
+INSERT INTO Producenci_Lekow_view (nazwa_producenta, kod_pocztowy, miasto, ulica,nr_domu, nr_mieszkania, email,telefon) VALUES ('Neuca S.A.', '87-100', 'Toruń', 'Forteczna', '35', '37', 'oferty.farmaceutyczne@neuca.pl', '800804805');
+INSERT INTO Producenci_Lekow_view (nazwa_producenta, kod_pocztowy, miasto, ulica,nr_domu, nr_mieszkania, email,telefon) VALUES ('Celon Pharma S.A.', '05-092', 'Łomianki/Kiełpin', 'Ogrodowa', '2a', NULL, 'info@celonpharma.com', '227515933');
+INSERT INTO Producenci_Lekow_view (nazwa_producenta, kod_pocztowy, miasto, ulica,nr_domu, nr_mieszkania, email,telefon) VALUES ('Farmacol S.A.', '40-431', 'Katowice', 'Szopienicka', '77', NULL, 'handlowy@farmacol.com.pl', '322080686');
+INSERT INTO Producenci_Lekow_view (nazwa_producenta, kod_pocztowy, miasto, ulica,nr_domu, nr_mieszkania, email,telefon) VALUES ('Grupa Adamed S.A.', '05-152', 'Czosnów', 'Mariana Adamkiewicza', '6a', NULL, 'adamed@adamed.com', '227327700');
+INSERT INTO Producenci_Lekow_view (nazwa_producenta, kod_pocztowy, miasto, ulica,nr_domu, nr_mieszkania, email,telefon) VALUES ('Aflofarm Farmacja Polska Sp. z o.o.', '95-200', 'Pabianice', 'Partyzancka', '133', '151', 'aflofarm@aflofarm.pl', '422253102');
+INSERT INTO Producenci_Lekow_view (nazwa_producenta, kod_pocztowy, miasto, ulica,nr_domu, nr_mieszkania, email,telefon) VALUES ('Toruńskie Zakłady Materiałów Opatrunkowych', '87-100', 'Toruń', 'Żółkiewskiego', '20', '26', 'bok@tzmo-global.com', '566123800');
+INSERT INTO Producenci_Lekow_view (nazwa_producenta, kod_pocztowy, miasto, ulica,nr_domu, nr_mieszkania, email,telefon) VALUES ('Zakłady Farmaceutyczne Polpharma S.A.', '83-200', 'Starogard Gdański', 'Pelplińska', '19', NULL, 'iod@polpharma.com', '585631600');
 
 --Wizyty bez opisow
 

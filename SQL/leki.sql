@@ -6309,5 +6309,5 @@ INSERT INTO Leki_view VALUES (NULL, 'Pasta cynkowa 20 g AVENA', 'Pasta cynkowa 2
 
 
 
-SELECT * FROM Leki_view;
+--SELECT * FROM Leki_view;
 --DELETE Leki_view;

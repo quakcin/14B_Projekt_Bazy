@@ -9,7 +9,8 @@ NLS_LANG=.WE8MSWIN1252
    echo @"./Wizyty.sql"
    echo @"./leki.sql"
    echo @"./recepty.sql"
+   echo @"./Panel_Administratora.sql"
    echo @"./LOGOWANIE.sql"
    echo @"./rejestracja.sql"
-   echo @"./odświeżanie sesji.sql"
-) | sqlplus system/1234
+   echo @"./odswiezanie_sesji.sql"
+) | sqlplus system/root
