@@ -10,6 +10,7 @@
     <meta charset="UTF-8">
 	<link rel="stylesheet" href="./css/m_style.css">
 	<link rel="stylesheet" href="./css/log_style.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
   <body>
 
@@ -37,10 +38,16 @@
 	<div class="log_panel">
 		<center>
 			<form class="log_control">
-				<label for="login">Username or email address</label>	<br>
-				<input type="text"  autocomplete="off" id="loginArea" class="rounded-input"> <br>
-				<label for="passw">Password</label>
-				<input type="password"  autocomplete="off" id="passwdArea" class="rounded-input"> <br><br>
+				<label for="login">Username or email address	<br>
+					<input type="text"  autocomplete="off" id="loginArea" class="rounded-input"> <br>
+				</label>
+				<label for="passw">Password
+					
+					<input type="password"  autocomplete="off" id="passwdArea" class="rounded-input"> 
+					<i class="hide fa fa-eye-slash "></i>
+					<i class="show fa fa-eye  "></i>
+					<br>
+				</label>
 			</form>
 		  
 
@@ -57,6 +64,7 @@
     
 	
 	<script src="./js/api.js"></script>
+	<script src="./js/eye_hide_show.js"></script>
     <script>
 
       dbRestrict("Jestes juz zalogowany/zalogowana!", "./konto", ["brak"]);
@@ -92,7 +100,11 @@
           }
         }, "zaloguj", ["user", form.login, "password", form.passwd]);
       }
-
+	  document.addEventListener('keydown', function(e)
+	  {
+		if(e.keyCode ==13)
+			loginButton.onclick();
+	  });
     </script>
 
   </body>

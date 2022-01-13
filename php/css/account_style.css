@@ -49,7 +49,6 @@ body
 input[type=button]
 {
 	appearance:none;
-	width:45%;
 	-webkit-appearance:none;
 	text-align: center;
 	border:none;
@@ -62,19 +61,8 @@ input[type=button]
     border-radius:10px;
 	cursor:pointer;
 }
-input[type=password]
-{
-	width:45%;
-	height: 35px;
-	background-color:#0d1117;
-	color: white;
-	border: 1px;
-	border-style: solid;
-	border-color: #30363d;
-	
-    border-radius:10px;
-	cursor:pointer;
-}
+
+
 input[type=button]:hover
 {
 	background-color:#161b22;
@@ -93,7 +81,7 @@ input[type=button]:hover
 	----max-width: 8%;
 	height: 35px;
 }
-.content input[type=text]
+.content input[type=text], input[type=password]
 {
 	display: inline-block;
     cursor: pointer;
@@ -183,10 +171,9 @@ input[type=button]:hover
 }
 .button-column
 {	
-	display: flex;
+	display: inline-block;
 	top: 0%;
 	justify-content: space-between;
-	width: 170px;
 	height: 100px;
 }
 .button-column input[type=button]
