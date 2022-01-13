@@ -3,7 +3,12 @@ body
 {
 	background-color: #0d1117;
 }
+label
+{
+	position: relative;
+	display: block;
 
+}
 .log_panel, .reg_panel, .error_msg, .bjuti_panel
 {
 	background-color: #161b22;
@@ -128,4 +133,18 @@ input[type=text], input[type=password], input[type=button]
 #exitButton:hover
 {
 	color: #b63333;
+}
+
+.show, .hide
+{
+	filter: invert(100%);
+	position: absolute;
+	right: 15px;
+	top: 38px;
+	font-size: 28px;
+	color: #333;
+}
+.hide
+{
+	display: none;
 }
