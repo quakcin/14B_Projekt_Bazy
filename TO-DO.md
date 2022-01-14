@@ -3,27 +3,30 @@
 
 ### Panel Admina
 - [x] Dodać opcje renderowania panelu
-  
-- [ ] Dodać schematy do panelu
-- [ ] Szukajki: Konta Pacjentów
-  
-- [ ] Szukajki: Konta Lekarzy
-- [ ] Inserter: Konto Lekarza    
-  
-- [ ] Szukajki: Konta Adminów
-- [ ] Inserter: Konto Adminów
-    
-- [ ] Szukajki: Wizyt
-  
-- [ ] Szukajki: Leków
-- [ ] Inserter: Leków
-    
-- [ ] Szukajki: Specjalizacji
-- [ ] Inserter: Specjalizacji
-    
-- [ ] Szukajki: Producentów
-- [ ] Inserter: Producentów
+- [x] Szukajki: Konta Pacjentów
+- [x] Szukajki: Konta Lekarzy
+- [x] Szukajki: Konta Adminów
+- [x] Szukajki: Wizyt
+- [x] Szukajki: Specjalizacji
+- [x] Szukajki: Producentów
 
+- [x] Edytor: (req) Konta Lekarza
+- [x] Edytor: (req) Konta Pacjenta
+- [x] Edytor: (req) Konta Admina
+- [x] Edytor: (req) Specjalizacji
+- [x] Edytor: (req) Producenta
+  
+- [ ] Edytor: (upt) Konta Lekarza
+- [ ] Edytor: (upt) Konta Pacjenta
+- [ ] Edytor: (upt) Konta Admina
+- [ ] Edytor: (upt) Specjalizacji
+- [ ] Edytor: (upt) Producenta
+  
+- [ ] Inserter: Konto Lekarza    
+- [ ] Inserter: Konto Adminów    
+- [ ] Inserter: Leków
+- [ ] Inserter: Specjalizacji
+- [ ] Inserter: Producentów
   
 ### Panel Lekarza
 - [x] Zaznaczanie recept
