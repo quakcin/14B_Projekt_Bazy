@@ -15,12 +15,14 @@
 - [x] Edytor: (req) Konta Admina
 - [x] Edytor: (req) Specjalizacji
 - [x] Edytor: (req) Producenta
+- [x] Edytor: (req) Wizyty
   
 - [ ] Edytor: (upt) Konta Lekarza
 - [ ] Edytor: (upt) Konta Pacjenta
 - [ ] Edytor: (upt) Konta Admina
 - [ ] Edytor: (upt) Specjalizacji
 - [ ] Edytor: (upt) Producenta
+- [ ] Edytor: (upt) Wizyty  
   
 - [ ] Inserter: Konto Lekarza    
 - [ ] Inserter: Konto Adminów    
