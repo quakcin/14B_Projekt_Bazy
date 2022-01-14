@@ -347,15 +347,6 @@
   // -- Tylko Panel Pacjenta:
   // -------------------------------------
 
-  function szukajPacjenta ()  // -- TO-DO: Dodac Inne Pola do szukajki
-  {
-    $qr = packSearchQuerry($_GET["key"], "pacjenci_view",
-      ["imie", "nazwisko"]
-    );
-    global $retDb;
-    $retDb = $buff;
-  }
-
   // Perm: Pacjent
   function szukajWizytyPacjent ()
   {
@@ -529,22 +520,23 @@
 
   function adm_upt_pacjent ()
   {
-    dbRequire("CALL ()");
+    dbRequire("CALL AdminEdytuj_Pacjenta(" . $_GET["p_id"] . ", '" . $_GET["imie"] . "', '" . $_GET["nazw"] . "', to_date('" . $_GET["urod"] . "', 'YYYY-MM-DD'), '" . $_GET["pesl"] . "', '" . $_GET["tele"] . "', '" . $_GET["mail"] . "', '" . $_GET["mias"] . "', '" . $_GET["ulic"] . "', '" . $_GET["ndom"] . "', '" . $_GET["nlok"] . "', '" . $_GET["pocz"] . "')");
   }
 
   function adm_upt_producent ()
   {
-    dbRequire("CALL ()");
+    dbRequire("CALL AdminEdytuj_Producenta(" . $_GET["p_id"] . ", '" . $_GET["nazw"] . "', '" . $_GET["tele"] . "', '" . $_GET["mail"] . "', '" . $_GET["mias"] . "', '" . $_GET["ulic"] . "', '" . $_GET["ndom"] . "', '" . $_GET["nlok"] . "', '" . $_GET["pocz"] . "')");    
   }
 
   function adm_upt_specjalizacja ()
   {
-    dbRequire("CALL ()");
+    dbRequire("UPDATE specjalizacje SET  opis = '" . $_GET["opis"] . "' WHERE nazwa_specjalizacji = '" . $_GET["p_id"] . "'");
   }
 
   function adm_upt_wizyta ()
   {
-    dbRequire("CALL ()");
+    $data = str_replace("T", " ", $_GET["data"]);
+    dbRequire("CALL AdminEdytuj_Wizyte(" . $_GET["p_id"] . ", to_date('" . $data . "', 'YYYY-MM-DD HH24:mi'), '" . $_GET["opis"] . "', '" . $_GET["stat"] . "', " . $_GET["lknr"] . ", " . $_GET["pcnr"] . ")");
   }
 
   function adm_reset_lekarz ()

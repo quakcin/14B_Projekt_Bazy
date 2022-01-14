@@ -17,12 +17,12 @@
 - [x] Edytor: (req) Producenta
 - [x] Edytor: (req) Wizyty
   
-- [ ] Edytor: (upt) Konta Lekarza
-- [ ] Edytor: (upt) Konta Pacjenta
-- [ ] Edytor: (upt) Konta Admina
-- [ ] Edytor: (upt) Specjalizacji
-- [ ] Edytor: (upt) Producenta
-- [ ] Edytor: (upt) Wizyty  
+- [x] Edytor: (upt) Konta Lekarza
+- [x] Edytor: (upt) Konta Pacjenta
+- [x] Edytor: (upt) Konta Admina
+- [x] Edytor: (upt) Specjalizacji
+- [x] Edytor: (upt) Producenta
+- [x] Edytor: (upt) Wizyty  
   
 - [ ] Inserter: Konto Lekarza    
 - [ ] Inserter: Konto Adminów    
