@@ -191,6 +191,12 @@ const invokeEditor = function (name, p_id)
       else
         label.textContent = item.n;
       
+	  // style do diva kiedy jest haslo
+	  if(`form_${item.n}` == 'form_haslo')
+	  {
+		wrapper.style.position = 'relative';
+		wrapper.style.display = 'block';
+	  }
       wrapper.appendChild(label);
 
       // item.n - name (parm), item.t - type, item.l - label 
@@ -220,13 +226,29 @@ const invokeEditor = function (name, p_id)
           inp.setAttribute('disabled', '');
         
         wrapper.appendChild(inp);
+		
+		
       }
 
       (scheme.indexOf(item) < 7
        ? fCol
        : sCol
       ).appendChild(wrapper);
+	  // - show passwd
+		if(`form_${item.n}` == 'form_haslo')
+		{
+		  const eye = document.createElement('i');
+		  const eye_slash = document.createElement('i');
+		  eye_slash.setAttribute('class', 'hide fa fa-eye-slash ');
+		  wrapper.appendChild(eye_slash);
+		  eye.setAttribute('class', 'show fa fa-eye');
+		  wrapper.appendChild(eye);
+		  passwd_show();
+		}
     }
+	
+	setMaxDate(document.getElementById("form_data_uro")); // max data urodzenia na dzień dzisiejszy
+	
     // -- Przycisk do zatwierdzenia zmian!
     const fin = document.createElement('input');
     fin.setAttribute('type', 'button');

@@ -7,8 +7,9 @@
   <head>
     <title> PRZYCHODNIA | MOJE KONTO </title>
     <meta charset="UTF-8">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="Stylesheet" href="css/dashboard.css">
-	<link rel="stylesheet" href="css/m_style.css">
+	<link rel="stylesheet" href="css/accountNavbar_style.css">
     <link rel="Stylesheet" href="css/account_style.css">
   </head>
   <body>
@@ -33,7 +34,7 @@
 			<a href="apteka"> Apteka </a>
 		</div>
         
-      </div>
+    </div>
   <div class="wrapper">
     <div class="menu" id="wMenu">
     </div>
@@ -55,8 +56,26 @@
 
     </div>
   </div>
+  <script>
+		const setMaxDate = function(e)
+		{
+			let today = new Date();
+			let dd = today.getDate();
+			let mm = today.getMonth() + 1;
+			let yyyy = today.getFullYear();
+			if (dd < 10)
+			   dd = '0' + dd;
+
+			if (mm < 10)
+			   mm = '0' + mm; 
+				
+			today = yyyy + '-' + mm + '-' + dd;
+			e.setAttribute("max", today);
+		}
+  </script>
 
   <script src="./js/api.js"></script>
+  <script src="./js/eye_hide_show.js"></script>
   <script src="./js/konto.js"></script>
   </body>
 </html>
