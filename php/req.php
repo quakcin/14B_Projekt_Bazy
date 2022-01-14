@@ -522,6 +522,31 @@
     $retDb[0][0] = str_replace(" ", "T", $retDb[0][0]);    
   }  
 
+  function adm_upt_lekarz ()
+  {
+    dbRequire("CALL AdminEdytuj_Lekarza(" . $_GET["p_id"] . ", '" . $_GET["imie"] . "', '" . $_GET["nazw"] . "', to_date('" . $_GET["urod"] . "', 'YYYY-MM-DD'), '" . $_GET["pesl"] . "', '" . $_GET["tele"] . "', '" . $_GET["mail"] . "', '" . $_GET["mias"] . "', '" . $_GET["ulic"] . "', '" . $_GET["ndom"] . "', '" . $_GET["nlok"] . "', '" . $_GET["pocz"] . "', '" . $_GET["spec"] . "')");
+  }
+
+  function adm_upt_pacjent ()
+  {
+    dbRequire("CALL ()");
+  }
+
+  function adm_upt_producent ()
+  {
+    dbRequire("CALL ()");
+  }
+
+  function adm_upt_specjalizacja ()
+  {
+    dbRequire("CALL ()");
+  }
+
+  function adm_upt_wizyta ()
+  {
+    dbRequire("CALL ()");
+  }
+
   function adm_reset_lekarz ()
   {
     dbRequire("CALL ResetHaslaLekarz(" . $_GET["p_id"] . ", " . $_GET["psswd"] . ")");
@@ -625,6 +650,12 @@
     new Command("req_edProducent", "adm_req_producent", "admin", ["p_id"]),
     new Command("req_edSpecjalizacja", "adm_req_specjalizacja", "admin", ["p_id"]),
     new Command("req_edWizyta", "adm_req_wizyta", "admin", ["p_id"]),
+
+    new Command("upt_edLekarz", "adm_upt_lekarz", "admin", ["p_id", "imie", "nazw", "urod", "pesl", "tele", "mail", "mias", "ulic", "ndom", "nlok", "pocz", "spec"]),
+    new Command("upt_edPacjent", "adm_upt_pacjent", "admin", ["p_id", "imie", "nazw", "urod", "pesl", "tele", "mail", "mias", "ulic", "ndom", "nlok", "pocz"]),
+    new Command("upt_edProducent", "adm_upt_producent", "admin", ["p_id", "nazw", "tele", "mail", "mias", "ulic", "ndom", "nlok", "pocz"]),
+    new Command("upt_edSpecjalizacja", "adm_upt_specjalizacja", "admin", ["p_id", "nazw", "opis"]),
+    new Command("upt_edWizyta", "adm_upt_wizyta", "admin", ["p_id", "data", "opis", "stat", "lknr", "pcnr"]),
     
     // -- Logowanie:  
     new Command("dropSess", "wylogowywanie", "pacjent", []),

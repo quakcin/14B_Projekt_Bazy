@@ -16,7 +16,6 @@ let G_PERSON_ID = null;
 // -- Obsluga Interfejsu i jego elementow
 // ---------------------------------------------------------------
 
-
 // -- Init: Schematy Bazy:
 const cSchemes = []; // -- dla edytora
 const cResults = []; // -- dla szukajki
