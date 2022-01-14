@@ -196,6 +196,7 @@ const invokeEditor = function (name, p_id)
 	  {
 		wrapper.style.position = 'relative';
 		wrapper.style.display = 'block';
+		wrapper.setAttribute('id', 'passwd-eye');
 	  }
       wrapper.appendChild(label);
 
@@ -235,16 +236,13 @@ const invokeEditor = function (name, p_id)
        : sCol
       ).appendChild(wrapper);
 	  // - show passwd
-		if(`form_${item.n}` == 'form_haslo')
-		{
-		  const eye = document.createElement('i');
-		  const eye_slash = document.createElement('i');
-		  eye_slash.setAttribute('class', 'hide fa fa-eye-slash ');
-		  wrapper.appendChild(eye_slash);
-		  eye.setAttribute('class', 'show fa fa-eye');
-		  wrapper.appendChild(eye);
-		  passwd_show();
-		}
+	  if(`form_${item.n}` == 'form_haslo')
+	  {
+		const eye_slash = document.createElement('i');
+		eye_slash.setAttribute('class', 'hide bi bi-eye-slash ');
+		wrapper.appendChild(eye_slash);
+		passwd_show();
+	  }
     }
 	
 	setMaxDate(document.getElementById("form_data_uro")); // max data urodzenia na dzień dzisiejszy

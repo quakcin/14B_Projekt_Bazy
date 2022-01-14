@@ -178,17 +178,13 @@ input[type=button]:hover
 	color: white;
 	border-color: #4a515c;
 }
-
-.show, .hide
+#passwd-eye .hide
 {
-	float: left;
-	position: absolute;
-	right: 4.5vh;
-	top: 6.3vh;
-	font-size: 20px;
-	color: #fff;
+	margin-left: -30px;
+    cursor: pointer;
 }
 .hide
 {
-	display: none;
+	font-size: 20px;
+	color: #fff;
 }

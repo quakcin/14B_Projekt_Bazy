@@ -135,16 +135,11 @@ input[type=text], input[type=password], input[type=button]
 	color: #b63333;
 }
 
-.show, .hide
+.hide
 {
-	filter: invert(100%);
 	position: absolute;
 	right: 15px;
 	top: 38px;
-	font-size: 28px;
-	color: #333;
-}
-.hide
-{
-	display: none;
+	font-size: 15px;
+	color: #fff;
 }
