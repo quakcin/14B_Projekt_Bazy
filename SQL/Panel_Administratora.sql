@@ -89,4 +89,36 @@ BEGIN
 END;
 /
 
-EXECUTE AdminEdytuj_Pacjenta (1, 'Adam', 'Niezgódka', sysdate-8541, '96325874125', NULL, NULL, 'Warszawa', 'Al. Jerozolimskie', '369a', '94', '01-256');
+--EXECUTE AdminEdytuj_Pacjenta (1, 'Adam', 'Niezgódka', sysdate-8541, '96325874125', NULL, NULL, 'Warszawa', 'Al. Jerozolimskie', '369a', '94', '01-256');
+
+CREATE OR REPLACE PROCEDURE AdminEdytuj_Producenta(p_idProcucenta Producenci_Lekow.nr_producenta%TYPE, p_nazwa Producenci_Lekow.Nazwa_Producenta%TYPE, 
+                                                    p_telefon Kontakty.telefon%TYPE, p_mail Kontakty.email%TYPE, p_miasto Adresy.miasto%TYPE, 
+                                                    p_ulica Adresy.ulica%TYPE, p_dom Adresy.nr_domu%TYPE,
+                                                    p_mieszk adresy.nr_mieszkania%TYPE, p_kod Adresy.Kod_Pocztowy%TYPE)
+AS
+BEGIN
+    UPDATE producenci_lekow SET nazwa_producenta = p_nazwa 
+    WHERE nr_producenta = p_idProcucenta;
+    
+    UPDATE Adresy SET miasto = p_miasto, ulica = p_ulica, nr_domu = p_dom, nr_mieszkania = p_mieszk, kod_pocztowy = p_kod 
+    WHERE nr_adresu = (SELECT Adres_Nr FROM Producenci_Lekow WHERE Nr_Producenta = p_idProcucenta);
+    
+    UPDATE Kontakty SET email = p_mail, telefon = p_telefon 
+    WHERE nr_kontaktu = (SELECT Kontakt_Nr FROM Producenci_Lekow WHERE Nr_Producenta = p_idProcucenta);
+END;
+/
+
+--EXECUTE AdminEdytuj_Producenta (1, 'upsik', '412874587', 'UDR@WP.PL', 'AD', 'SS', '15', null, '25-001');
+
+--UPDATE specjalizacje SET nazwa_specjalizacji = 'coś', opis = 'cos2' WHERE nr_specjalizacji = 1
+
+CREATE OR REPLACE PROCEDURE AdminEdytuj_Wizyte(p_idWizyty Wizyty.nr_wizyty%TYPE, p_data Wizyty.Data_Wizyty%TYPE, 
+                                                p_opis Wizyty.opis%TYPE, p_status Wizyty.czy_odbyta%TYPE, 
+                                                p_lekarz Wizyty.lekarz_nr%TYPE, p_pacjent Wizyty.pacjent_nr%TYPE)
+AS
+BEGIN
+    UPDATE Wizyty SET Data_Wizyty = p_data, opis = p_opis, czy_odbyta = p_status, lekarz_nr = p_lekarz, pacjent_nr = p_pacjent WHERE nr_wizyty = p_idWizyty;
+END;
+/
+
+--EXECUTE AdminEdytuj_Wizyte(1, to_date('25.02.2022 15:10', 'DD.MM.YYYY HH24:mi'), '  ', 'Zaplanowana', 20, 4);

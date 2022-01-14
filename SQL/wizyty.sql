@@ -32,7 +32,7 @@ INSERT INTO Wizyty (lekarz_nr, pacjent_nr, Data_wizyty, opis) VALUES(p_Numer_Lek
 END;
 /
 
---EXECUTE Umow_Wizyte(3,2,'06.01.2022 10:00', 'Opis choroby');
+--EXECUTE Umow_Wizyte(3,2,'15.01.2022 12:07', 'Opis choroby');
 
 
 --Perspektywa Lekarza
