@@ -1,7 +1,7 @@
 /*
-  WANR: schematy/pola musza byc takie same jak selecty po
-        stronie serwera, inaczej edytor i search box
-        nie beda dzialac wgle!
+  UWAGA: Edytując ten plik pamiętaj o: ZACHOWANIU POPRAWNEGO STYLU
+         INDENTACJI I WSZYSTKIEGO CO WPŁYWA NA JEGO CZYTELNOŚĆ!
+         Uprzejmie dziękuje.
 */
 
 dbRestrict(
@@ -142,7 +142,8 @@ const invokeSearch = function (name, p_id)
 
 const invokeEditor = function (name, p_id) 
 {
-  dbReq((e) => {
+  dbReq((e) =>
+  {
     if (e.success == false)
     {
       console.log("invokeEditor()", e);
@@ -190,18 +191,9 @@ const invokeEditor = function (name, p_id)
         label.textContent = item.l;
       else
         label.textContent = item.n;
-      
-	  // style do diva kiedy jest haslo
-	  if(`form_${item.n}` == 'form_haslo')
-	  {
-		wrapper.style.position = 'relative';
-		wrapper.style.display = 'block';
-		wrapper.setAttribute('id', 'passwd-eye');
-	  }
+
       wrapper.appendChild(label);
 
-      // item.n - name (parm), item.t - type, item.l - label 
-      
       if (item.t == 'select')
       {
         const inp = document.createElement('select');
@@ -227,25 +219,26 @@ const invokeEditor = function (name, p_id)
           inp.setAttribute('disabled', '');
         
         wrapper.appendChild(inp);
-		
-		
       }
 
-      (scheme.indexOf(item) < 7
-       ? fCol
-       : sCol
-      ).appendChild(wrapper);
-	  // - show passwd
-	  if(`form_${item.n}` == 'form_haslo')
-	  {
-		const eye_slash = document.createElement('i');
-		eye_slash.setAttribute('class', 'hide bi bi-eye-slash ');
-		wrapper.appendChild(eye_slash);
-		passwd_show();
-	  }
+      // -- dodanie wrappera do odpowiedniej kolumny
+      (scheme.indexOf(item) < 7 ? fCol : sCol ).appendChild(wrapper);      
+
+      // style do diva kiedy jest haslo
+      if (item.t == 'password')
+      {
+        wrapper.setAttribute('style', 'position: relative; display: block;');
+        wrapper.setAttribute('id', 'passwd-eye');
+
+        const eye_slash = document.createElement('i');
+        eye_slash.setAttribute('class', 'hide bi bi-eye-slash ');
+        wrapper.appendChild(eye_slash);
+        passwd_show();        
+      }      
     }
 	
-	setMaxDate(document.getElementById("form_data_uro")); // max data urodzenia na dzień dzisiejszy
+	  // TO-DO: setMaxDate(document.getElementById("form_data_uro")); // max data urodzenia na dzień dzisiejszy
+    //        tylko jako dekoratory dla renderera.
 	
     // -- Przycisk do zatwierdzenia zmian!
     const fin = document.createElement('input');
@@ -269,7 +262,6 @@ const invokeEditor = function (name, p_id)
         btn.evt(p_id);
       };
     }
-    
   }, `req_${name}`, ["p_id", p_id]);
 }
 
