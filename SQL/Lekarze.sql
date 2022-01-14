@@ -29,7 +29,7 @@ WHEN UPDATING THEN
     UPDATE Kontakty SET Telefon = :NEW.Telefon, Email = :NEW.Email WHERE Nr_Kontaktu = (SELECT Kontakt_Nr FROM Osoby WHERE Nr_Osoby = :NEW.Nr_Osoby); 
     UPDATE Osoby SET Nazwisko = :NEW.Nazwisko, Imie = :NEW.Imie, Data_Urodzenia = :NEW.Data_Urodzenia, PESEL = :NEW.PESEL WHERE Nr_Osoby = :NEW.Nr_Osoby;
     SELECT Nr_Specjalizacji INTO v_Nr_Specjalizacji FROM Specjalizacje WHERE nazwa_specjalizacji=:NEW.nazwa_specjalizacji;
-    UPDATE Lekarze SET Specjalizacja_Nr = v_Nr_Specjalizacji;
+    UPDATE Lekarze SET Specjalizacja_Nr = v_Nr_Specjalizacji WHERE Osoba_Nr = :NEW.Nr_Osoby;
     UPDATE Konta SET Haslo = :NEW.Haslo WHERE Osoba_Nr = :NEW.Nr_Osoby;
 WHEN DELETING THEN
     DELETE FROM Lekarze WHERE Osoba_Nr = :OLD.Nr_Osoby;

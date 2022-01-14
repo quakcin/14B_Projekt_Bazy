@@ -56,3 +56,37 @@ BEGIN
     UPDATE Konta SET haslo = p_haslo WHERE osoba_nr = v_osoba;
 END;
 /
+
+CREATE OR REPLACE PROCEDURE AdminEdytuj_Lekarza(p_idLekarza Lekarze.nr_lekarza%TYPE, p_imie Osoby.imie%TYPE, p_nazwisko Osoby.nazwisko%TYPE, 
+                                                p_data Osoby.data_urodzenia%TYPE, p_pesel Osoby.pesel%TYPE, p_telefon Kontakty.telefon%TYPE,
+                                                p_mail Kontakty.email%TYPE, p_miasto Adresy.miasto%TYPE, p_ulica Adresy.ulica%TYPE, p_dom Adresy.nr_domu%TYPE,
+                                                p_mieszk adresy.nr_mieszkania%TYPE, p_kod Adresy.Kod_Pocztowy%TYPE, p_specjalizacja Specjalizacje.nazwa_specjalizacji%TYPE)
+AS
+v_osoba osoby.nr_osoby%TYPE;
+BEGIN
+    SELECT Osoba_Nr INTO v_osoba FROM Lekarze WHERE Nr_Lekarza = p_idLekarza;
+    UPDATE Lekarze_view SET imie = p_imie, nazwisko = p_nazwisko, data_urodzenia = p_data, pesel = p_pesel, telefon = p_telefon, 
+                            email = p_mail, miasto = p_miasto, ulica = p_ulica, nr_domu = p_dom, nr_mieszkania = p_mieszk, 
+                            kod_pocztowy = p_kod, nazwa_specjalizacji = p_specjalizacja  
+    WHERE Nr_Osoby = v_osoba;
+END;
+/
+
+--EXECUTE AdminEdytuj_Lekarza(1, 'Piotr' , 'Nowak', sysdate-8000, '74125896325', '412541254', 'doktornowak@wp.pl', 'Kielce', 'Prosta', '34', '45', '25-265', 'Dentysta');
+
+CREATE OR REPLACE PROCEDURE AdminEdytuj_Pacjenta(p_idPacjenta pacjenci.nr_karty_pacjenta%TYPE, p_imie Osoby.imie%TYPE, p_nazwisko Osoby.nazwisko%TYPE, 
+                                                p_data Osoby.data_urodzenia%TYPE, p_pesel Osoby.pesel%TYPE, p_telefon Kontakty.telefon%TYPE,
+                                                p_mail Kontakty.email%TYPE, p_miasto Adresy.miasto%TYPE, p_ulica Adresy.ulica%TYPE, p_dom Adresy.nr_domu%TYPE,
+                                                p_mieszk adresy.nr_mieszkania%TYPE, p_kod Adresy.Kod_Pocztowy%TYPE)
+AS
+v_osoba osoby.nr_osoby%TYPE;
+BEGIN
+    SELECT Osoba_Nr INTO v_osoba FROM Pacjenci WHERE nr_karty_pacjenta = p_idPacjenta;
+    UPDATE Pacjenci_view SET imie = p_imie, nazwisko = p_nazwisko, data_urodzenia = p_data, pesel = p_pesel, telefon = p_telefon, 
+                            email = p_mail, miasto = p_miasto, ulica = p_ulica, nr_domu = p_dom, nr_mieszkania = p_mieszk, 
+                            kod_pocztowy = p_kod  
+    WHERE Nr_Osoby = v_osoba;
+END;
+/
+
+EXECUTE AdminEdytuj_Pacjenta (1, 'Adam', 'Niezgódka', sysdate-8541, '96325874125', NULL, NULL, 'Warszawa', 'Al. Jerozolimskie', '369a', '94', '01-256');
