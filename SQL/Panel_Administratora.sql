@@ -30,8 +30,9 @@ SELECT  Konta.login, osoby.imie, osoby.nazwisko, kontakty.email, osoby.nr_osoby
 
 CREATE OR REPLACE VIEW AdminView_Specjalizacje AS
 SELECT specjalizacje.nazwa_specjalizacji, specjalizacje.opis, COUNT(Lekarze.nr_lekarza) AS "Ilosc lekarzy" FROM Specjalizacje
-INNER JOIN Lekarze ON lekarze.specjalizacja_nr = specjalizacje.nr_specjalizacji
-GROUP BY specjalizacje.nazwa_specjalizacji, specjalizacje.opis;
+LEFT JOIN Lekarze ON lekarze.specjalizacja_nr = specjalizacje.nr_specjalizacji
+GROUP BY specjalizacje.nazwa_specjalizacji, specjalizacje.opis
+ORDER BY specjalizacje.nazwa_specjalizacji;
 
 SELECT imie, nazwisko, TO_CHAR(data_urodzenia, 'yyyy-MM-dd'), pesel, telefon, email, miasto, ulica, nr_domu, nr_mieszkania, kod_pocztowy, nazwa_specjalizacji FROM Lekarze_view WHERE Nr_lekarza = 1;
 SELECT imie, nazwisko, TO_CHAR(data_urodzenia, 'yyyy-MM-dd'), pesel, telefon, email, miasto, ulica, nr_domu, nr_mieszkania, kod_pocztowy FROM Pacjenci_view WHERE Nr_osoby = (SELECT Osoba_Nr FROM Pacjenci WHERE Nr_Karty_Pacjenta = 1);
@@ -122,3 +123,26 @@ END;
 /
 
 --EXECUTE AdminEdytuj_Wizyte(1, to_date('25.02.2022 15:10', 'DD.MM.YYYY HH24:mi'), '  ', 'Zaplanowana', 20, 4);
+
+CREATE OR REPLACE PROCEDURE AdminUsun_admina(p_id osoby.nr_osoby%TYPE)
+AS
+BEGIN
+    IF(p_id = 1) THEN
+     RAISE_APPLICATION_ERROR( -20005, 
+          'Nie można usunąć konta głównego administratora numer 1!' );
+    END IF;
+    DELETE FROM Konta WHERE osoba_nr = p_id;
+    DELETE FROM Kontakty WHERE nr_kontaktu = 37;
+    DELETE FROM Osoby WHERE Nr_Osoby = p_id;
+END;
+/
+
+--EXECUTE AdminUsun_admina(27);
+
+CREATE OR REPLACE PROCEDURE AdminUsun_pacjenta(p_id osoby.nr_osoby%TYPE)
+AS
+v_osoba Osoby.nr_osoby%TYPE;
+BEGIN
+    
+END;
+/
