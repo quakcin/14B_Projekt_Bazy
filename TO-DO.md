@@ -2,6 +2,7 @@
 ## Konto / Dashboard
 
 ### Panel Admina
+- [ ] Puste Pola -> NULL  
 - [x] Dodać opcje renderowania panelu
 - [x] Szukajki: Konta Pacjentów
 - [x] Szukajki: Konta Lekarzy

@@ -548,6 +548,41 @@
   {
     dbRequire("CALL ResetHaslaPacjent(" . $_GET["p_id"] . ", " . $_GET["psswd"] . ")");
   }
+
+  function adm_ins_lekarz ()
+  {
+    dbRequire("INSERT INTO Lekarze_view VALUES ('" . $_GET["logn"] . "', '" . $_GET["pwwd"] . "', '" . $_GET["imie"] . "', '" . $_GET["nazw"] . "', TO_DATE('" . $_GET["urod"] . "', 'YYYY-MM-DD'), '" . $_GET["pesl"] . "', '" . $_GET["tele"] . "', '" . $_GET["mail"] . "', '" . $_GET["mias"] . "', '" . $_GET["ulic"] . "', '" . $_GET["ndom"] . "', '" . $_GET["nlok"] . "', '" . $_GET["pocz"] . "', '" . $_GET["spec"] . "', NULL, NULL, NULL)");
+  }
+
+  function adm_ins_admin ()
+  {
+    dbRequire("CALL admin_add('" . $_GET["logn"] . "', '" . $_GET["pwwd"] . "', '" . $_GET["imie"] . "', '" . $_GET["nazw"] . "', '" . $_GET["tele"] . "', '" . $_GET["mail"] . "')");
+  }
+
+  function adm_ins_specjalizacja ()
+  {
+    dbRequire("INSERT INTO Specjalizacje (Nazwa_Specjalizacji, Opis) VALUES ('" . $_GET["nazw"] . "', '" . $_GET["opis"] . "')");
+  }
+
+  function adm_ins_producent ()
+  {
+    dbRequire("CALL producLekow_add('" . $_GET["nazw"] . "', '" . $_GET["pocz"] . "', '" . $_GET["mias"] . "', '" . $_GET["ulic"] . "', '" . $_GET["ndom"] . "', '" . $_GET["nlok"] . "', '" . $_GET["mail"] . "', '" . $_GET["tele"] . "')");
+  }
+
+  function adm_usun_admina ()
+  {
+    dbRequire("CALL AdminUsun_admina(" . $_GET["p_id"] . ")");
+  }
+
+  function adm_usun_lekarza ()
+  {
+    dbRequire("DELETE FROM Lekarze_view WHERE nr_lekarza = " . $_GET["p_id"]);
+  }
+
+  function adm_usun_pacjenta ()
+  {
+    dbRequire("DELETE FROM Pacjenci_view WHERE nr_karty_pacjenta = " . $_GET["p_id"]);
+  }  
     
   // -------------------------------------
   // -- Wizyty:
@@ -579,6 +614,13 @@
   {
     global $retPacket;
     dbRequire("CALL Umow_Wizyte(" . $_GET["lekarz"] .  ", " . $retPacket["nrOsoby"] . ", '" . $_GET["time"] . "', '" . $_GET["opis"] . "')");    
+  }
+
+  function req_inserter ()
+  {
+    global $retDb;
+    for ($i = 0; $i < 32; $i++)
+      $retDb[0][$i] = "";
   }
   
   // -- Wszystkie Polecenia oblugiwane po stronie php
@@ -637,6 +679,10 @@
     new Command("szukajWizyt", "adm_szukaj_wizyt", "admin", ["key"]),
     new Command("szukajProducentow", "adm_szukaj_producentow", "admin", ["key"]),
     new Command("szukajSpecjalizacji", "adm_szukaj_specjalizacji", "admin", ["key"]),
+    new Command("usun_admina", "adm_usun_admina", "admin", ["p_id"]),
+    new Command("usun_lekarza", "adm_usun_lekarza", "admin", ["p_id"]),
+    new Command("usun_pacjenta", "adm_usun_pacjenta", "admin", ["p_id"]),      
+  
     new Command("req_edLekarz", "adm_req_lekarz", "admin", ["p_id"]),
     new Command("req_edPacjent", "adm_req_pacjent", "admin", ["p_id"]),
     new Command("req_edProducent", "adm_req_producent", "admin", ["p_id"]),
@@ -648,7 +694,17 @@
     new Command("upt_edProducent", "adm_upt_producent", "admin", ["p_id", "nazw", "tele", "mail", "mias", "ulic", "ndom", "nlok", "pocz"]),
     new Command("upt_edSpecjalizacja", "adm_upt_specjalizacja", "admin", ["p_id", "nazw", "opis"]),
     new Command("upt_edWizyta", "adm_upt_wizyta", "admin", ["p_id", "data", "opis", "stat", "lknr", "pcnr"]),
-    
+
+    new Command("req_insLekarz", "req_inserter", "admin", ["p_id"]),
+    new Command("req_insAdmin", "req_inserter", "admin", ["p_id"]),
+    new Command("req_insSpecjalizacja", "req_inserter", "admin", ["p_id"]),
+    new Command("req_insProducent", "req_inserter", "admin", ["p_id"]),
+
+    new Command("upt_insLekarz", "adm_ins_lekarz", "admin", ["p_id"]),
+    new Command("upt_insAdmin", "adm_ins_admin", "admin", ["p_id"]),
+    new Command("upt_insSpecjalizacja", "adm_ins_specjalizacja", "admin", ["p_id"]),
+    new Command("upt_insProducent", "adm_ins_producent", "admin", ["p_id"]),
+      
     // -- Logowanie:  
     new Command("dropSess", "wylogowywanie", "pacjent", []),
     new Command("dropSess", "wylogowywanie", "lekarz", []),

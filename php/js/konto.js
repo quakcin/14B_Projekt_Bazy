@@ -120,7 +120,7 @@ const editorCommit = function (e, p_id)
       return;
     }
     console.log(e);
-    alert('Serwer teraz nie odpowiada, prosimy sprobwac pozniej!');
+    alert(`Wystąpił błąd: ${e.err}`);
   }, `upt_${scheme.name}`, formParams);
     
 }
@@ -146,7 +146,7 @@ const invokeEditor = function (name, p_id)
     if (e.success == false)
     {
       console.log("invokeEditor()", e);
-      alert("Serwer nie odpowiada, prosimy sprobowac pozniej!");
+      alert(`Wystąpił błąd: ${e.err}`);
       return;
     }
     
@@ -688,7 +688,12 @@ const szukajkiAdmina = function ()
     {
       name: "Usuń", action: (e) =>
       {
-        console.log("AKCJA");
+        const adminID = uncomplexResult(e.target).at(-1);
+        dbReq((e) =>
+        {
+          if (e.success == false)
+            alert(`Nie udało się usunąć konta admina, ${e.err}`);
+        }, "usun_admina", ["p_id", adminID]);
       }
     }
   );
@@ -774,6 +779,11 @@ const edytoryAdmina = function ()
       {n: "spec", l: "Specjalizacja", t: "select", opt: ["Alergolog", "Dentysta", "Dermatolog", "Ginekolog", "Hematolog", "Kardiolog", "Lekarz Rodzinny", "Neurolog", "Okulista", "Pediatra", "Psychiatra", "Reumatolog", "Urolog"]}
     ],
     [
+      {val: "Usuń Konto", evt: (p_id) =>
+        {
+          dbReq((e) => { if (e.success == false) alert(`Wystąpił błąd: ${e.err}`); }, "usun_lekarza", ["p_id", p_id]);
+        }
+      },
       {val: "Resetuj Hasło", evt: (p_id) =>
         {
           const newPsswd = parseInt(Math.random() * 9999) % 1000 + 1111;
@@ -804,6 +814,11 @@ const edytoryAdmina = function ()
       {n: "pocz", l: "Kod Pocztowy", t: "text"},
     ],
     [
+      {val: "Usuń Konto", evt: (p_id) =>
+        {
+          dbReq((e) => { if (e.success == false) alert(`Wystąpił błąd: ${e.err}`); }, "usun_pacjenta", ["p_id", p_id]);
+        }
+      },      
       {val: "Resetuj Hasło", evt: (p_id) =>
         {
           const newPsswd = parseInt(Math.random() * 9999) % 1000 + 1111;
@@ -874,7 +889,60 @@ const edytoryAdmina = function ()
 
 const inserteryAdmina = function ()
 {
-  
+  addScheme
+  (
+    "insLekarz", "Dodawanie Konta Lekarza",
+    [
+      {n: "logn", l: "Login", t: "text"},
+      {n: "pwwd", l: "Hasło", t: "password"},      
+      {n: "imie", l: "Imię", t: "text"},
+      {n: "nazw", l: "Nazwisko", t: "text"},
+      {n: "urod", l: "Data Urodzenia", t: "date"},
+      {n: "pesl", l: "Pesel", t: "text"},
+      {n: "tele", l: "Telefon", t: "text"},
+      {n: "mail", l: "E-Mail", t: "text"},
+      {n: "mias", l: "Miasto", t: "text"},
+      {n: "ulic", l: "Ulica", t: "text"},
+      {n: "ndom", l: "Nr Domu", t: "text"},
+      {n: "nlok", l: "Nr Mieszkania", t: "text"},
+      {n: "pocz", l: "Kod Pocztowy", t: "text"},
+      {n: "spec", l: "Specjalizacja", t: "select", opt: ["Alergolog", "Dentysta", "Dermatolog", "Ginekolog", "Hematolog", "Kardiolog", "Lekarz Rodzinny", "Neurolog", "Okulista", "Pediatra", "Psychiatra", "Reumatolog", "Urolog"]}
+    ],
+  );
+  addScheme
+  (
+    "insAdmin", "Dodawanie Konta Admina",
+    [
+      {n: "logn", l: "Login", t: "text"},
+      {n: "pwwd", l: "Hasło", t: "password"},      
+      {n: "imie", l: "Imię", t: "text"},
+      {n: "nazw", l: "Nazwisko", t: "text"},
+      {n: "tele", l: "Telefon", t: "text"},
+      {n: "mail", l: "E-Mail", t: "text"}
+    ],
+  );
+  addScheme
+  (
+    "insSpecjalizacja", "Dodawanie Specjalizacji",
+    [
+      {n: "nazw", l: "Nazwa Specjalizacji", t: "text"},
+      {n: "opis", l: "Opis", t: "text"}
+    ],
+  );
+  addScheme
+  (
+    "insProducent", "Dodawanie Producenta Leków",
+    [
+      {n: "nazw", l: "Nazwa", t: "text"},
+      {n: "tele", l: "Telefon", t: "text"},
+      {n: "mail", l: "E-Mail", t: "text"},
+      {n: "mias", l: "Miasto", t: "text"},
+      {n: "ulic", l: "Ulica", t: "text"},
+      {n: "ndom", l: "Nr Domu", t: "text"},
+      {n: "nlok", l: "Nr Mieszkania", t: "text"},
+      {n: "pocz", l: "Kod Pocztowy", t: "text"},
+    ],
+  );  
 }
 
 const initAdmin = function ()
@@ -887,6 +955,12 @@ const initAdmin = function ()
   addPanel("Wizyty", "wizyty", P_SEARCH);
   addPanel("Producenci", "producenci", P_SEARCH);
   addPanel("Specjalizacje", "specjalizacje", P_SEARCH);
+
+  addPanel("Dodaj Lekarza", "insLekarz", P_EDIT);
+  addPanel("Dodaj Admin", "insAdmin", P_EDIT);
+  addPanel("Dodaj Specjalizacje", "insSpecjalizacja", P_EDIT);
+  addPanel("Dodaj Producenta", "insProducent", P_EDIT);
+ 
   addPanel("Wyloguj", "n/a", P_LOGOUT);
 }
 
