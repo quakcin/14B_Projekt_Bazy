@@ -7,94 +7,155 @@
   <head>
     <title> PRZYCHODNIA | INFORMATOR </title>
     <meta charset="UTF-8">
+    <link rel="Stylesheet" href="./css/informator.css">
   </head>
   <body>
 
     <div class="search-box">
+      <div>
+        <select id="combobox-rodzaj">
+          <option>Wszyscy</option>          
+          <option>Lekarz</option>
+          <option>Pacjent</option>
+        </select>
+      </div>
+      <div>
+        <input type="text" id="textbox-imie" placeholder="Imie">
+      </div>
+      <div>
+        <input type="text" id="textbox-nazwisko" placeholder="Nazwisko">        
+      </div>
+      <div>
+        <input type="button" value="Szukaj" id="search-button">
+      </div>      
     </div>
-    <div class="search-result">
-      <div class="search-result-top"></div>
-      <div class="search-result-bottom"></div>      
-      <div class="search-result-bottom"></div>      
-      <div class="search-result-bottom"></div>      
-      <div class="search-result-bottom"></div>      
-      <div class="search-result-bottom"></div>      
+    <div class="search-results" id="search-results">
     </div>
     
-    <div class="search-result-top" id="result-template-top-lekarz">
-      <table>
-        <tr>
-          <td> Imie: </td>
-          <td> %imie% </td>
-        </tr>
-        <tr>
-          <td> Nazwisko: </td>
-          <td> %nazw% </td>
-        </tr>
-        <tr>
-          <td> Specjalizacja: </td>
-          <td> %spec% </td>
-        </tr>
-        <tr>
-          <td> Telefon: </td>
-          <td> %tele% </td>
-        </tr>
-        <tr>
-          <td> E-Mail: </td>
-          <td> %mail% </td>
-        </tr>
-      </table>
+    <div class="search-result" id="result-template-lekarz" style="display: none";>
+      <div class="wrapper">
+        <div class="pfp" style="background-image: url(./data/img/pfp/lekarz.png)">
+        </div>
+        <div class="info">
+          <div class="names">
+            %imie, %nazw
+          </div>
+          <div class="spec">
+            %spec
+          </div>
+          <div class="property">
+            Telefon: %tele
+          </div>
+          <div class="property">
+            E-Mail: %mail
+          </div>
+        </div>        
+      </div>
     </div>
 
-    <div class="search-result-item" id="result-template-item-lekarz">
-      <table>
-        <tr>
-          <td>%data%</td>
-          <td>%stat%</td>
-          <td>%imie%</td>
-          <td>%nazw%</td>
-        </tr>
-      </table>
+    <div class="search-result" id="result-template-pacjent" style="display: none;">
+      <div class="wrapper">
+        <div class="pfp" style="background-image: url(./data/img/pfp/pacjent.png)">
+        </div>
+        <div class="info">
+          <div class="names">
+            %imie, %nazw
+          </div>
+          <div class="spec">
+            %mias - %data
+          </div>
+          <div class="property">
+            Telefon: %tele
+          </div>
+          <div class="property">
+            E-Mail: %mail
+          </div>
+        </div>        
+      </div>
     </div>
-
-    <div class="search-result-top" id="result-template-top-pacjent">
-      <table>
-        <tr>
-          <td> Imie: </td>
-          <td> %imie% </td>
-        </tr>
-        <tr>
-          <td> Nazwisko: </td>
-          <td> %nazw% </td>
-        </tr>
-        <tr>
-          <td> Data urodzenia: </td>
-          <td> %data% </td>
-        </tr>
-        <tr>
-          <td> Miasto: </td>
-          <td> %mias% </td>
-        </tr>
-        <tr>
-          <td> Telefon: </td>
-          <td> %tele% </td>
-        </tr>
-      </table>
-    </div>
-
-    <div class="search-result-item" id="result-template-item-pacjent">
-      <table>
-        <tr>
-          <td>%data%</td>
-          <td>%stat%</td>
-          <td>%imie%</td>
-          <td>%nazw%</td>
-        </tr>
-      </table>
-    </div>    
     
     <script src="./js/api.js"></script>
-    <script src="./js/informator.js"></script>
+    <script>
+
+      const lookup = function ()
+      {
+        const typ = document.getElementById("combobox-rodzaj").value;
+        const imie = document.getElementById("textbox-imie").value;
+        const nazwisko = document.getElementById("textbox-nazwisko").value;
+
+        const prot_lekarz = document.getElementById('result-template-lekarz').innerHTML;
+        const prot_pacjent = document.getElementById('result-template-pacjent').innerHTML;        
+
+        dbReq((e) =>
+        {
+          if (e.success == false)
+          {
+            alert(`Wystąpił błąd serwera ${e.err}`);
+            return;
+          }
+
+          document.getElementById('search-results').innerHTML = '';
+
+          if (typ == 'Lekarz' || typ == 'Wszyscy')
+          {
+            for (const [i, elem] of e.db[0].entries())
+            {
+              const proto = prot_lekarz
+                .replace('%imie', elem[0])
+                .replace('%nazw', elem[1])
+                .replace('%spec', elem[2])
+                .replace('%tele', elem[3])
+                .replace('%mail', elem[4])
+
+              document.getElementById('search-results').innerHTML += proto;
+            }
+          }
+
+          if (typ == 'Pacjent' || typ == 'Wszyscy')
+          {
+            for (const [i, elem] of e.db[1].entries())
+            {
+              const proto = prot_pacjent
+                .replace('%imie', elem[0])
+                .replace('%nazw', elem[1])
+                .replace('%data', elem[2])
+                .replace('%mias', elem[3])
+                .replace('%tele', elem[4])
+                .replace('%mail', elem[5])
+
+              document.getElementById('search-results').innerHTML += proto;
+            }
+          }          
+          
+        }, "ludziSzukaj", ["imie", imie.toLowerCase(), "nazwisko", nazwisko.toLowerCase()]);        
+      }
+      
+      document.getElementById("search-button").onclick = (e) =>
+      {
+        lookup();
+      }
+
+      document.body.onload = (e) =>
+      {
+        const params = [];
+        for (const [i, elem] of location.href.split("?")[1].split("&").entries())
+          params[elem.split('=')[0]] = decodeURIComponent(elem.split('=')[1]);
+
+        if ('imie' in params)
+          document.getElementById('textbox-imie').value = params['imie'];
+
+        if ('nazwisko' in params)
+          document.getElementById('textbox-nazwisko').value = params['nazwisko'];
+
+        if ('rodzaj' in params)
+          document.getElementById('combobox-rodzaj').value = params['rodzaj'];
+
+        if ('imie' in params || 'nazwisko' in params || 'rodzaj' || params)
+          lookup();
+
+      }
+
+    </script>
     
   </body>
 </html>

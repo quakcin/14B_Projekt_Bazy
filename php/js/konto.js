@@ -585,7 +585,8 @@ const initLekarz = function ()
       name: "Wiecej",
       action: (e) =>
       {
-        console.log("PODGLAD", e);
+        const items = uncomplexResult(e.target);
+        window.location.href = `./informator?imie=${items[1]}&nazwisko=${items[2]}&rodzaj=Pacjent`;
       }
     }
   );

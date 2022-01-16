@@ -623,6 +623,21 @@
       $retDb[0][$i] = "";
   }
   
+  // -------------------------------------
+  // -- Uniwersalne (Informator):
+  // -------------------------------------
+
+  function ludziSzukaj ()
+  {
+    global $retDb;
+
+    global $retPacket;
+    $retPacket['qr'] = "SELECT imie, nazwisko, Nazwa_Specjalizacji, Telefon, Email FROM Lekarze_view WHERE LOWER(Imie) LIKE '%" . $_GET["imie"] . "%' AND LOWER(Nazwisko) LIKE '%" . $_GET["nazwisko"] . "%'";
+  
+    $retDb[0] = dbRequire("SELECT imie, nazwisko, Nazwa_Specjalizacji, Telefon, Email FROM Lekarze_view WHERE LOWER(Imie) LIKE '%" . $_GET["imie"] . "%' AND LOWER(Nazwisko) LIKE '%" . $_GET["nazwisko"] . "%'");
+    $retDb[1] = dbRequire("SELECT imie, nazwisko, TO_CHAR(data_urodzenia, 'dd.mm.yyyy'), miasto, Telefon, Email FROM Pacjenci_view WHERE LOWER(Imie) LIKE '%" . $_GET["imie"] . "%' AND LOWER(Nazwisko) LIKE '%" . $_GET["nazwisko"] . "%'");
+  }
+  
   // -- Wszystkie Polecenia oblugiwane po stronie php
   //    Format:   (  JS, PHP, Dostep, [parametry z _GET]  )
 
@@ -704,7 +719,14 @@
     new Command("upt_insAdmin", "adm_ins_admin", "admin", ["p_id"]),
     new Command("upt_insSpecjalizacja", "adm_ins_specjalizacja", "admin", ["p_id"]),
     new Command("upt_insProducent", "adm_ins_producent", "admin", ["p_id"]),
-      
+
+    // -- Informator
+
+    new Command("ludziSzukaj", "ludziSzukaj", "admin", ["imie", "nazwisko"]),
+    new Command("ludziSzukaj", "ludziSzukaj", "lekarz", ["imie", "nazwisko"]),
+    new Command("ludziSzukaj", "ludziSzukaj", "pacjent", ["imie", "nazwisko"]),
+  
+        
     // -- Logowanie:  
     new Command("dropSess", "wylogowywanie", "pacjent", []),
     new Command("dropSess", "wylogowywanie", "lekarz", []),
