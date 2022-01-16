@@ -16,7 +16,7 @@ body
 	border-color: #151920;
 	border-right: 1px solid #151920;
 }
-input[type=button]
+input[type=button], input[type=number]
 {
 	appearance:none;
 	width: fit-content;
@@ -31,9 +31,16 @@ input[type=button]
     border-radius:10px;
 	cursor:pointer;
 }
+input[type=number]
+{
+	width: fit-content;
+	padding:10px 15px;
+}
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
 
-
-input[type=button]:hover
+input[type=button]:hover, input[type=number]:hover
 {
 	background-color:#21262d;
 	color: #c9ccd1;
@@ -85,6 +92,7 @@ input[type=date], #form_data
 	border-color: #30363d;
 	padding:10px;
     border-radius:10px;
+	cursor: pointer;
 }
 #form_data_uro:active, #form_data:active, #form_data:hover, #form_data_uro:hover, input[type=password]:focus
 {
@@ -104,7 +112,7 @@ input[type=date], #form_data
 }
 #serch-wrap  input[type=button]
 {
-	max-width: 20%;
+	width: fit-content;
 }
 #serch-wrap
 {
@@ -210,4 +218,39 @@ input[type=date], #form_data
 {
 	font-size: 20px;
 	color: #fff;
+}
+
+/* tytuly strony */
+.db-form-title
+{
+	text-align: center;
+	padding: 5px;
+	font-size: 20px;
+	border: 1px solid #30363d;
+	border-radius: 25px;
+	background-color: #0d1117;
+}
+/* selecty */
+select
+{
+	display: inline-block;
+    width: 100%;
+    cursor: pointer;
+    padding: 10px 15px;
+    outline: 0;
+    border: 1px;
+	border-style: solid;
+	border-color: #30363d;
+	margin: 10px 0px 15px 0px;
+	border-radius:13px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+	background-color:#0d1117;
+	color: white;
+}
+select:hover
+{
+	border-color: #1f6feb;
+    outline: none;
+    box-shadow: 0px 0px 5px 5px #0c2d6b;
 }

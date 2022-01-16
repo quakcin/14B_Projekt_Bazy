@@ -1,20 +1,34 @@
+body
+{
+  padding: 0px;
+  margin: 0px;
+}
 .navbar 
 {
   overflow: hidden;
- background-color: #161b22;
+  background-color: #161b22;
   position: sticky;
   position: -webkit-sticky;
   top: 0;
+  font-size: 20px;
+  
 }
 
 .navbar a 
 {
+  height: 5vh;
+  display: grid;
   float: left;
-  display: block;
   color: white;
-  text-align: center;
-  padding: 14px 20px;
+  padding: 10px 15px;
   text-decoration: none;
+}
+
+.nav-bar > a
+{
+	position: relative;
+	place-items: center;
+	text-align: center;
 }
 
 
