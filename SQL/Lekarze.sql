@@ -14,7 +14,9 @@ CREATE OR REPLACE TRIGGER Lekarz_add_trigger
 INSTEAD OF INSERT OR UPDATE OR DELETE ON Lekarze_view
 FOR EACH ROW
 DECLARE
-v_Nr_Specjalizacji specjalizacje.nr_specjalizacji%TYPE;
+    v_Nr_Specjalizacji specjalizacje.nr_specjalizacji%TYPE;
+    adres NUMBER;
+    kontakt NUMBER;
 BEGIN
 CASE
 WHEN INSERTING THEN
@@ -32,12 +34,14 @@ WHEN UPDATING THEN
     UPDATE Lekarze SET Specjalizacja_Nr = v_Nr_Specjalizacji WHERE Osoba_Nr = :NEW.Nr_Osoby;
     UPDATE Konta SET Haslo = :NEW.Haslo WHERE Osoba_Nr = :NEW.Nr_Osoby;
 WHEN DELETING THEN
+    SELECT Adres_Nr INTO adres FROM Osoby WHERE Nr_Osoby = :OLD.Nr_Osoby;
+    SELECT Kontakt_Nr INTO kontakt FROM Osoby WHERE Nr_Osoby = :OLD.Nr_Osoby;
     DELETE FROM Lekarze WHERE Osoba_Nr = :OLD.Nr_Osoby;
     DELETE FROM Konta WHERE Osoba_Nr = :OLD.Nr_Osoby;
     DELETE FROM Sesje WHERE Osoba_Nr = :OLD.Nr_Osoby;
-    DELETE FROM Osoby WHERE Nr_Osoby = :OLD.Nr_Osoby; 
-    DELETE FROM Adresy WHERE Nr_Adresu = (SELECT Adres_Nr FROM Osoby WHERE Nr_Osoby = :OLD.Nr_Osoby);
-    DELETE FROM Kontakty WHERE Nr_Kontaktu = (SELECT Kontakt_Nr FROM Osoby WHERE Nr_Osoby = :OLD.Nr_Osoby);
+    DELETE FROM Osoby WHERE Nr_Osoby = :OLD.Nr_Osoby;
+    DELETE FROM Adresy WHERE Nr_Adresu = adres;
+    DELETE FROM Kontakty WHERE Nr_Kontaktu = kontakt; 
 END CASE;
 END;
 /
@@ -56,7 +60,7 @@ BEGIN
 END;
 /
 
-EXECUTE uptInfo('Grzegorzz', 'Nowakk', 'lek3454', '1979-10-21', '15943770171', '997018017', 'doktorRafal@wpp.pl', 'Rubbin', 'Kwiatowa', '1', '5', '78-417', 6);
+--EXECUTE uptInfo('Grzegorzz', 'Nowakk', 'lek3454', '1979-10-21', '15943770171', '997018017', 'doktorRafal@wpp.pl', 'Rubbin', 'Kwiatowa', '1', '5', '78-417', 6);
 
 
 CREATE OR REPLACE VIEW pacjentLekarzaInfo AS
@@ -66,7 +70,7 @@ INNER JOIN Osoby ON pacjenci.osoba_nr=osoby.nr_osoby
 INNER JOIN (SELECT pacjent_Nr, MAX(data_wizyty) as "Ostatnia" FROM Wizyty WHERE CZY_ODBYTA = 'Odbyta' GROUP BY pacjent_Nr) "tab" ON wizyty.pacjent_nr = "tab".pacjent_Nr
 GROUP BY pacjenci.nr_karty_pacjenta, osoby.imie, osoby.nazwisko, osoby.data_urodzenia, "tab"."Ostatnia", wizyty.lekarz_nr;
 
-SELECT nr_karty_pacjenta, imie, nazwisko, TO_CHAR(data_urodzenia, 'dd.mm.yyyy'), TO_CHAR("Ostatnia", 'dd.mm.yyyy HH24:mi') FROM pacjentLekarzaInfo WHERE lekarz_nr = 2;
+--SELECT nr_karty_pacjenta, imie, nazwisko, TO_CHAR(data_urodzenia, 'dd.mm.yyyy'), TO_CHAR("Ostatnia", 'dd.mm.yyyy HH24:mi') FROM pacjentLekarzaInfo WHERE lekarz_nr = 2;
 
 
 CREATE OR REPLACE PROCEDURE ZaznaczRecepte(p_lekarz wizyty.lekarz_nr%TYPE, p_Wizyta wizyty.nr_wizyty%TYPE)

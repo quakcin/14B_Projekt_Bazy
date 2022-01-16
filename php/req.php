@@ -91,7 +91,7 @@
 
   //  -- Polaczenie Z Baza
 
-  $db = @oci_connect("system", "1234", "localhost/xe");
+  $db = @oci_connect("system", "root", "localhost/xe");
 
   if (!$db)
     packetThrow((oci_error())['message'], []);
@@ -581,7 +581,7 @@
 
   function adm_usun_pacjenta ()
   {
-    dbRequire("DELETE FROM Pacjenci_view WHERE nr_karty_pacjenta = " . $_GET["p_id"]);
+    dbRequire("CALL AdminUsun_pacjenta(" . $_GET["p_id"] . ")");
   }  
     
   // -------------------------------------

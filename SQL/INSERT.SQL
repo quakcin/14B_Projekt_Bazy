@@ -12,11 +12,10 @@ INSERT INTO Specjalizacje (Nazwa_Specjalizacji) VALUES ('Alergolog');
 INSERT INTO Specjalizacje (Nazwa_Specjalizacji) VALUES ('Reumatolog');
 INSERT INTO Specjalizacje (Nazwa_Specjalizacji) VALUES ('Hematolog');
 INSERT INTO Specjalizacje (Nazwa_Specjalizacji) VALUES ('Lekarz Rodzinny');
-select * from Specjalizacje order by nazwa_specjalizacji;
 
 
 --Konto ADMINA
-INSERT INTO Adresy  VALUES(1, ' ', ' ', ' ', NULL, ' ');
+INSERT INTO Adresy  VALUES(1, 'Kielce', 'Al. Tysiąclecia Państwa Polskiego', '1', 'D', '25-001');
 INSERT INTO Kontakty VALUES (1, NULL, NULL);
 INSERT INTO Osoby   VALUES(1, 'Bandura', 'Maciek', TO_DATE('2000-05-16', 'YYYY-MM-DD'), '00000000000', 1, 1);
 INSERT INTO Konta   VALUES(1, 'admin', 'qwerty', 'admin', 1);

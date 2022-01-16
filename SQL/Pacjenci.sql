@@ -12,6 +12,9 @@ SELECT  Konta.login, Konta.haslo, osoby.imie, osoby.nazwisko, osoby.data_urodzen
 CREATE OR REPLACE TRIGGER Pacjent_trigger
 INSTEAD OF INSERT OR UPDATE OR DELETE ON Pacjenci_view
 FOR EACH ROW
+DECLARE
+    adres NUMBER;
+    kontakt NUMBER;
 BEGIN
 CASE
 WHEN INSERTING THEN
@@ -26,12 +29,14 @@ WHEN UPDATING THEN
     UPDATE Osoby SET Nazwisko = :NEW.Nazwisko, Imie = :NEW.Imie, Data_Urodzenia = :NEW.Data_Urodzenia, PESEL = :NEW.PESEL WHERE Nr_Osoby = :NEW.Nr_Osoby;
     UPDATE Konta SET Haslo = :NEW.Haslo WHERE Osoba_Nr = :NEW.Nr_Osoby;
 WHEN DELETING THEN
+    SELECT Adres_Nr INTO adres FROM Osoby WHERE Nr_Osoby = :OLD.Nr_Osoby;
+    SELECT Kontakt_Nr INTO kontakt FROM Osoby WHERE Nr_Osoby = :OLD.Nr_Osoby;
     DELETE FROM Pacjenci WHERE Osoba_Nr = :OLD.Nr_Osoby;
     DELETE FROM Konta WHERE Osoba_Nr = :OLD.Nr_Osoby;
     DELETE FROM Sesje WHERE Osoba_Nr = :OLD.Nr_Osoby;
     DELETE FROM Osoby WHERE Nr_Osoby = :OLD.Nr_Osoby; 
-    DELETE FROM Adresy WHERE Nr_Adresu = (SELECT Adres_Nr FROM Osoby WHERE Nr_Osoby = :OLD.Nr_Osoby);
-    DELETE FROM Kontakty WHERE Nr_Kontaktu = (SELECT Kontakt_Nr FROM Osoby WHERE Nr_Osoby = :OLD.Nr_Osoby); 
+    DELETE FROM Adresy WHERE Nr_Adresu = adres;
+    DELETE FROM Kontakty WHERE Nr_Kontaktu = kontakt; 
 END CASE;
 END;
 /
@@ -46,9 +51,3 @@ SELECT  osoby.imie, osoby.nazwisko, Konta.haslo, TO_CHAR(osoby.data_urodzenia, '
         INNER JOIN Kontakty ON osoby.kontakt_nr = kontakty.nr_kontaktu
         INNER JOIN Konta ON Osoby.Nr_osoby = Konta.Osoba_Nr;
         
-SELECT * FROM reqInfo WHERE nr_osoby = 2;
-
-SELECT imie, nazwisko, haslo, "Data", pesel, telefon, email, miasto, ulica, nr_domu, nr_mieszkania, kod_pocztowy FROM reqPacjenci WHERE nr_osoby = 2;
---DELETE FROM Pacjenci_view WHERE nr_osoby = 5;
-
-SELECT * FROM Pacjenci_view;

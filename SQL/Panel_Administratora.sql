@@ -2,11 +2,11 @@ CREATE OR REPLACE VIEW AdminView_Wizyta AS
 SELECT Wizyty.Nr_Wizyty, TO_CHAR(Wizyty.data_wizyty, 'yyyy-MM-dd HH24:MI') as "Data_Wizyty", Wizyty.Opis, Wizyty.czy_odbyta, wizyty.lekarz_nr, 
         "OsobaLekarza".imie AS "Imie lekarza", "OsobaLekarza".Nazwisko AS "Nazwisko lekarza", specjalizacje.nazwa_specjalizacji, 
         wizyty.pacjent_nr, "OsobaPacjenta".imie AS "Imie pacjenta", "OsobaPacjenta".Nazwisko AS "Nazwisko pacjenta" FROM Wizyty
-INNER JOIN Lekarze ON wizyty.lekarz_nr = lekarze.nr_lekarza
-INNER JOIN Pacjenci ON wizyty.pacjent_nr = pacjenci.nr_karty_pacjenta
-INNER JOIN Osoby "OsobaPacjenta" ON "OsobaPacjenta".Nr_Osoby = pacjenci.osoba_nr
-INNER JOIN Osoby "OsobaLekarza" ON "OsobaLekarza".Nr_Osoby = Lekarze.osoba_nr
-INNER JOIN Specjalizacje ON specjalizacje.nr_specjalizacji = lekarze.specjalizacja_nr;
+LEFT JOIN Lekarze ON wizyty.lekarz_nr = lekarze.nr_lekarza
+LEFT JOIN Pacjenci ON wizyty.pacjent_nr = pacjenci.nr_karty_pacjenta
+LEFT JOIN Osoby "OsobaPacjenta" ON "OsobaPacjenta".Nr_Osoby = pacjenci.osoba_nr
+LEFT JOIN Osoby "OsobaLekarza" ON "OsobaLekarza".Nr_Osoby = Lekarze.osoba_nr
+LEFT JOIN Specjalizacje ON specjalizacje.nr_specjalizacji = lekarze.specjalizacja_nr;
 
 
 CREATE OR REPLACE VIEW AdminView_Pacjent AS
@@ -126,23 +126,41 @@ END;
 
 CREATE OR REPLACE PROCEDURE AdminUsun_admina(p_id osoby.nr_osoby%TYPE)
 AS
+v_kontakt kontakty.nr_kontaktu%TYPE;
 BEGIN
     IF(p_id = 1) THEN
      RAISE_APPLICATION_ERROR( -20005, 
           'Nie można usunąć konta głównego administratora numer 1!' );
     END IF;
+    SELECT Kontakt_Nr INTO v_kontakt FROM OSOBY WHERE Nr_Osoby = p_id;
     DELETE FROM Konta WHERE osoba_nr = p_id;
-    DELETE FROM Kontakty WHERE nr_kontaktu = 37;
+    DELETE FROM Sesje WHERE osoba_nr = p_id;
     DELETE FROM Osoby WHERE Nr_Osoby = p_id;
+    DELETE FROM Kontakty WHERE nr_kontaktu = v_kontakt;
 END;
 /
 
 --EXECUTE AdminUsun_admina(27);
 
-CREATE OR REPLACE PROCEDURE AdminUsun_pacjenta(p_id osoby.nr_osoby%TYPE)
+CREATE OR REPLACE PROCEDURE AdminUsun_pacjenta(p_id pacjenci.nr_karty_pacjenta%TYPE)
 AS
 v_osoba Osoby.nr_osoby%TYPE;
 BEGIN
-    
+    SELECT osoba_nr INTO v_osoba FROM Pacjenci WHERE nr_karty_pacjenta = p_id;
+    DELETE FROM pacjenci_view WHERE nr_osoby = v_osoba;
 END;
 /
+
+--EXECUTE AdminUsun_pacjenta(1);
+
+CREATE OR REPLACE PROCEDURE AdminUsun_lekarza(p_id pacjenci.nr_karty_pacjenta%TYPE)
+AS
+v_osoba Osoby.nr_osoby%TYPE;
+BEGIN
+    SELECT osoba_nr INTO v_osoba FROM Lekarze WHERE Nr_Lekarza = p_id;
+    DELETE FROM Lekarze_view WHERE nr_osoby = v_osoba;
+
+END;
+/
+
+--EXECUTE AdminUsun_lekarza(1);
