@@ -25,13 +25,13 @@
 
 .navbar a:hover 
 {
-  background-color: #161b22;
+	background-color: #161b22;
 	color: #7b8187;
 }
 
 .navbar a.active 
 {
-  background-color: #161b22;
+	background-color: #161b22;
 	color: #7b8187;
 }
 

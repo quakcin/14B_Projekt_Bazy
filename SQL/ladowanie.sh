@@ -13,4 +13,4 @@ NLS_LANG=.WE8MSWIN1252
    echo @"./LOGOWANIE.sql"
    echo @"./rejestracja.sql"
    echo @"./odswiezanie_sesji.sql"
-) | sqlplus system/root
+) | sqlplus system/123qwe

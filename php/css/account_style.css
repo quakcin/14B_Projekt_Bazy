@@ -2,6 +2,7 @@ body
 {
 	background-color: #0d1117;
 	color:white;
+
 }
 .wrapper
 {
@@ -9,7 +10,7 @@ body
 }
 .menu
 {
-	flex: 10%;
+	flex: 13%;
 	background-color: #0d1117;
 	border-top: 1px solid;
 	border-color: #151920;
@@ -18,15 +19,15 @@ body
 input[type=button]
 {
 	appearance:none;
+	width: fit-content;
+	padding: 0 15px;
 	-webkit-appearance:none;
 	text-align: center;
-	border:none;
 	background-color:#0d1117;
-	color: white;
+	color: #c9ccd1;
 	border: 1px;
 	border-style: solid;
 	border-color: #30363d;
-	
     border-radius:10px;
 	cursor:pointer;
 }
@@ -34,8 +35,9 @@ input[type=button]
 
 input[type=button]:hover
 {
-	background-color:#161b22;
-	color: white;
+	background-color:#21262d;
+	color: #c9ccd1;
+	border: 1px solid #6f7275;
 }
 .content
 {
@@ -53,7 +55,6 @@ input[type=button]:hover
 .content input[type=text], input[type=password]
 {
 	display: inline-block;
-    cursor: pointer;
     padding: 10px 15px;
     outline: 0;
     border: 1px;
@@ -73,7 +74,7 @@ input[type=button]:hover
     box-shadow: 0px 0px 5px 5px #0c2d6b;
 }
 
-#form_data_uro
+input[type=date], #form_data
 {
 	padding:10px;
 	border:none;
@@ -85,7 +86,7 @@ input[type=button]:hover
 	padding:10px;
     border-radius:10px;
 }
-#form_data_uro:active, #form_data_uro:hover, input[type=password]:focus
+#form_data_uro:active, #form_data:active, #form_data:hover, #form_data_uro:hover, input[type=password]:focus
 {
 	border-color: #1f6feb;
     outline: none;
@@ -144,40 +145,62 @@ input[type=button]:hover
 }
 .button-column
 {	
-	display: inline-block;
+	display: flex;
 	top: 0%;
-	justify-content: space-between;
+	gap: 12px;
 	height: 100px;
 }
 .button-column input[type=button]
 {
-	width: 70px;
+	width: fit-content;
+	padding: 0 5px;
 }
 
-.button-column input[type=button]:nth-child(1)
+/* usun konto */
+.button-column input[value$='Usuń Konto'], input[value$='Usuń']
+{
+	background-color: #21262d;
+	width: fit-content;
+	padding: 0 5px;
+	color: #f85149;
+}
+.button-column input[value$='Usuń Konto']:hover, input[value$='Usuń']:hover
+{
+	background-color: #f85149;
+	width: fit-content;
+	padding: 0 5px;
+	color: white;
+	border: 1px solid #fc3e35;
+}
+/* resetuj haslo */
+.button-column input[value$='Resetuj Hasło']
+{
+	background-color: #21262d;
+	width: fit-content;
+	padding: 0 5px;
+	color: #c9ccd1;
+}
+.button-column input[value$='Resetuj Hasło']:hover
+{
+	background-color: #21262d;
+	width: fit-content;
+	padding: 0 5px;
+	border: 1px solid #797c80;
+}
+
+.button-column > input[type=button]:nth-child(1)
 {
 	background-color: #238636;
 	color: white;
 }
 
-.button-column input[type=button]:nth-child(1):hover
+.button-column > input[type=button]:nth-child(1):hover
 {
 	background-color: #2cab45;
 	color: white;
 }
 
-.button-column input[type=button]:nth-child(2)
-{
-	width: 90px;
-	background-color: #a81818;
-}
 
-.button-column input[type=button]:nth-child(2):hover
-{
-	background-color: #e02828;
-	color: white;
-	border-color: #4a515c;
-}
 #passwd-eye .hide
 {
 	margin-left: -30px;

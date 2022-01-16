@@ -185,6 +185,8 @@ const invokeEditor = function (name, p_id)
     {
       const wrapper = document.createElement('div');
       const label = document.createElement('div');
+	  // - passwd id var
+	  let passwdId;
 
       if ("l" in item)
         label.textContent = item.l;
@@ -218,6 +220,7 @@ const invokeEditor = function (name, p_id)
           inp.setAttribute('disabled', '');
         
         wrapper.appendChild(inp);
+		passwdId = inp.id;
       }
 
       // -- dodanie wrappera do odpowiedniej kolumny
@@ -232,7 +235,7 @@ const invokeEditor = function (name, p_id)
         const eye_slash = document.createElement('i');
         eye_slash.setAttribute('class', 'hide bi bi-eye-slash ');
         wrapper.appendChild(eye_slash);
-        passwd_show();        
+        passwd_show(passwdId);        
       }      
     }
 	

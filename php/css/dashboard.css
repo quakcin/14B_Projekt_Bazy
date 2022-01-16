@@ -4,11 +4,11 @@ body
   margin: 0px;
   -overflow: hidden;
 }
-
 .wrapper 
 {
   display: flex;
   justify-content: left;
+  
 }
 
 .wrapper > .menu 
@@ -16,7 +16,7 @@ body
   width: 250px;
   height: 100vh;
   border-right: 2px solid black;
-  padding: 15px;
+  padding: 25px;
   box-sizing: border-box;
 }
 
@@ -24,9 +24,21 @@ body
 {
   width: calc(100vw - 250px);
   overflow: show;
-  padding: 15px;
+  padding: 5px;
   box-sizing: border-box;
   display: flex;
+  overflow: auto;
+  
+}
+.wrapper > .content::-webkit-scrollbar { width: 20px; }
+.wrapper > .content::-webkit-scrollbar-track {
+  background-color: #e4e4e4;
+  border-radius: 100px;
+}
+.wrapper > .content::-webkit-scrollbar-thumb {
+  border-radius: 100px;
+  background-color: #43484f;
+  box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
 }
 
 .wrapper > .menu > input
@@ -45,13 +57,13 @@ body
 {
     --width: 70vw;
     display: flex;
+	flex-wrap: wrap;
     align-items: center;
     -justify-content: space-between;
-    border-top: 1px dotted black;
 }
 
 .superTable > .row > div
 {
-    padding: 15px;
+    padding: 5px;
     box-sizing: border-box;
 }

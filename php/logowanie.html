@@ -65,7 +65,7 @@
 	<script src="./js/api.js"></script>
 	<script src="./js/eye_hide_show.js"></script>
     <script>
-	  passwd_show();	
+	  passwd_show(document.getElementById('passwdArea').id);	
       dbRestrict("Jestes juz zalogowany/zalogowana!", "./konto", ["brak"]);
       
       loginButton.onclick = function(e) 

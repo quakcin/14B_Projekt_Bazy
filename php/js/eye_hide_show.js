@@ -1,17 +1,12 @@
 let showFlag = false;
 let passwordField;
 
-
-
-
-function passwd_show()
+function passwd_show(passwdId)
 {
-  if(document.getElementById('passwdArea') != null)
-	passwordField = document.getElementById('passwdArea');
-  else if (document.getElementById('form_haslo') != null)
-	passwordField = document.getElementById('form_haslo');
+  passwordField = document.getElementById(passwdId);
+  console.log(passwordField);
   let hide = document.querySelector('.hide');
-
+  
   hide.onclick = function()
   {
 	const type = passwordField.getAttribute("type") === "password"
