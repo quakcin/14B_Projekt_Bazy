@@ -10,25 +10,91 @@
   </head>
   <body>
 
-    <select>
-      <option>Pacjent</option>
-      <option>Lekarz</option>
-    </select>
+    <div class="search-box">
+    </div>
+    <div class="search-result">
+      <div class="search-result-top"></div>
+      <div class="search-result-bottom"></div>      
+      <div class="search-result-bottom"></div>      
+      <div class="search-result-bottom"></div>      
+      <div class="search-result-bottom"></div>      
+      <div class="search-result-bottom"></div>      
+    </div>
+    
+    <div class="search-result-top" id="result-template-top-lekarz">
+      <table>
+        <tr>
+          <td> Imie: </td>
+          <td> %imie% </td>
+        </tr>
+        <tr>
+          <td> Nazwisko: </td>
+          <td> %nazw% </td>
+        </tr>
+        <tr>
+          <td> Specjalizacja: </td>
+          <td> %spec% </td>
+        </tr>
+        <tr>
+          <td> Telefon: </td>
+          <td> %tele% </td>
+        </tr>
+        <tr>
+          <td> E-Mail: </td>
+          <td> %mail% </td>
+        </tr>
+      </table>
+    </div>
 
-    <input type="text" placeholder="Imie">
-    <input type="text" placeholder="Nazisko">
+    <div class="search-result-item" id="result-template-item-lekarz">
+      <table>
+        <tr>
+          <td>%data%</td>
+          <td>%stat%</td>
+          <td>%imie%</td>
+          <td>%nazw%</td>
+        </tr>
+      </table>
+    </div>
 
-    <a href="#js.szukaj"> Szukaj </a>
+    <div class="search-result-top" id="result-template-top-pacjent">
+      <table>
+        <tr>
+          <td> Imie: </td>
+          <td> %imie% </td>
+        </tr>
+        <tr>
+          <td> Nazwisko: </td>
+          <td> %nazw% </td>
+        </tr>
+        <tr>
+          <td> Data urodzenia: </td>
+          <td> %data% </td>
+        </tr>
+        <tr>
+          <td> Miasto: </td>
+          <td> %mias% </td>
+        </tr>
+        <tr>
+          <td> Telefon: </td>
+          <td> %tele% </td>
+        </tr>
+      </table>
+    </div>
 
-    <!--
-      Dla Lekrazy:
-        Imie, Naziwsko, Specjalizacja
-
-      Dla Osob:
-        Imie, Naziwsko, Il. Odbytych Wizyt, Data Ostatniej Wizyty, Data Najblizszej Zaplanowanej Wizyty
-
-    -->
+    <div class="search-result-item" id="result-template-item-pacjent">
+      <table>
+        <tr>
+          <td>%data%</td>
+          <td>%stat%</td>
+          <td>%imie%</td>
+          <td>%nazw%</td>
+        </tr>
+      </table>
+    </div>    
+    
     <script src="./js/api.js"></script>
+    <script src="./js/informator.js"></script>
     
   </body>
 </html>
