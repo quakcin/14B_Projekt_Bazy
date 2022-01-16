@@ -44,18 +44,21 @@ label
 .error_msg
 {
 	display: none;
+	max-width: fit-content;
 	background-color: #382328;
 	border-color: #8f2626;
 }
 .e_msg
 {
-	flex: 70%;
+	flex: 90%;
 }
 .e_butt
 {
-	flex: 30%;
+	flex: 10%;
 	flex-wrap: wrap;
+	float: right;
 }
+.e_butt > #exitButton{ cursor: pointer;}
 
 .reg_panel
 {
