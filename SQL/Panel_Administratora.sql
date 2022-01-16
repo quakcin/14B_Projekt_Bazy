@@ -6,7 +6,8 @@ LEFT JOIN Lekarze ON wizyty.lekarz_nr = lekarze.nr_lekarza
 LEFT JOIN Pacjenci ON wizyty.pacjent_nr = pacjenci.nr_karty_pacjenta
 LEFT JOIN Osoby "OsobaPacjenta" ON "OsobaPacjenta".Nr_Osoby = pacjenci.osoba_nr
 LEFT JOIN Osoby "OsobaLekarza" ON "OsobaLekarza".Nr_Osoby = Lekarze.osoba_nr
-LEFT JOIN Specjalizacje ON specjalizacje.nr_specjalizacji = lekarze.specjalizacja_nr;
+LEFT JOIN Specjalizacje ON specjalizacje.nr_specjalizacji = lekarze.specjalizacja_nr
+ORDER BY Wizyty.Nr_Wizyty;
 
 
 CREATE OR REPLACE VIEW AdminView_Pacjent AS
