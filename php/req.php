@@ -422,9 +422,9 @@
     global $retDb;
 
     $qr = packSearchQuerry($_GET["key"], "AdminView_Pacjent",
-      ["login", "imie", "nazwisko", "data_urodzenia", "pesel", "nr_karty_pacjenta"]
+      ["login", "imie", "nazwisko", '"Data urodzenia"', "pesel", "nr_karty_pacjenta"]
     );  
-    $qr = str_replace("*", "login, imie, nazwisko, pesel, data_urodzenia, nr_karty_pacjenta", $qr);
+    $qr = str_replace("*", "login, imie, nazwisko, pesel, \"Data urodzenia\", nr_karty_pacjenta", $qr);
   
     $retDb = dbRequire($qr);
   }

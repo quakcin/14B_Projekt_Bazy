@@ -10,7 +10,7 @@ LEFT JOIN Specjalizacje ON specjalizacje.nr_specjalizacji = lekarze.specjalizacj
 
 
 CREATE OR REPLACE VIEW AdminView_Pacjent AS
-SELECT  Konta.login, Konta.haslo, osoby.imie, osoby.nazwisko, osoby.data_urodzenia, osoby.pesel, kontakty.telefon, 
+SELECT  Konta.login, Konta.haslo, osoby.imie, osoby.nazwisko, TO_CHAR(osoby.data_urodzenia, 'dd.mm.yyyy') AS "Data urodzenia", osoby.pesel, kontakty.telefon, 
         kontakty.email, adresy.miasto, adresy.ulica, adresy.nr_domu, adresy.nr_mieszkania, 
         adresy.kod_pocztowy, pacjenci.nr_karty_pacjenta, osoby.nr_osoby
         FROM Osoby
@@ -164,3 +164,24 @@ END;
 /
 
 --EXECUTE AdminUsun_lekarza(1);
+
+CREATE OR REPLACE PROCEDURE admin_add(p_login Konta.login%TYPE, p_haslo Konta.haslo%TYPE, p_imie osoby.imie%TYPE, p_nazw osoby.nazwisko%TYPE, 
+                                        p_telefon kontakty.telefon%TYPE, p_email Kontakty.email%TYPE)
+AS
+BEGIN
+INSERT INTO Kontakty VALUES (Kontakty_sequence.NEXTVAL, p_telefon, p_email);
+INSERT INTO Osoby VALUES(Osoby_sequence.NEXTVAL, p_nazw, p_imie, sysdate - round(dbms_random.value(2000,3000)), TO_CHAR(round(dbms_random.value(00000000001,99999999999))), 1, Kontakty_sequence.CURRVAL);
+INSERT INTO Konta VALUES(Konta_sequence.NEXTVAL, p_login, p_haslo, 'admin', Osoby_sequence.CURRVAL);
+
+END;
+/
+
+CREATE OR REPLACE PROCEDURE producLekow_add(p_nazwa Producenci_Lekow.nazwa_producenta%TYPE, p_kodpoczt Adresy.Kod_Pocztowy%TYPE, 
+                            p_miasto Adresy.Miasto%TYPE, p_ulica Adresy.Ulica%TYPE, p_dom adresy.nr_domu%TYPE, p_mieszk adresy.nr_mieszkania%TYPE,
+                            p_mail kontakty.email%TYPE, p_tel kontakty.telefon%TYPE)
+AS
+BEGIN
+INSERT INTO Producenci_Lekow_view (nazwa_producenta, kod_pocztowy, miasto, ulica,nr_domu, nr_mieszkania, email,telefon) 
+VALUES (p_nazwa, p_kodpoczt, p_miasto, p_ulica, p_dom, p_mieszk, p_mail, p_tel);
+END;
+/
