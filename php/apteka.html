@@ -7,13 +7,176 @@
   <head>
     <title> PRZYCHODNIA | APTEKA </title>
     <meta charset="UTF-8">
+    <link rel="Stylesheet" href="./css/apteka.css">
   </head>
   <body>
 
-  <input type="text" placeholder="Nazwa Leku">
-  <input type="text" placeholder="Nr Recepty">
-  <a href="#js"> Szukaj </a>
-    
-  <script src="./js/api.js"></script>
+    <div class="search-wrapper">
+      <div>
+        <input type="text" placeholder="Nazwa Leku" id="search-box">
+      </div>
+      <div>
+      <select id="search-type">
+        <option>Bez Recepty</option>
+      </select>
+      </div>
+      <div>
+        <input type="button" value="Szukaj" id="search-button">
+      </div>
+    </div>
+
+    <div class="search-results" id="search-results">
+      
+    </div>
+
+    <div id="search-result-template" style="display: none;">
+      <div class="search-result" id="lek_%id" style="background-color: %bgcol;" title="%desc">
+        <div class="picture" style="background-image: url(%img);" onclick="window.open('%url');"></div>
+        <div class="meta">
+          <div class="name">%name</div>
+          <div class="price">%price zł</div>
+        </div>
+        %config
+      </div>
+    </div>
+
+    <div id="result-config-lekarz" style="display: none;">
+      <div class="config">
+        <input type="button" value="Dodaj" onclick="dodajDoRecepty(%id)">
+        <input type="button" value="Usun" onclick="usunZRecepty(%id)">      
+      </div>
+    </div>
+
+    <div id="result-config-admin" style="display: none;">
+      <div class="config">
+        <input type="button" value="Usun">      
+      </div>
+    </div>
+  
+    <script src="./js/api.js"></script>
+    <script>
+
+      let P_AC_TYPE = 'lekarz';
+
+      document.body.onload = (e) =>
+      {
+        dbReq((e) =>
+        {
+          if (e.success == false)
+          {
+            alert(`Wystąpił błąd serwera ${e.err}!`);
+            return;
+          }
+          
+          // ----------------------------------------
+          // -- Ustawienie wyszukiwarki
+
+          P_AC_TYPE = e.acType;
+
+          if (e.acType == 'lekarz')
+          {
+            for (const [i, elem] of e.db[0].entries())
+              document.getElementById('search-type').innerHTML += `<option>${elem[0]}</option>`;
+
+            document.getElementById('search-type').value = e.db[1][0];
+          }
+          
+        }, "aptekaInit");
+      }
+      
+      // -- move to proper file!
+      document.getElementById('search-button').onclick = (e) =>
+      {
+        lookup();
+      }
+
+      document.getElementById('search-type').onchange = (e) =>
+      {
+        lookup();
+      }
+
+      
+
+      // ----------------------------------------
+      // -- Wyrenderowanie Wyników
+      const renderResults = function (results, special = [])
+      {
+        console.log(special);
+        document.getElementById('search-results').innerHTML = '';
+        for (const [i, result] of results.entries())
+        {
+          const proto = document.getElementById('search-result-template').innerHTML
+            .replace('%config', (P_AC_TYPE == 'pacjent') ? '' : (P_AC_TYPE == 'lekarz' ? document.getElementById('result-config-lekarz').innerHTML : document.getElementById('result-config-admin').innerHTML))
+            .replace('%bgcol', (special.flat().includes(result[5]) ? '#fff1c9' : 'transparent'))
+            .replace('%name', result[0])
+            .replace('%price', result[1])
+            .replace('%url', result[2])
+            .replace('%img', result[3])
+            .replace('%desc', result[4])
+            .replaceAll('%id', result[5]) 
+          document.getElementById('search-results').innerHTML += proto;
+        }
+      }
+      
+      // ----------------------------------------
+      // -- Szukanie Po Nazwie
+      const rawSearch = function ()
+      {
+        dbReq((e) =>
+          {
+            console.log(e);
+            if (e.success == false)
+              alert(`Wystąpił błąd serwera: ${e.err}!`);
+            else
+              renderResults(e.db[0], e.db[1]);
+        }, "aptekaSzukaj", ["key", document.getElementById('search-box').value, 'typ', document.getElementById('search-type').value]);
+      }
+
+      // ----------------------------------------
+      // -- Szukanie Po Recepcie
+      const properSearch = function ()
+      {
+        console.log('pps');
+      }
+
+      // ----------------------------------------
+      // -- Wstępna Obsługa Wyszukiwarki
+      const lookup = function ()
+      {
+        if (document.getElementById('search-type').value == 'Bez Recepty' || P_AC_TYPE == 'lekarz')
+          rawSearch();
+        else
+          properSearch();
+      }
+
+      // --------------------------------------------------------------------------------
+      // -- Funkcje: Lekarza
+      // --------------------------------------------------------------------------------
+
+      const dodajDoRecepty = function (id)
+      {
+        dbReq((e) =>
+        {
+          if (e.success == false)
+            alert(`Błąd Serwera ${e.err}`);
+
+          document.getElementById(`lek_${id}`).setAttribute('style', 'background-color: #fff1c9;');
+          
+        }, "aptekaDodajRecepte", ["rec", document.getElementById('search-type').value, "lek", id]);
+      }
+      
+      const usunZRecepty = function (id)
+      {
+        dbReq((e) =>
+        {
+          if (e.success == false)
+            alert(`Błąd Serwera ${e.err}`);
+
+          document.getElementById(`lek_${id}`).setAttribute('style', 'background-color: transparent;');
+
+        }, "aptekaUsunRecepte", ["rec", document.getElementById('search-type').value, "lek", id]);
+      }
+      
+    </script>
   </body>
 </html>

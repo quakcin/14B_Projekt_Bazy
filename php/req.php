@@ -583,7 +583,45 @@
   {
     dbRequire("CALL AdminUsun_pacjenta(" . $_GET["p_id"] . ")");
   }  
-    
+
+  // -------------------------------------
+  // -- Apteka:
+  // -------------------------------------
+
+  function apt_szukaj ()
+  {
+    global $retDb;
+    $retDb[0] = dbRequire("SELECT nazwa_leku, cena, odnosnik, zdjecie, opis, nr_leku FROM Leki_view WHERE LOWER(nazwa_leku) LIKE '%" . $_GET["key"] . "%' AND ROWNUM < 100");
+    if ($_GET["typ"] != 'Bez Recepty')
+      $retDb[1] = dbRequire("SELECT Lek_Nr FROM Lek_Na_Recepte WHERE recepta_nr = " . $_GET["typ"]);      
+    else
+      $retDb[1] = array();
+  }
+
+  function apt_init ()
+  {
+    global $retDb;
+    global $retPacket;
+
+    if ($retPacket['acType'] == 'lekarz')
+    {
+      $retDb[0] = dbRequire("SELECT Nr_Recepty FROM ReceptyLekarza WHERE Osoba_Nr = " . $retPacket['nrOsoby']);  
+      $retDb[1] = dbRequire("SELECT Ostatnia_Recepta FROM Lekarze WHERE osoba_nr = " . $retPacket['nrOsoby']);
+    }
+  }
+
+  function apt_dodaj_recepte ()
+  {
+    global $retDb;
+    dbRequire("INSERT INTO Lek_Na_Recepte VALUES(" . $_GET["rec"] . "," . $_GET["lek"] . ")");
+  }
+  
+  function apt_usun_recepte ()
+  {
+    global $retDb;
+    dbRequire("DELETE FROM  Lek_Na_Recepte WHERE recepta_nr = " . $_GET["rec"] . " AND lek_nr = " . $_GET["lek"]);
+  }
+  
   // -------------------------------------
   // -- Wizyty:
   // -------------------------------------
@@ -725,7 +763,14 @@
     new Command("ludziSzukaj", "ludziSzukaj", "admin", ["imie", "nazwisko"]),
     new Command("ludziSzukaj", "ludziSzukaj", "lekarz", ["imie", "nazwisko"]),
     new Command("ludziSzukaj", "ludziSzukaj", "pacjent", ["imie", "nazwisko"]),
-  
+
+    // -- Apteka
+    new Command("aptekaSzukaj", "apt_szukaj", "pacjent", ["key", "typ"]),
+    new Command("aptekaSzukaj", "apt_szukaj", "lekarz", ["key", "typ"]),
+
+    new Command("aptekaInit", "apt_init", "lekarz", []),
+    new Command("aptekaDodajRecepte", "apt_dodaj_recepte", "lekarz", ["lek", "rec"]),
+    new Command("aptekaUsunRecepte", "apt_usun_recepte", "lekarz", ["lek", "rec"]),   
         
     // -- Logowanie:  
     new Command("dropSess", "wylogowywanie", "pacjent", []),

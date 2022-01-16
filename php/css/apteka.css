@@ -1,0 +1,55 @@
+body
+{
+    padding: 0px;
+    margin: 0px;
+}
+
+.search-wrapper
+{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 450px;
+    padding: 30px;
+    box-sizing: border-box;
+    background-color: #f0f0f0;
+    margin-left: 100px;
+    margin-top: 25px;
+}
+
+.search-results
+{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100vw;
+    margin-left: 100px;
+}
+
+.search-result
+{
+    display: block;
+    width: 210px;
+    height: 350px;
+    padding: 10px;
+    box-sizing: border-box;
+    margin: 40px;
+}
+
+.search-result > .picture
+{
+    width: 190px;
+    height: 190px;
+    background-size: cover;    
+}
+
+.search-result > .meta >.name
+{
+    font-size: 20px;
+}
+
+.search-result > .meta >.price
+{
+    font-size: 18px;
+    font-weight: bold;
+}
