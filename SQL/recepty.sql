@@ -1,7 +1,7 @@
-/*INSERT INTO Recepty (Wizyta_Nr) VALUES (12);
-INSERT INTO Lek_Na_Recepte VALUES (3,218);
-INSERT INTO Lek_Na_Recepte VALUES (3,203);
-INSERT INTO Lek_Na_Recepte VALUES (3,260);
+/*INSERT INTO Recepty (Wizyta_Nr) VALUES (3);
+INSERT INTO Lek_Na_Recepte VALUES (2,218);
+INSERT INTO Lek_Na_Recepte VALUES (2,203);
+INSERT INTO Lek_Na_Recepte VALUES (7,218);
 INSERT INTO Lek_Na_Recepte VALUES (3,17);*/
 
 
