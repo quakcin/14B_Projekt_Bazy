@@ -11,6 +11,7 @@
 	
 	<link rel="stylesheet" href="./css/m_style.css">
 	<link rel="stylesheet" href="./css/reg_style.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
   </head>
   <body>
 
@@ -105,7 +106,7 @@
 			</tr>
 			<tr>
 				<td class="f1_text">Haslo  </td>
-				<td><input class="f1" id="Haslo" type="password" autocomplete="off" name="Haslo"> </td>
+				<td><input class="f1" id="Haslo" type="password" autocomplete="off" name="Haslo"> <i class="hide bi bi-eye-slash "></i> </td>
 			</tr>
 			<tr>
 				<td  class="error Haslo_error"> </td>
@@ -126,8 +127,20 @@
   
 
   <script src="./js/api.js"></script>
+  <script src="./js/eye_hide_show.js"></script>
   <script>
-    
+	passwd_show(document.getElementById('Haslo').id);
+    function checkItmName( name)
+	{
+	  let itmName = ['Lokal', 'Telefon', 'Mail'];
+	  
+	  if(itmName.indexOf(name) !== -1)
+		{ console.log(name+' istnieje'); return false;}
+	  else 
+	    return true;
+	}
+	
+	
     dbRestrict(
       "Jestes juz zarejestrowany/zarejestrowana!", 
       "./konto", ["brak", "admin"]
@@ -144,7 +157,7 @@
         argList.push(itm.name.toLowerCase());
         let errorMsg = document.getElementsByClassName(itm.name+"_error");
         const strippedValue = itm.value.trim();
-        if (strippedValue == '' && itm.name != 'Lokal')
+        if (strippedValue == '' && checkItmName(itm.name))
         {
           errorMsg[0].innerHTML= `Pole ${itm.name} nie moze byc puste!`;
           document.getElementById(itm.name).style.borderBottomColor= "red";
@@ -153,7 +166,7 @@
         else
         {
           //Walidacja wprowadanych danych
-          if(itm.name != 'Lokal')
+          if(checkItmName(itm.name))
           {
             errorMsg[0].innerHTML= "";
             document.getElementById(itm.name).style.borderBottomColor= "#30363d";
@@ -170,7 +183,12 @@
               }
             break;
             case 'Mail':
-              if(!strippedValue.includes("@"))
+			  if(strippedValue.length == 0)
+				{
+				  errorMsg[0].innerHTML= "";
+				  document.getElementById(itm.name).style.borderBottomColor= "#30363d";
+				}
+              else if(!strippedValue.includes("@"))
               {
                 errorMsg[0].innerHTML= `Pole ${itm.name} nie jest mailem`;
                 document.getElementById(itm.name).style.borderBottomColor= "red";

@@ -94,3 +94,19 @@ body
 	font-size: 10px;
 	vertical-align: middle;
 }
+::-webkit-calendar-picker-indicator 
+{
+	background-color: white; 
+	border-radius: 5px;
+}
+
+#Haslo .hide
+{
+	margin-left: -30px;
+    cursor: pointer;
+}
+.hide
+{
+	font-size: 20px;
+	color: #fff;
+}
