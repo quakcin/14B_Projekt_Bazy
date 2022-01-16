@@ -1,4 +1,10 @@
 
+## APTEKA
+- [ ] Pacjenci
+- [ ] Admin
+- [ ] Brak
+- [ ] Zaznaczone
+  
 ## Konto / Dashboard
 
 ### Panel Admina
@@ -25,11 +31,11 @@
 - [x] Edytor: (upt) Producenta
 - [x] Edytor: (upt) Wizyty  
   
-- [ ] Inserter: Konto Lekarza    
-- [ ] Inserter: Konto Adminów    
+- [x] Inserter: Konto Lekarza    
+- [x] Inserter: Konto Adminów    
 - [ ] Inserter: Leków
-- [ ] Inserter: Specjalizacji
-- [ ] Inserter: Producentów
+- [x] Inserter: Specjalizacji
+- [x] Inserter: Producentów
   
 ### Panel Lekarza
 - [x] Zaznaczanie recept
@@ -37,7 +43,7 @@
 - [ ] Szersze pole leków w szukajce od recept
   
 ### Panel Pacjenta
-- [ ] Poprawić CSS'a
+- [x] Poprawić CSS'a
 - [x] Usuwanie konta (narazie tylko przycisk)
 - [ ] Schować numer pacjenta w szukajce wizyt
 - [ ] Nie pobierać hasła, hashować po stronie bazy
@@ -52,8 +58,8 @@
 
 
 ## Strona / Reszta
-- [ ] Zakładka od podglądu pacjentów i lekarzy
-- [ ] Zakładka apteki
+- [x] Zakładka od podglądu pacjentów i lekarzy
+- [x] Zakładka apteki
 - [ ] Poprawić "Umuw Się Na Wizyte"
 - [ ] Dynamiczne przyciski logowania na stronie głównej
 - [ ] Skalowanie Teł na stronie głównej (polecam background-image: url() w css)
