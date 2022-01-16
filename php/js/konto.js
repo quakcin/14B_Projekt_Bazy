@@ -185,9 +185,7 @@ const invokeEditor = function (name, p_id)
     {
       const wrapper = document.createElement('div');
       const label = document.createElement('div');
-	  // - passwd id var
-	  let passwdId;
-
+      
       if ("l" in item)
         label.textContent = item.l;
       else
@@ -220,7 +218,6 @@ const invokeEditor = function (name, p_id)
           inp.setAttribute('disabled', '');
         
         wrapper.appendChild(inp);
-		passwdId = inp.id;
       }
 
       // -- dodanie wrappera do odpowiedniej kolumny
@@ -235,7 +232,7 @@ const invokeEditor = function (name, p_id)
         const eye_slash = document.createElement('i');
         eye_slash.setAttribute('class', 'hide bi bi-eye-slash ');
         wrapper.appendChild(eye_slash);
-        passwd_show(passwdId);        
+        passwd_show(`form_${item.n}`);        
       }      
     }
 	
@@ -341,10 +338,10 @@ const renderSearchResult = function (dbRow, resScheme, index)
   row.setAttribute('id', rowID);
   row.setAttribute('style', `width: ${renderCalcRowWidth(resScheme)}px`);
   
-  for (let item of dbRow)
+  for (const [i, item] of dbRow.entries())
   {
     const col = document.createElement('div');
-    col.setAttribute('style', `width: ${resScheme.fields[dbRow.indexOf(item)].s}px`);
+    col.setAttribute('style', `width: ${resScheme.fields[i].s}px`);
     if (index == 0)
       col.style.fontWeight = 'bold';
     col.textContent = item;
@@ -398,9 +395,9 @@ const performSearch = function ()
       let results = [];
       results.push(fields);
       results = results.concat(e.db);
-      for (let elem of results)
+      for (const [i, elem] of results.entries())
         tab.appendChild(
-          renderSearchResult(elem, res, results.indexOf(elem))
+          renderSearchResult(elem, res, i)
         );
     }
     sbr.appendChild(tab);
@@ -696,6 +693,7 @@ const szukajkiAdmina = function ()
         {
           if (e.success == false)
             alert(`Nie udało się usunąć konta admina, ${e.err}`);
+          performSearch();
         }, "usun_admina", ["p_id", adminID]);
       }
     }
@@ -784,7 +782,13 @@ const edytoryAdmina = function ()
     [
       {val: "Usuń Konto", evt: (p_id) =>
         {
-          dbReq((e) => { if (e.success == false) alert(`Wystąpił błąd: ${e.err}`); }, "usun_lekarza", ["p_id", p_id]);
+          dbReq((e) =>
+          {
+            if (e.success == false)
+              alert(`Wystąpił błąd: ${e.err}`);
+            hideAllPanelsExcept(P_SEARCH);
+            invokeSearch('acLekarze', G_PERSON_ID);
+          }, "usun_lekarza", ["p_id", p_id]);
         }
       },
       {val: "Resetuj Hasło", evt: (p_id) =>
@@ -819,9 +823,15 @@ const edytoryAdmina = function ()
     [
       {val: "Usuń Konto", evt: (p_id) =>
         {
-          dbReq((e) => { if (e.success == false) alert(`Wystąpił błąd: ${e.err}`); }, "usun_pacjenta", ["p_id", p_id]);
+          dbReq((e) =>
+          {
+            if (e.success == false)
+              alert(`Wystąpił błąd: ${e.err}`);
+            hideAllPanelsExcept(P_SEARCH);
+            invokeSearch('acPacjenci', G_PERSON_ID);
+          }, "usun_pacjenta", ["p_id", p_id]);
         }
-      },      
+      },     
       {val: "Resetuj Hasło", evt: (p_id) =>
         {
           const newPsswd = parseInt(Math.random() * 9999) % 1000 + 1111;
