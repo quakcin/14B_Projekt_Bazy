@@ -1,8 +1,8 @@
-/*INSERT INTO Recepty (Wizyta_Nr) VALUES (52); 
-INSERT INTO Lek_Na_Recepte(Recepta_Nr, Lek_Nr) VALUES (3,18);
-INSERT INTO Lek_Na_Recepte(Recepta_Nr, Lek_Nr) VALUES (3,13);
-INSERT INTO Lek_Na_Recepte(Recepta_Nr, Lek_Nr) VALUES (3,16);
-INSERT INTO Lek_Na_Recepte(Recepta_Nr, Lek_Nr) VALUES (3,17);*/
+/*INSERT INTO Recepty (Wizyta_Nr) VALUES (12);
+INSERT INTO Lek_Na_Recepte VALUES (3,218);
+INSERT INTO Lek_Na_Recepte VALUES (3,203);
+INSERT INTO Lek_Na_Recepte VALUES (3,260);
+INSERT INTO Lek_Na_Recepte VALUES (3,17);*/
 
 
 
@@ -18,3 +18,11 @@ INNER JOIN Osoby ON osoby.nr_osoby = lekarze.osoba_nr;
 /*SELECT * FROM Pacjent_Recepty WHERE pacjent_nr = (SELECT NR_KARTY_PACJENTA FROM Pacjenci INNER JOIN Osoby ON pacjenci.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = 2);*/
 
 /*SELECT TO_CHAR(SYSDATE, 'yyyy-MM-dd') , TO_CHAR(SYSDATE+30, 'yyyy-MM-dd'), '' FROM DUAL; */
+
+
+CREATE OR REPLACE VIEW ReceptyLekarza AS
+SELECT Nr_Recepty, Osoba_Nr FROM recepty
+INNER JOIN Wizyty ON wizyty.nr_wizyty = recepty.wizyta_nr
+INNER JOIN Lekarze ON Lekarze.Nr_Lekarza = Wizyty.lekarz_nr;
+
+SELECT Nr_Recepty FROM ReceptyLekarza WHERE Osoba_Nr = 18;

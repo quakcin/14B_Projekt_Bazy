@@ -46,7 +46,7 @@ INSERT INTO Lekarze_view VALUES ('Lek16', 'lek16', 'Dominika', 'Szulc', sysdate-
 INSERT INTO Lekarze_view VALUES ('Lek17', 'lek17', 'Dominik', 'Kozłowski', sysdate-7700, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'Koz³owski123@wp.pl', 'Nowa S³upia', 'Szkolna', '8', NULL, '25-577', 'Reumatolog', NULL, NULL, NULL);
 INSERT INTO Lekarze_view VALUES ('Lek18', 'lek18', 'Julia', 'Duda', sysdate-15500, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'doktorDuda@wp.pl', 'Nowa S³upia', 'Kwiatowa', '13', NULL, '25-577', 'Hematolog', NULL, NULL, NULL);
 INSERT INTO Lekarze_view VALUES ('Lek19', 'lek19', 'Andrzej', 'Jakubowski', sysdate-12300, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'doktorAJak@wp.pl', 'Nowa S³upia', 'Chemowa', '4', NULL, '25-577', 'Lekarz Rodzinny', NULL, NULL, NULL);
-INSERT INTO Lekarze_view VALUES ('Lek20', 'lek20', 'Michal', 'Wróblewski', sysdate-14600, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'Wroblewski@wp.pl', 'Kielce', 'Hoza', '25', NULL, '25-987', 'Lekarz Rodzinny', NULL, NULL, NULL);
+INSERT INTO Lekarze_view VALUES ('Lek20', 'lek20', 'Michał', 'Wróblewski', sysdate-14600, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'Wroblewski@wp.pl', 'Kielce', 'Hoza', '25', NULL, '25-987', 'Lekarz Rodzinny', NULL, NULL, NULL);
 INSERT INTO Lekarze_view VALUES ('Lek21', 'lek21', 'Szymon', 'Szymczak', sysdate-21370, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'doktorSzymczak@wp.pl', 'Kielce', 'Czestochowska', '46', NULL, '25-987', 'Lekarz Rodzinny', NULL, NULL, NULL);
 
 --Producenci leków
@@ -85,13 +85,9 @@ FOR i IN 1..p_ilosc LOOP
     SELECT to_char(sysdate + round(dbms_random.VALUE(-60,60)), 'DD.MM.YYYY') INTO dni FROM dual;
     SELECT * INTO godziny FROM(SELECT * FROM dostepne_godz ORDER BY DBMS_RANDOM.RANDOM) WHERE  ROWNUM < 2;
     data_wizyty := (dni||' '||godziny);
-    IF(TO_DATE(data_wizyty, 'DD.MM.YYYY HH24:MI') < TO_DATE(SYSDATE, 'DD.MM.YYYY HH24:MI')) THEN
-        INSERT INTO Wizyty (lekarz_nr, pacjent_nr, Data_wizyty, czy_odbyta) 
-        VALUES(round(DBMS_RANDOM.VALUE(1,(SELECT MAX(Nr_Lekarza) FROM Lekarze))),round(DBMS_RANDOM.VALUE(1,(SELECT MAX(Nr_Karty_Pacjenta) FROM Pacjenci))), TO_DATE(data_wizyty,'DD.MM.YYYY HH24:MI'), 'Odbyta');
-    ELSE
-        INSERT INTO Wizyty (lekarz_nr, pacjent_nr, Data_wizyty, czy_odbyta) 
-        VALUES(round(DBMS_RANDOM.VALUE(1,(SELECT MAX(Nr_Lekarza) FROM Lekarze))),round(DBMS_RANDOM.VALUE(1,(SELECT MAX(Nr_Karty_Pacjenta) FROM Pacjenci))), TO_DATE(data_wizyty,'DD.MM.YYYY HH24:MI'), 'Zaplanowana');
-    END IF;
+    INSERT INTO Wizyty (lekarz_nr, pacjent_nr, Data_wizyty, czy_odbyta) 
+    VALUES(round(DBMS_RANDOM.VALUE(1,(SELECT MAX(Nr_Lekarza) FROM Lekarze))),round(DBMS_RANDOM.VALUE(1,(SELECT MAX(Nr_Karty_Pacjenta) FROM Pacjenci))), TO_DATE(data_wizyty,'DD.MM.YYYY HH24:MI'), 'Zaplanowana');
+    UPDATE Wizyty SET czy_odbyta = 'Odbyta' WHERE wizyty.data_wizyty < SYSDATE;
 END LOOP;
 END;
 /
