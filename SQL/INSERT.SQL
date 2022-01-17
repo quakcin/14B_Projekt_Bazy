@@ -1,17 +1,17 @@
 --Specjalizacje
-INSERT INTO Specjalizacje (Nazwa_Specjalizacji) VALUES ('Kardiolog');
-INSERT INTO Specjalizacje (Nazwa_Specjalizacji) VALUES ('Dentysta');
-INSERT INTO Specjalizacje (Nazwa_Specjalizacji) VALUES ('Okulista');
-INSERT INTO Specjalizacje (Nazwa_Specjalizacji) VALUES ('Neurolog');
-INSERT INTO Specjalizacje (Nazwa_Specjalizacji) VALUES ('Urolog');
-INSERT INTO Specjalizacje (Nazwa_Specjalizacji) VALUES ('Psychiatra');
-INSERT INTO Specjalizacje (Nazwa_Specjalizacji) VALUES ('Pediatra');
-INSERT INTO Specjalizacje (Nazwa_Specjalizacji) VALUES ('Dermatolog');
-INSERT INTO Specjalizacje (Nazwa_Specjalizacji) VALUES ('Ginekolog');
-INSERT INTO Specjalizacje (Nazwa_Specjalizacji) VALUES ('Alergolog');
-INSERT INTO Specjalizacje (Nazwa_Specjalizacji) VALUES ('Reumatolog');
-INSERT INTO Specjalizacje (Nazwa_Specjalizacji) VALUES ('Hematolog');
-INSERT INTO Specjalizacje (Nazwa_Specjalizacji) VALUES ('Lekarz Rodzinny');
+INSERT INTO Specjalizacje (Nazwa_Specjalizacji,Opis) VALUES ('Kardiolog', 'Lekarz medycyny zajmujący się chorobami serca i układu krążenia.');
+INSERT INTO Specjalizacje (Nazwa_Specjalizacji, Opis) VALUES ('Dentysta', 'Lekarz medycyny zajmujący sie chorobami zębów i jamy ustnej');
+INSERT INTO Specjalizacje (Nazwa_Specjalizacji, Opis) VALUES ('Okulista', 'Lekarz medycyny zajmujący sie badaniem i leczeniem narządu wzroku oraz korygowaniem jego wad');
+INSERT INTO Specjalizacje (Nazwa_Specjalizacji, Opis) VALUES ('Neurolog', 'Lekarz medycyny zajmujący sie zajmujący sie chorobami obwodowego oraz ośrodkowego układu nerwowego');
+INSERT INTO Specjalizacje (Nazwa_Specjalizacji, Opis) VALUES ('Urolog', 'Lekarz medycyny zajmujący sie chorobami układu moczowego u mężczyzn, kobiet, a także dzieci');
+INSERT INTO Specjalizacje (Nazwa_Specjalizacji, Opis) VALUES ('Psychiatra', 'Lekarz medycyny zajmujący sie diagnozowaniem oraz leczeniem chorób i zaburzę psychicznych');
+INSERT INTO Specjalizacje (Nazwa_Specjalizacji, Opis) VALUES ('Pediatra', 'Lekarz medycyny zajmujący sie chorobami dziecięcymi');
+INSERT INTO Specjalizacje (Nazwa_Specjalizacji, Opis) VALUES ('Dermatolog', 'Lekarz medycyny zajmujący sie  leczeniem, diagnozowaniem i profilaktyka chorób skory, włosów i paznokci');
+INSERT INTO Specjalizacje (Nazwa_Specjalizacji, Opis) VALUES ('Ginekolog', 'Lekarz medycyny zajmujący sie  profilaktyka i leczeniem chorób żeńskiego układu płciowego');
+INSERT INTO Specjalizacje (Nazwa_Specjalizacji, Opis) VALUES ('Alergolog', 'Lekarz medycyny zajmujący sie chorobami wywoływanymi przez alergeny');
+INSERT INTO Specjalizacje (Nazwa_Specjalizacji, Opis) VALUES ('Reumatolog', 'Lekarz medycyny zajmujący sie rożnego typu schorzeniami powiązanymi ze stanami zwyrodnieniowymi i zapalnymi tkanki łącznej, kości i stawów');
+INSERT INTO Specjalizacje (Nazwa_Specjalizacji, Opis) VALUES ('Hematolog', 'Lekarz medycyny zajmujący sie chorobami krwi i układu krwiotwórczego');
+INSERT INTO Specjalizacje (Nazwa_Specjalizacji, Opis) VALUES ('Lekarz Rodzinny', 'Lekarz medycyny zajmujący sie diagnozowaniem i leczeniem chorób, które występują najczęściej według statystyk, ale nie wymagają konsultacji specjalistycznych');
 
 
 --Konto ADMINA
