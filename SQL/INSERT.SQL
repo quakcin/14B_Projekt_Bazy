@@ -62,7 +62,6 @@ INSERT INTO Producenci_Lekow_view (nazwa_producenta, kod_pocztowy, miasto, ulica
 INSERT INTO Producenci_Lekow_view (nazwa_producenta, kod_pocztowy, miasto, ulica,nr_domu, nr_mieszkania, email,telefon) VALUES ('Zakłady Farmaceutyczne Polpharma S.A.', '83-200', 'Starogard Gdański', 'Pelplińska', '19', NULL, 'iod@polpharma.com', '585631600');
 
 --Wizyty bez opisow
-
 CREATE TABLE dostepne_godz(
 godz NVARCHAR2(20)
 );
@@ -80,19 +79,31 @@ IS
 dni NVARCHAR2(80);
 godziny NVARCHAR2(80);
 data_wizyty NVARCHAR2(80);
+los NUMBER;
+prawdopodob NUMBER;
 BEGIN
 FOR i IN 1..p_ilosc LOOP
-    SELECT to_char(sysdate + round(dbms_random.VALUE(-60,60)), 'DD.MM.YYYY') INTO dni FROM dual;
+    los:=round(dbms_random.VALUE(-60,60));
+    SELECT to_char(sysdate + los, 'DD.MM.YYYY') INTO dni FROM dual;
     SELECT * INTO godziny FROM(SELECT * FROM dostepne_godz ORDER BY DBMS_RANDOM.RANDOM) WHERE  ROWNUM < 2;
     data_wizyty := (dni||' '||godziny);
     INSERT INTO Wizyty (lekarz_nr, pacjent_nr, Data_wizyty, czy_odbyta) 
     VALUES(round(DBMS_RANDOM.VALUE(1,(SELECT MAX(Nr_Lekarza) FROM Lekarze))),round(DBMS_RANDOM.VALUE(1,(SELECT MAX(Nr_Karty_Pacjenta) FROM Pacjenci))), TO_DATE(data_wizyty,'DD.MM.YYYY HH24:MI'), 'Zaplanowana');
-    UPDATE Wizyty SET czy_odbyta = 'Odbyta' WHERE wizyty.data_wizyty < SYSDATE;
+    IF(dbms_random.VALUE(0,100)<80 AND los<0) THEN
+        INSERT INTO Recepty (Wizyta_Nr) VALUES ((SELECT MAX(NR_Wizyty) FROM Wizyty));
+        prawdopodob:=round(dbms_random.VALUE(1,4));
+        FOR i IN 1..prawdopodob LOOP
+            INSERT INTO Lek_Na_Recepte VALUES ((SELECT MAX(NR_Recepty) FROM Recepty), (round(dbms_random.VALUE(1,(SELECT MAX(NR_LEKU) FROM LEKI)))));
+        END LOOP;
+    END IF;
+    IF(dbms_random.VALUE(0,100)<5 AND los<0) THEN
+        UPDATE Wizyty SET czy_odbyta = 'Odwołana', Opis = 'Pacjent nie zjawił się na wizycie' WHERE wizyty.data_wizyty < SYSDATE AND wizyty.czy_odbyta NOT LIKE 'Odbyta' ;
+    END IF;
 END LOOP;
+    UPDATE Wizyty SET czy_odbyta = 'Odbyta' WHERE wizyty.data_wizyty < SYSDATE AND wizyty.czy_odbyta NOT LIKE 'Odwołana';
 END;
 /
-EXECUTE dodaj_wizyte_random(30);
+EXECUTE dodaj_wizyte_random(40);
 ALTER TRIGGER check_Wizyty_dates_trigger ENABLE;
-
+DROP TABLE dostepne_godz CASCADE CONSTRAINTS;
 DROP PROCEDURE dodaj_wizyte_random;
---SELECT nr_wizyty, lekarz_nr, pacjent_nr, TO_CHAR(data_wizyty, 'dd.mm.yyyy HH24:mi'), opis FROM wizyty;
