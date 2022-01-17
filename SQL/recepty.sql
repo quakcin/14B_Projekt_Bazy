@@ -25,4 +25,4 @@ SELECT Nr_Recepty, Osoba_Nr FROM recepty
 INNER JOIN Wizyty ON wizyty.nr_wizyty = recepty.wizyta_nr
 INNER JOIN Lekarze ON Lekarze.Nr_Lekarza = Wizyty.lekarz_nr;
 
-SELECT Nr_Recepty FROM ReceptyLekarza WHERE Osoba_Nr = 18;
+--SELECT Nr_Recepty FROM ReceptyLekarza WHERE Osoba_Nr = 18;

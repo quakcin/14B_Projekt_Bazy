@@ -94,7 +94,7 @@ CREATE TABLE Lekarze(
 CREATE TABLE Konta(
     id_Konta NUMBER PRIMARY KEY,
     login NVARCHAR2(30) UNIQUE,
-    haslo NVARCHAR2(32),
+    haslo NVARCHAR2(32) NOT NULL,
     typ_konta NVARCHAR2(10),
     Osoba_Nr NUMBER NOT NULL,
     CONSTRAINT check_account_type CHECK( typ_konta IN('admin', 'lekarz', 'pacjent')),
