@@ -1,0 +1,106 @@
+#del-container
+{
+	display: none;
+	background-color: #fff;
+	position: fixed;
+	top: 25%;
+	left: 25%;
+	color: black;
+	width: 400px;
+	height: 250px;
+	border-radius: 10px;
+	justify-content: center;
+	overflow: hidden;
+}
+#del-container > .bi-x-lg
+{
+	position: absolute;
+	top: 5%;
+	right: 2%;
+	cursor: pointer;
+	color: rgba(33, 33, 38,0.394)
+}
+#del-container > .bi-x-lg:hover
+{
+	color: #424242;
+}
+
+#del-container > h3
+{
+	position: absolute;
+	top: -5%;
+	font-size: 25px;
+	color: #505154 !important;
+	text-transform: translate(-100px);
+}
+#del-container > .sub-head
+{
+	position: absolute;
+	top: 13%;
+	width: 60%;
+	text-align: center;
+	color: rgba(0,0,0,0.493);
+	font-size:16px;
+	line-height: 18px;
+	font-weight: 600;
+	
+}
+#del-container > .warning
+{
+	position: relative;
+	top: 38%;
+	width: 80%;
+	height: 100px;
+	border-radius: 10px;
+	background: rgba(255,143,116,0.116);
+	display: flex;
+	align-items: center;
+}
+
+#del-container > .warning > #triangle-error
+{
+	flex: 10%;
+	position: relative;
+	left: 2%;
+	font-size: 30px;
+	color: #ff5757;
+}
+#del-container > .warning > .warn-p
+{
+	flex: 80%;
+	color: #5c5c5c;
+	font-weight: 600;
+}
+#del-container > .cancel
+{
+	position: absolute;
+	bottom: 5%;
+	left: 20%;
+	width: fit-content;
+	padding: 2px 15px;
+	border: 2px solid #575975;
+	background-color: transparent;
+	border-radius: 5px;
+	color: #575975;
+	
+}
+#del-container > .delete
+{
+	position: absolute;
+	bottom: 5%;
+	right: 20%;
+	height: 24px;
+	width: fit-content;
+	padding: 2px 15px;
+	border: 0px solid;
+	background-color: #ff5e5e;
+	border-radius: 5px;
+	color: #fff;
+	
+}
+#del-container > button
+{
+	cursor: pointer;
+	font-weight: 600;
+	letter-spacing: 1px;
+}

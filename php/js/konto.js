@@ -446,7 +446,7 @@ const initPacjent = function ()
       {
         const items = uncomplexResult(e.target);
         dbReq((e) => {
-          console.log(e);
+          console.log('usunieto '+e);
           if (e.success == false)
             alert("Serwer nie odpowiada!");
           performSearch();
@@ -493,18 +493,7 @@ const initPacjent = function ()
     {n: "kod_poczt", l: "Kod pocztowy", t: "text"}
   ],
   [
-    {val: "Usuń Konto", evt: (e) => {
-      const sec = parseInt(Math.random() * 999) % 888 + 111;
-      if (sec == prompt(`Wpisz ${sec} aby usnąć konto!`))
-        dbReq((e) => {
-          if (e.success == false)
-            alert("Nie udało się usunąć konta!");
-          else
-            window.location.href = './index';
-        }, "pacjentUsunKonto");
-      else
-        alert("Kod się nie zgadza!");
-    }}
+    {val: "Usuń Konto", evt: (e) => {	delAccount(0,e); }}
   ] 
   );
   // -- Panels:
@@ -687,16 +676,7 @@ const szukajkiAdmina = function ()
       {n: "P_ID", s: 80}      
     ],
     {
-      name: "Usuń", action: (e) =>
-      {
-        const adminID = uncomplexResult(e.target).at(-1);
-        dbReq((e) =>
-        {
-          if (e.success == false)
-            alert(`Nie udało się usunąć konta admina, ${e.err}`);
-          performSearch();
-        }, "usun_admina", ["p_id", adminID]);
-      }
+      name: "Usuń", action: (e) => { delAccount(1, e)}
     }
   );
   addResult
@@ -781,16 +761,7 @@ const edytoryAdmina = function ()
       {n: "spec", l: "Specjalizacja", t: "select", opt: ["Alergolog", "Dentysta", "Dermatolog", "Ginekolog", "Hematolog", "Kardiolog", "Lekarz Rodzinny", "Neurolog", "Okulista", "Pediatra", "Psychiatra", "Reumatolog", "Urolog"]}
     ],
     [
-      {val: "Usuń Konto", evt: (p_id) =>
-        {
-          dbReq((e) =>
-          {
-            if (e.success == false)
-              alert(`Wystąpił błąd: ${e.err}`);
-            hideAllPanelsExcept(P_SEARCH);
-            invokeSearch('acLekarze', G_PERSON_ID);
-          }, "usun_lekarza", ["p_id", p_id]);
-        }
+      {val: "Usuń Konto", evt: (p_id) => {delAccount(2, p_id) }
       },
       {val: "Resetuj Hasło", evt: (p_id) =>
         {
@@ -822,16 +793,7 @@ const edytoryAdmina = function ()
       {n: "pocz", l: "Kod Pocztowy", t: "text"},
     ],
     [
-      {val: "Usuń Konto", evt: (p_id) =>
-        {
-          dbReq((e) =>
-          {
-            if (e.success == false)
-              alert(`Wystąpił błąd: ${e.err}`);
-            hideAllPanelsExcept(P_SEARCH);
-            invokeSearch('acPacjenci', G_PERSON_ID);
-          }, "usun_pacjenta", ["p_id", p_id]);
-        }
+      {val: "Usuń Konto", evt: (p_id) => {delAccount(3, p_id)}
       },     
       {val: "Resetuj Hasło", evt: (p_id) =>
         {
