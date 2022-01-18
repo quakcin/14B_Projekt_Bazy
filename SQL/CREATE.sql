@@ -137,8 +137,8 @@ CREATE TABLE Leki_Z_Apteki(
 
 CREATE TABLE Lek_Na_Recepte(
     Recepta_Nr NUMBER NOT NULL,
-    Lek_Nr NUMBER NOT NULL,
-    CONSTRAINT Lek_NR_fk FOREIGN KEY(Lek_Nr) REFERENCES Leki(Nr_Leku),
+    Lek_Nr NUMBER,
+    CONSTRAINT Lek_NR_fk FOREIGN KEY(Lek_Nr) REFERENCES Leki(Nr_Leku) ON DELETE SET NULL,
     CONSTRAINT Recepta_fk FOREIGN KEY(Recepta_Nr) REFERENCES Recepty(Nr_Recepty),
     CONSTRAINT LekRec UNIQUE (Recepta_Nr, Lek_Nr)
 );
