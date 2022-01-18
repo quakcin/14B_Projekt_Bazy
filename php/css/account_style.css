@@ -226,9 +226,8 @@ input[type=date], #form_data
 	text-align: center;
 	padding: 5px;
 	font-size: 20px;
-	border: 1px solid #30363d;
-	border-radius: 25px;
-	background-color: #0d1117;
+	border-bottom: 1px solid #30363d;
+	
 }
 /* selecty */
 select
