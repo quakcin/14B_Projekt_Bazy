@@ -836,7 +836,7 @@ const edytoryAdmina = function ()
     [
       {n: "data", l: "Data", t: "datetime-local"},
       {n: "opis", l: "Opis", t: "text"},
-      {n: "stat", l: "Status", t: "text"},
+      {n: "stat", l: "Status", t: "select", opt: ["Odbyta",  "Zaplanowana", "Odwołana", "Przeniesiona"]},
       {n: "lknr", l: "Nr Lekarza", t: "number"},
       {n: "lkim", l: "Imię", t: "text", restrict: true},
       {n: "lknz", l: "Nazwisko", t: "text", restrict: true},
