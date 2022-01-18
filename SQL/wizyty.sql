@@ -121,7 +121,7 @@ FOR i IN 1..p_ilosc LOOP
             INSERT INTO Lek_Na_Recepte VALUES ((SELECT MAX(NR_Recepty) FROM Recepty), (round(dbms_random.VALUE(1,(SELECT MAX(NR_LEKU) FROM LEKI)))));
         END LOOP;
     END IF;
-    IF(dbms_random.VALUE(0,100) < 4 AND los<0) THEN
+    IF(dbms_random.VALUE(0,100) < 3 AND los<0) THEN
         UPDATE Wizyty SET czy_odbyta = 'Odwołana', Opis = 'Pacjent nie zjawił się na wizycie.' WHERE wizyty.data_wizyty < SYSDATE AND wizyty.czy_odbyta NOT LIKE 'Odbyta' ;
     END IF;
 END LOOP;
