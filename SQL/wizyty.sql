@@ -8,7 +8,7 @@ INNER JOIN Pacjenci ON Wizyty.pacjent_nr = pacjenci.nr_karty_pacjenta
 INNER JOIN Specjalizacje ON lekarze.specjalizacja_nr = specjalizacje.nr_specjalizacji
 INNER JOIN Osoby ON lekarze.osoba_nr = osoby.nr_osoby;
 
-SELECT * FROM Pacjent_Wizyty WHERE pacjent_nr = (SELECT NR_KARTY_PACJENTA FROM Pacjenci INNER JOIN Osoby ON pacjenci.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = 2);
+--SELECT * FROM Pacjent_Wizyty WHERE pacjent_nr = (SELECT NR_KARTY_PACJENTA FROM Pacjenci INNER JOIN Osoby ON pacjenci.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = 2);
 
 --Umowienie wizyty
 CREATE OR REPLACE FUNCTION Dostepnosc_Wizyty(p_Numer_Lekarza Lekarze.nr_lekarza%TYPE, p_Data NVARCHAR2)
@@ -21,7 +21,7 @@ RETURN v_Nr_Wizyty;
 END;
 /
 
-SELECT Dostepnosc_Wizyty(1, '30.12.2021 10:0') FROM DUAL;
+--SELECT Dostepnosc_Wizyty(1, '30.12.2021 10:0') FROM DUAL;
 
 CREATE OR REPLACE PROCEDURE Umow_Wizyte(p_Numer_Lekarza Lekarze.nr_lekarza%TYPE, p_Numer_Osoby Pacjenci.nr_karty_pacjenta%TYPE, p_Data NVARCHAR2, p_Opis Wizyty.Opis%TYPE)
 IS
@@ -42,7 +42,7 @@ INNER JOIN Pacjenci ON Wizyty.pacjent_nr = pacjenci.nr_karty_pacjenta
 INNER JOIN Osoby ON Pacjenci.osoba_nr = osoby.nr_osoby;
 
 
-SELECT Nr_Wizyty, pacjent_nr, Imie, Nazwisko, "Data Wizyty", Opis, czy_odbyta FROM Lekarz_Wizyty WHERE lekarz_nr = (SELECT Nr_Lekarza FROM lekarze INNER JOIN Osoby ON lekarze.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = 6);
+--SELECT Nr_Wizyty, pacjent_nr, Imie, Nazwisko, "Data Wizyty", Opis, czy_odbyta FROM Lekarz_Wizyty WHERE lekarz_nr = (SELECT Nr_Lekarza FROM lekarze INNER JOIN Osoby ON lekarze.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = 6);
 
 
 CREATE OR REPLACE TRIGGER Lekarz_Wizyty_trigger
@@ -63,7 +63,7 @@ UPDATE Wizyty SET Opis = (Opis || ' (Odp: ' || p_opis ||')'), czy_odbyta = p_sta
 END;
 /
 
-EXECUTE lekWizUpdate('abd', 'odbyta', 2);
+--EXECUTE lekWizUpdate('abd', 'odbyta', 2);
 
 
 CREATE OR REPLACE PROCEDURE OdwolajWizytePac (p_Nr_Wizyty Wizyty.nr_wizyty%TYPE, p_Nr_Osoby Osoby.nr_osoby%TYPE)
@@ -74,7 +74,7 @@ WHERE (nr_wizyty =  p_Nr_Wizyty AND pacjent_nr = (SELECT Nr_Karty_Pacjenta  FROM
 END;
 /
 
-EXECUTE OdwolajWizytePac(6,5);
+--EXECUTE OdwolajWizytePac(6,5);
 
 CREATE OR REPLACE PROCEDURE OdwolajWizyteLek (p_Nr_Wizyty Wizyty.nr_wizyty%TYPE)
 IS
@@ -83,5 +83,51 @@ UPDATE Wizyty SET Opis='(Odp: Lekarz odwołał wizytę)', Czy_Odbyta = 'Odwołan
 END;
 /
 
-EXECUTE OdwolajWizyteLek(6);
+--EXECUTE OdwolajWizyteLek(6);
 
+
+--Wizyty bez opisow
+CREATE TABLE dostepne_godz(
+godz NVARCHAR2(20)
+);
+INSERT INTO dostepne_godz VALUES ('10:00');
+INSERT INTO dostepne_godz VALUES ('11:30');
+INSERT INTO dostepne_godz VALUES ('13:00');
+INSERT INTO dostepne_godz VALUES ('14:30');
+INSERT INTO dostepne_godz VALUES ('16:00');
+INSERT INTO dostepne_godz VALUES ('17:30');
+INSERT INTO dostepne_godz VALUES ('19:00');
+
+ALTER TRIGGER check_Wizyty_dates_trigger DISABLE;
+CREATE OR REPLACE PROCEDURE dodaj_wizyte_random(p_ilosc NUMBER)
+IS
+dni NVARCHAR2(80);
+godziny NVARCHAR2(80);
+data_wizyty NVARCHAR2(80);
+los NUMBER;
+prawdopodob NUMBER;
+BEGIN
+FOR i IN 1..p_ilosc LOOP
+    los:=round(dbms_random.VALUE(-60,60));
+    SELECT to_char(sysdate + los, 'DD.MM.YYYY') INTO dni FROM dual;
+    SELECT * INTO godziny FROM(SELECT * FROM dostepne_godz ORDER BY DBMS_RANDOM.RANDOM) WHERE  ROWNUM < 2;
+    data_wizyty := (dni||' '||godziny);
+    INSERT INTO Wizyty (lekarz_nr, pacjent_nr, Data_wizyty, czy_odbyta) 
+    VALUES(round(DBMS_RANDOM.VALUE(1,(SELECT MAX(Nr_Lekarza) FROM Lekarze))),round(DBMS_RANDOM.VALUE(1,(SELECT MAX(Nr_Karty_Pacjenta) FROM Pacjenci))), TO_DATE(data_wizyty,'DD.MM.YYYY HH24:MI'), 'Zaplanowana');
+    IF(dbms_random.VALUE(0,100)<80 AND los<0) THEN
+        INSERT INTO Recepty (Wizyta_Nr) VALUES ((SELECT MAX(NR_Wizyty) FROM Wizyty));
+        prawdopodob:=round(dbms_random.VALUE(1,4));
+        FOR i IN 1..prawdopodob LOOP
+            INSERT INTO Lek_Na_Recepte VALUES ((SELECT MAX(NR_Recepty) FROM Recepty), (round(dbms_random.VALUE(1,(SELECT MAX(NR_LEKU) FROM LEKI)))));
+        END LOOP;
+    END IF;
+    IF(dbms_random.VALUE(0,100) < 4 AND los<0) THEN
+        UPDATE Wizyty SET czy_odbyta = 'Odwołana', Opis = 'Pacjent nie zjawił się na wizycie.' WHERE wizyty.data_wizyty < SYSDATE AND wizyty.czy_odbyta NOT LIKE 'Odbyta' ;
+    END IF;
+END LOOP;
+    UPDATE Wizyty SET czy_odbyta = 'Odbyta' WHERE wizyty.data_wizyty < SYSDATE AND wizyty.czy_odbyta NOT LIKE 'Odwołana';
+END;
+/
+EXECUTE dodaj_wizyte_random(40);
+ALTER TRIGGER check_Wizyty_dates_trigger ENABLE;
+DROP TABLE dostepne_godz CASCADE CONSTRAINTS;

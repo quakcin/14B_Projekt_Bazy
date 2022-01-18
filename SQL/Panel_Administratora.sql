@@ -35,11 +35,11 @@ LEFT JOIN Lekarze ON lekarze.specjalizacja_nr = specjalizacje.nr_specjalizacji
 GROUP BY specjalizacje.nazwa_specjalizacji, specjalizacje.opis
 ORDER BY specjalizacje.nazwa_specjalizacji;
 
-SELECT imie, nazwisko, TO_CHAR(data_urodzenia, 'yyyy-MM-dd'), pesel, telefon, email, miasto, ulica, nr_domu, nr_mieszkania, kod_pocztowy, nazwa_specjalizacji FROM Lekarze_view WHERE Nr_lekarza = 1;
+/*SELECT imie, nazwisko, TO_CHAR(data_urodzenia, 'yyyy-MM-dd'), pesel, telefon, email, miasto, ulica, nr_domu, nr_mieszkania, kod_pocztowy, nazwa_specjalizacji FROM Lekarze_view WHERE Nr_lekarza = 1;
 SELECT imie, nazwisko, TO_CHAR(data_urodzenia, 'yyyy-MM-dd'), pesel, telefon, email, miasto, ulica, nr_domu, nr_mieszkania, kod_pocztowy FROM Pacjenci_view WHERE Nr_osoby = (SELECT Osoba_Nr FROM Pacjenci WHERE Nr_Karty_Pacjenta = 1);
 SELECT nazwa_producenta, telefon, email, miasto, ulica, nr_domu, nr_mieszkania, kod_pocztowy FROM Producenci_Lekow_view WHERE nr_producenta = 1; 
 SELECT nazwa_specjalizacji, opis FROM AdminView_Specjalizacje WHERE nazwa_specjalizacji = 'Kardiolog';
-SELECT "Data_Wizyty", Opis, czy_odbyta, lekarz_nr, "Imie lekarza", "Nazwisko lekarza", pacjent_nr, "Imie pacjenta", "Nazwisko pacjenta" FROM AdminView_Wizyta WHERE nr_wizyty = 1;
+SELECT "Data_Wizyty", Opis, czy_odbyta, lekarz_nr, "Imie lekarza", "Nazwisko lekarza", pacjent_nr, "Imie pacjenta", "Nazwisko pacjenta" FROM AdminView_Wizyta WHERE nr_wizyty = 1;*/
 
 CREATE OR REPLACE PROCEDURE ResetHaslaLekarz(p_id lekarze.nr_lekarza%TYPE, p_haslo konta.haslo%TYPE)
 AS
