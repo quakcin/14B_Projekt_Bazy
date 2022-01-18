@@ -1,9 +1,15 @@
 
 ## APTEKA
-- [ ] Pacjenci
-- [ ] Admin
-- [ ] Brak
-- [ ] Zaznaczone
+- [x] Init Pacjenci
+- [x] Init Admin
+- [x] Init Brak
+- [x] Init Zaznaczone
+
+- [ ] Select z Firmami -> Automatyczne odswierzanie
+- [ ] Wylaczanie Recepty jesli jedyna to 'Bez Recepty'
+- [ ] On-Error dla tel z nie dzialajacymi thumbnailami
+- [x] Panel Lekarza!! -> Dodanie Recepty -> Przeniesienie do apteki
+- [ ] dbRestrict dla admina na rejestracji!
   
 ## Konto / Dashboard
 
@@ -33,27 +39,26 @@
   
 - [x] Inserter: Konto Lekarza    
 - [x] Inserter: Konto Adminów    
-- [ ] Inserter: Leków
+- [x] Inserter: Leków
 - [x] Inserter: Specjalizacji
 - [x] Inserter: Producentów
   
 ### Panel Lekarza
 - [x] Zaznaczanie recept
-- [ ] Funkcjonalność przycisków w szukajce pacjentów
-- [ ] Szersze pole leków w szukajce od recept
+- [x] Funkcjonalność przycisków w szukajce pacjentów
+- [x] Szersze pole leków w szukajce od recept
   
 ### Panel Pacjenta
 - [x] Poprawić CSS'a
 - [x] Usuwanie konta (narazie tylko przycisk)
 - [ ] Schować numer pacjenta w szukajce wizyt
-- [ ] Nie pobierać hasła, hashować po stronie bazy
 - [x] Pole zalecenia w widoku: Pacjent_Recepty
-- [ ] Szersze pole leków w szukajce od recept
+- [x] Szersze pole leków w szukajce od recept
 
 ## Baza Danych  
 - [x] Ostatnia dodana / zaznaczona recepta (id) w tabeli lekarza
 - [x] Widok do pobierania recept lekarza
-- [ ] Szukajka dla apteki
+- [x] Szukajka dla apteki
 
 
 
@@ -62,5 +67,5 @@
 - [x] Zakładka apteki
 - [ ] Poprawić "Umuw Się Na Wizyte"
 - [ ] Dynamiczne przyciski logowania na stronie głównej
-- [ ] Skalowanie Teł na stronie głównej (polecam background-image: url() w css)
+- [x] Skalowanie Teł na stronie głównej (polecam background-image: url() w css)
   

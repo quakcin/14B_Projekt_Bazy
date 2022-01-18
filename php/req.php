@@ -91,7 +91,7 @@
 
   //  -- Polaczenie Z Baza
 
-  $db = @oci_connect("system", "123qwe", "localhost/xe", "AL32UTF8");
+  $db = @oci_connect("system", "1234", "localhost/xe", "AL32UTF8");
 
   if (!$db)
     packetThrow((oci_error())['message'], []);
@@ -568,6 +568,11 @@
   {
     dbRequire("CALL producLekow_add('" . $_GET["nazw"] . "', '" . $_GET["pocz"] . "', '" . $_GET["mias"] . "', '" . $_GET["ulic"] . "', '" . $_GET["ndom"] . "', '" . $_GET["nlok"] . "', '" . $_GET["mail"] . "', '" . $_GET["tele"] . "')");
   }
+  
+  function adm_ins_lek ()
+  {
+    dbRequire("INSERT INTO Leki_view VALUES (NULL, '" . $_GET["nazw"] . "', '" . $_GET["opis"] . "', " . $_GET["prod"] . ", " . $_GET["cena"] . ", '" . $_GET["aptk"] . "', '" . $_GET["zdjc"] . "')");
+  }
 
   function adm_usun_admina ()
   {
@@ -591,11 +596,29 @@
   function apt_szukaj ()
   {
     global $retDb;
-    $retDb[0] = dbRequire("SELECT nazwa_leku, cena, odnosnik, zdjecie, opis, nr_leku FROM Leki_view WHERE LOWER(nazwa_leku) LIKE '%" . $_GET["key"] . "%' AND ROWNUM < 100");
-    if ($_GET["typ"] != 'Bez Recepty')
-      $retDb[1] = dbRequire("SELECT Lek_Nr FROM Lek_Na_Recepte WHERE recepta_nr = " . $_GET["typ"]);      
+
+    if ($_GET["prod"] == "Wszystkie")
+    {
+      $retDb[0] = dbRequire("SELECT nazwa_leku, cena, odnosnik, zdjecie, opis, nr_leku FROM Leki_view WHERE LOWER(nazwa_leku) LIKE '%" . $_GET["key"] . "%' AND ROWNUM < 100");
+      if ($_GET["typ"] != 'Bez Recepty')
+        $retDb[1] = dbRequire("SELECT Lek_Nr FROM Lek_Na_Recepte WHERE recepta_nr = " . $_GET["typ"]);      
+      else
+        $retDb[1] = array();
+    }
     else
-      $retDb[1] = array();
+    {
+      $retDb[0] = dbRequire("SELECT nazwa_leku, cena, odnosnik, zdjecie, opis, nr_leku FROM Leki_view WHERE Producent_Nr = " . $_GET["prod"] . " AND LOWER(nazwa_leku) LIKE '%" . $_GET["key"] . "%' AND ROWNUM < 100");
+      if ($_GET["typ"] != 'Bez Recepty')
+        $retDb[1] = dbRequire("SELECT Lek_Nr FROM Lek_Na_Recepte WHERE recepta_nr = " . $_GET["typ"]);      
+      else
+        $retDb[1] = array();  
+    }
+  }
+
+  function apt_szukaj_recepty ()
+  {
+    global $retDb;
+    $retDb = dbRequire("SELECT nazwa_leku, cena, odnosnik, zdjecie, opis, nr_leku FROM Leki_view INNER JOIN Lek_Na_Recepte ON lek_na_recepte.lek_nr = Nr_leku WHERE lek_na_recepte.recepta_nr = " . $_GET["rec"]);    
   }
 
   function apt_init ()
@@ -607,19 +630,37 @@
     {
       $retDb[0] = dbRequire("SELECT Nr_Recepty FROM ReceptyLekarza WHERE Osoba_Nr = " . $retPacket['nrOsoby']);  
       $retDb[1] = dbRequire("SELECT Ostatnia_Recepta FROM Lekarze WHERE osoba_nr = " . $retPacket['nrOsoby']);
+      $retDb[2] = dbRequire("SELECT Nazwa_Producenta, Nr_Producenta FROM producenci_lekow"); 
+    }
+    else if ($retPacket['acType'] == 'admin' || $retPacket['acType'] == 'brak')
+    {
+      $retDb = dbRequire("SELECT Nazwa_Producenta, Nr_Producenta FROM producenci_lekow");
+    }
+    else if ($retPacket['acType'] == 'pacjent')
+    {
+      $retDb[0] = dbRequire("SELECT Nr_Recepty FROM Pacjent_Recepty WHERE pacjent_nr = (SELECT NR_KARTY_PACJENTA FROM Pacjenci INNER JOIN Osoby ON pacjenci.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = " . $retPacket['nrOsoby'] . ") GROUP BY nr_recepty ORDER BY nr_recepty");        
+      $retDb[1] = dbRequire("SELECT Nazwa_Producenta, Nr_Producenta FROM producenci_lekow");      
     }
   }
 
+  // Perm: Lekarz
   function apt_dodaj_recepte ()
   {
     global $retDb;
     dbRequire("INSERT INTO Lek_Na_Recepte VALUES(" . $_GET["rec"] . "," . $_GET["lek"] . ")");
   }
-  
+
+  // Perm: Lekarz
   function apt_usun_recepte ()
   {
     global $retDb;
     dbRequire("DELETE FROM  Lek_Na_Recepte WHERE recepta_nr = " . $_GET["rec"] . " AND lek_nr = " . $_GET["lek"]);
+  }
+
+  // Perm: Admin
+  function apt_usun_lek ()
+  {
+    dbRequire("DELETE FROM  Leki_View WHERE nr_leku = " . $_GET["lek"]);
   }
   
   // -------------------------------------
@@ -752,11 +793,13 @@
     new Command("req_insAdmin", "req_inserter", "admin", ["p_id"]),
     new Command("req_insSpecjalizacja", "req_inserter", "admin", ["p_id"]),
     new Command("req_insProducent", "req_inserter", "admin", ["p_id"]),
+    new Command("req_insLek", "req_inserter", "admin", ["p_id"]),  
 
     new Command("upt_insLekarz", "adm_ins_lekarz", "admin", ["p_id"]),
     new Command("upt_insAdmin", "adm_ins_admin", "admin", ["p_id"]),
     new Command("upt_insSpecjalizacja", "adm_ins_specjalizacja", "admin", ["p_id"]),
     new Command("upt_insProducent", "adm_ins_producent", "admin", ["p_id"]),
+    new Command("upt_insLek", "adm_ins_lek", "admin", ["p_id"]),  
 
     // -- Informator
 
@@ -765,12 +808,20 @@
     new Command("ludziSzukaj", "ludziSzukaj", "pacjent", ["imie", "nazwisko"]),
 
     // -- Apteka
+    new Command("aptekaSzukajRecepty", "apt_szukaj_recepty", "pacjent", ["rec"]),  
     new Command("aptekaSzukaj", "apt_szukaj", "pacjent", ["key", "typ"]),
     new Command("aptekaSzukaj", "apt_szukaj", "lekarz", ["key", "typ"]),
+    new Command("aptekaSzukaj", "apt_szukaj", "admin", ["key", "typ"]),
+    new Command("aptekaSzukaj", "apt_szukaj", "brak", ["key", "typ"]),  
 
     new Command("aptekaInit", "apt_init", "lekarz", []),
+    new Command("aptekaInit", "apt_init", "admin", []),
+    new Command("aptekaInit", "apt_init", "pacjent", []),
+    new Command("aptekaInit", "apt_init", "brak", []),  
+    
     new Command("aptekaDodajRecepte", "apt_dodaj_recepte", "lekarz", ["lek", "rec"]),
-    new Command("aptekaUsunRecepte", "apt_usun_recepte", "lekarz", ["lek", "rec"]),   
+    new Command("aptekaUsunRecepte", "apt_usun_recepte", "lekarz", ["lek", "rec"]),
+    new Command("aptekaUsunLek", "apt_usun_lek", "admin", ["lek"]),     
         
     // -- Logowanie:  
     new Command("dropSess", "wylogowywanie", "pacjent", []),

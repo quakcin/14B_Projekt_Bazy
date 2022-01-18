@@ -16,10 +16,15 @@
         <input type="text" placeholder="Nazwa Leku" id="search-box">
       </div>
       <div>
-      <select id="search-type">
-        <option>Bez Recepty</option>
-      </select>
+        <select id="search-type">
+          <option>Bez Recepty</option>
+        </select>
       </div>
+      <div>
+        <select id="search-company">
+          <option>Wszystkie</option>
+        </select>
+      </div>      
       <div>
         <input type="button" value="Szukaj" id="search-button">
       </div>
@@ -49,7 +54,7 @@
 
     <div id="result-config-admin" style="display: none;">
       <div class="config">
-        <input type="button" value="Usun">      
+        <input type="button" value="Usun" onclick="usunZBazy(%id)">      
       </div>
     </div>
   
@@ -78,7 +83,25 @@
             for (const [i, elem] of e.db[0].entries())
               document.getElementById('search-type').innerHTML += `<option>${elem[0]}</option>`;
 
+            for (const [i, elem] of e.db[2].entries())
+              document.getElementById('search-company').innerHTML += `<option value="${elem[1]}">${elem[0].length > 20 ? elem[0].substr(0, 17) + "..." : elem[0]}</option>`;         
+
             document.getElementById('search-type').value = e.db[1][0];
+            if (document.getElementById('search-type').value == '')
+              document.getElementById('search-type').value = 'Bez Recepty';            
+          }
+          else if (e.acType == 'admin' || e.acType == 'brak')
+          {
+            for (const [i, elem] of e.db.entries())
+              document.getElementById('search-company').innerHTML += `<option value="${elem[1]}">${elem[0].length > 20 ? elem[0].substr(0, 17) + "..." : elem[0]}</option>`;
+          }
+          else if (e.acType == 'pacjent')
+          {
+            for (const [i, elem] of e.db[0].entries())
+              document.getElementById('search-type').innerHTML += `<option>${elem[0]}</option>`;
+            
+            for (const [i, elem] of e.db[1].entries())
+              document.getElementById('search-company').innerHTML += `<option value="${elem[1]}">${elem[0].length > 20 ? elem[0].substr(0, 17) + "..." : elem[0]}</option>`;            
           }
           
         }, "aptekaInit");
@@ -95,8 +118,6 @@
         lookup();
       }
 
-      
-
       // ----------------------------------------
       // -- Wyrenderowanie Wyników
       const renderResults = function (results, special = [])
@@ -106,7 +127,7 @@
         for (const [i, result] of results.entries())
         {
           const proto = document.getElementById('search-result-template').innerHTML
-            .replace('%config', (P_AC_TYPE == 'pacjent') ? '' : (P_AC_TYPE == 'lekarz' ? document.getElementById('result-config-lekarz').innerHTML : document.getElementById('result-config-admin').innerHTML))
+            .replace('%config', (P_AC_TYPE == 'pacjent' || P_AC_TYPE == 'brak') ? '' : (P_AC_TYPE == 'lekarz' ? document.getElementById('result-config-lekarz').innerHTML : document.getElementById('result-config-admin').innerHTML))
             .replace('%bgcol', (special.flat().includes(result[5]) ? '#fff1c9' : 'transparent'))
             .replace('%name', result[0])
             .replace('%price', result[1])
@@ -129,14 +150,21 @@
               alert(`Wystąpił błąd serwera: ${e.err}!`);
             else
               renderResults(e.db[0], e.db[1]);
-        }, "aptekaSzukaj", ["key", document.getElementById('search-box').value, 'typ', document.getElementById('search-type').value]);
+        }, "aptekaSzukaj", ["key", document.getElementById('search-box').value, 'typ', document.getElementById('search-type').value, 'prod', document.getElementById('search-company').value]);
       }
 
       // ----------------------------------------
       // -- Szukanie Po Recepcie
       const properSearch = function ()
       {
-        console.log('pps');
+        dbReq((e) =>
+          {
+            console.log(e);
+            if (e.success == false)
+              alert(`Wystąpił błąd serwera: ${e.err}!`);
+            else
+              renderResults(e.db);
+        }, "aptekaSzukajRecepty", ['rec', document.getElementById('search-type').value]);
       }
 
       // ----------------------------------------
@@ -155,6 +183,9 @@
 
       const dodajDoRecepty = function (id)
       {
+        if (document.getElementById('search-type').value == 'Bez Recepty')
+          return;
+        
         dbReq((e) =>
         {
           if (e.success == false)
@@ -167,6 +198,9 @@
       
       const usunZRecepty = function (id)
       {
+        if (document.getElementById('search-type').value == 'Bez Recepty')
+          return;
+                
         dbReq((e) =>
         {
           if (e.success == false)
@@ -175,6 +209,24 @@
           document.getElementById(`lek_${id}`).setAttribute('style', 'background-color: transparent;');
 
         }, "aptekaUsunRecepte", ["rec", document.getElementById('search-type').value, "lek", id]);
+      }
+
+
+      // --------------------------------------------------------------------------------
+      // -- Funkcje: Administratora
+      // --------------------------------------------------------------------------------
+
+      const usunZBazy = function (id)
+      {
+        dbReq((e) =>
+        {
+          if (e.success == false)
+            alert(`Błąd Serwera ${e.err}`);
+
+          document.getElementById(`lek_${id}`).setAttribute('display', 'none;');
+          rawSearch();
+          
+        }, "aptekaUsunLek", ["lek", id]);        
       }
       
     </script>
