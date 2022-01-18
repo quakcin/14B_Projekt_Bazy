@@ -9,7 +9,7 @@ body
     display: flex;
     justify-content: space-around;
     align-items: center;
-    width: 450px;
+    width: 550px;
     padding: 30px;
     box-sizing: border-box;
     background-color: #f0f0f0;
@@ -22,7 +22,7 @@ body
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    width: 100vw;
+    width: calc(100vw - 180px);
     margin-left: 100px;
 }
 

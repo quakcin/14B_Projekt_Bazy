@@ -606,9 +606,7 @@ const initLekarz = function ()
     {n: "waznosc", l: "Ważna do", t: "date"},
     {n: "zalecenia", l: "Zalecenia / Dawkowanie", t: "text"}
   ], [/* Bez Dodatkowych Przycisków */], (e) => {
-    // -- Recepte dodaje edytor przez upt_dodajRecepte
-    //    Ta funkcja obsluguje to co sie ma stać potem.
-    alert("Dodano Recepte, Teraz zrób coś!");
+    window.location.href = './apteka';
   });
   addPanel("Strona Glowna", "n/a", P_HOMEPAGE);
   addPanel("Moje Konto", "lekKonto", P_EDIT);
@@ -860,7 +858,7 @@ const edytoryAdmina = function ()
       {n: "", l: "", t: ""},
       {n: "", l: "", t: ""},      
     ],
-  );
+  ); 
 }
 
 const inserteryAdmina = function ()
@@ -918,7 +916,19 @@ const inserteryAdmina = function ()
       {n: "nlok", l: "Nr Mieszkania", t: "text"},
       {n: "pocz", l: "Kod Pocztowy", t: "text"},
     ],
-  );  
+  );
+  addScheme
+  (
+    "insLek", "Dodawanie Leku do Bazy",
+    [
+      {n: "prod", l: "ID Producenta", t: "text"},
+      {n: "nazw", l: "Nazwa Leku", t: "text"},
+      {n: "cena", l: "Cena Leku", t: "text"},
+      {n: "aptk", l: "URL do Apteki", t: "text"},
+      {n: "zdjc", l: "URL do Zdjecia", t: "text"},
+      {n: "opis", l: "Dodatkowy Opis", t: "text"},
+    ],
+  );   
 }
 
 const initAdmin = function ()
@@ -936,7 +946,8 @@ const initAdmin = function ()
   addPanel("Dodaj Admin", "insAdmin", P_EDIT);
   addPanel("Dodaj Specjalizacje", "insSpecjalizacja", P_EDIT);
   addPanel("Dodaj Producenta", "insProducent", P_EDIT);
- 
+  addPanel("Dodaj Lek", "insLek", P_EDIT);
+  
   addPanel("Wyloguj", "n/a", P_LOGOUT);
 }
 
