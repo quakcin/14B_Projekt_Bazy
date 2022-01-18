@@ -7,6 +7,7 @@
   <head>
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 		<link rel="stylesheet" href="css/m_style.css">
+		<link rel="stylesheet" href="css/footer.css">
   </head>
   <body>
 	<div class="m_head">
@@ -19,8 +20,7 @@
 		<!-- Dodaj loggera do js'a zeby dodawal tokena do linkow -->
 		<!-- Wrapper moze obejmowac cale menu -->
       <div class="header">
-        <h1 id=ha >LOGO</h1>
-        <p><b>Temat Projektu</b> Przychodnia</p>
+        <h1>APTEKA</h1>
       </div>
       <div class="navbar">
         <a href="logowanie">Zaloguj</a> 
@@ -33,64 +33,90 @@
 
       <div class="row">
         <div class="side">
-          <h2>Wspaniali lekarze</h2>
-		  <p id=p >"Dobrze wykwalifikowany personel"</p>
-          <div  id="grad1" ></div>
-          <p>Nasi najlepsi lekarze %1 otrzymali ostatnio nagrody lekarskie za długoletnią pomoc potrzebującym.</p>
-          <h3 id=h>Aktualności</h3>
-          <div  id="grad2" ></div><br>
-		  <p id=p >"Prognozy dla dzieci nie są optymistyczne"</p>
-		  <p>Wariant Delta okazał się szczególnie zakaźny dla dzieci. Dlatego obawiam się, że Omikron może być jeszcze bardziej niebezpieczny dla najmłodszych i doprowadzić do całkowitej zajętości łóżek.</p>
-          <div  id="grad3" ></div><br>
-		  <p id=p >"Dieta Ketogeniczna: Podstawowe Informacje"</p>
-		  <p>Główne założenia diety keto to: spożywanie tłuszczy i wyeliminowanie węglowodanów, a ponadto znaczne ograniczenie posiłków zawierających cukier, a więc owoców i warzyw. W diecie ketogenicznej należy spożywać produkty z dużą zawartością tłuszczu, a więc tłuste mięsa, ryby, oleje, śmietanę i masło oraz orzechy. Tłuszcze powinny być wysokiej jakości, a więc nie rafinowane, tylko tłoczone na zimno.Główną zaletą tej diety jest spadek tkanki tłuszczowej, dzięki czemu usprawnia się pracę serca, nerek i wielu innych narządów oraz układów. Obniża się również ciśnienie tętnicze krwi oraz zmniejsza się poziom cukru, cholesterolu i trójglicerydów, co zapobiega zawałom serca, udarom i miażdżycy tętnic.</p>
-          <div  id="grad4" ></div>
-		  <p id=p >"Uszy, woskowina, czop"</p>
-		  <p>Usuwanie czopa woskowinowego jest najczęstszą procedurą laryngologiczną wykonywaną w POZ oraz w gabinetach laryngologicznych. Aby doszło do upośledzenia słuchu, woskowina musi wypełnić co najmniej 80% kanału słuchowego. Uszy mają zdolność samooczyszczania i w zasadzie nie wymagają żadnych zabiegów higienicznych. Jeśli są zdrowe, całkowicie poprawnym postępowaniem jest ograniczenie się do higieny małżowin usznych. Używamy do tego wody z mydłem, ewentualnie patyczków, ale jedynie celem oczyszczenia zagłębień w obrębie małżowiny usznej. Nie można ich wkładać do przewodu słuchowego!</p>
-		  
-        </div>
+						<h3>Wspaniali lekarze</h3>
+						<div class="container-side">
+							<h2> Dobrze wykwalifikowany personel</h2>
+							<h2> Nasi najlepsi lekarze %1 otrzymali ostatnio nagrody lekarskie za długoletnią pomoc potrzebującym.</h2>
+						</div>
+						<h3 id=h>Aktualności</h3>
+						<div class="container-side">
+							<h2> Prognozy dla dzieci nie są optymistyczne</h2>
+							<div  id="fakeimg" >
+									<img class='img2' />
+									<h2> Wariant Delta okazał się szczególnie zakaźny dla dzieci. Dlatego obawiam się, że Omikron może być jeszcze bardziej niebezpieczny dla najmłodszych i doprowadzić do całkowitej zajętości łóżek.</h2>
+								
+								</div>
+						</div>	
+
+				</div>
         <div class="main">
           <h2>Przychodnia</h2>
-          <h5 id=p >Szeroki Zakres Pomocy</h5>
-		  <div  id="grad5" ></div><br>
-		  <p id=p >Specjalizacje naszych lekarzy:</p>
-          <p id="db_out"></p>
-          <p id=p >Ranking najcześciej odwiedzanych lekarzy:</p>
-		  <p>%2</p>
-		  <p id=p >Pacjent z największą ilością wizyt:</p>
-		  <p>%3</p>
-          <br>
-          <h2>Nasza Apteka</h2>
-          <h4>Nasi lekarze mają możliwość wydawania recept na aż %4 leków	</h5>
-          <div  id="grad6" ></div><br>
-          <p id=p >Leki pochodzą od nastepujących producentów:</p>
-		  <p>%5</p>
-		  <p id=p >Najdroższy lek dostępny w aptece:</p>
-		  <p>%6</p>
-		  <h5 id=p >Godziny Przyjęć</h5>
-		  <div  id="grad8" ></div><br>
-          <p>Aby pozbyć sie kolejek a jednocześnie poświęcić wystarczająco dużo czasu pacjentom, nasi lekarze przyjmują w poniższych godzinach:</p>
-		  <p>%7</p>
-		  <p>Wizyty najcześciej odbywają sie o godzinie:</p>
-		  <p>%8</p>
+					<div class='container-row'>
+						<h5>Szeroki Zakres Pomocy</h5>
+						<div id="fakeimg" >
+							<img class='img1' />
+						</div>
+						<h4>Specjalizacje naszych lekarzy:</h4>
+						<p id="db_out"></p>
+					</div>
+					 <h2>Statystyki</h2>
+					<div class='container-row'>
+						<h5>Ranking najcześciej odwiedzanych lekarzy:
+							<div id="cont"> 
+							</div>
+						</h5>
+							
+						<h5>Pacjent z największą ilością wizyt:
+							<div id="cont"> 
+							</div>
+						</h5>
+					</div>
+					<h2>Nasza Apteka</h2>
+					<div class='container-row'>
+						<h5>Nasi lekarze mają możliwość wydawania recept na aż %4 leków	</h5>
+					</div>
+					<h2>Lekarstwa</h2>
+					<div class='container-row'>
+						<h5>Leki pochodzą od nastepujących producentów:</h5>
+						<div id="cont"> 
+						</div>
+						<h5>Najdroższy lek dostępny w aptece: </h5>
+						<div id="cont"> 
+						</div>
+					</div>
+					<h2>Godziny Przyjęć</h2>
+					<div class='container-row'>
+						<h5>Aby pozbyć sie kolejek a jednocześnie poświęcić wystarczająco dużo czasu pacjentom, nasi lekarze przyjmują w poniższych godzinach:</h5>
+						<div id="cont"> 
+						</div>
+						<h5>Wizyty najcześciej odbywają sie o godzinie: </h5>
+						<div id="cont"> 
+						</div>
+					</div>
         </div>
       </div>
-	<div class="row">
-	<div class="footersideL">
-		<div  id="grad7" ></div>
-		
+	<div class="footer">
+		<div class='psk-img'>
+			<img class='img' />
+			
 		</div>
-		<div class="footermain">
-		  <h3 id=ha >Autorzy:</h3>
-		  <p>-Maciej Bandura <br> -Marcin Ślusarczyk<br>
-		  -Mariusz Śmistek <br> -Filip Tosnowiec</p>
+		<div class='footContent'>
+			<div class='autors'>
+				<h3>Autorzy:</h3>
+				<p> -Mariusz Śmistek <br/>
+						-Maciej Bandura	 <br/>
+						-Marcin Ślusarczyk <br/>
+						-Filip Tosnowiec
+				</p>
+			</div>
+			<div class='leader'>
+				<h3>Prowadzący:</h3>
+				<p>-dr inż. Mariusz Piotr Bedla <br /> 
+				-mgr inż. Michał Młodawski</p>
+			</div>
+			
 		</div>
-		<div class="footersideR">
-		  <h2 id=ha > MINIPROJEKT Z PRZEDMIOTU BAZY DANYCH 1</h2>
-		  <h3>Prowadzący:</h3>
-		  <p>-dr inż. Mariusz Piotr Bedla &emsp; 
-		  -mgr inż. Michał Młodawski</p>
-		</div>	
+	</div>	
 	</div>
 	
   <script>

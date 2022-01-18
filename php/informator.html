@@ -7,26 +7,40 @@
   <head>
     <title> PRZYCHODNIA | INFORMATOR </title>
     <meta charset="UTF-8">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">	<link rel="Stylesheet" href="css/dashboard.css">
     <link rel="Stylesheet" href="./css/informator.css">
+		<link rel="stylesheet" href="css/accountNavbar_style.css">
+		<link rel="stylesheet" href="css/footer.css">
+		<link rel="stylesheet" href="css/infoStyle.css">
   </head>
   <body>
-
+		<div class="navbar">
+			<a href="index.html">
+				<img class="logo" src="./data/img/samples/logo.png"  alt="logo" />
+			</a>
+			<div class="nav-bar">
+				<a href="konto">Moje Konto</a> 
+				<a href="wizyty"> Umuw sie na wizyte </a>
+				<a href="informator"> Informacje o Pacjencie / Lekarzu </a>
+				<a href="apteka"> Apteka </a>
+			</div>	
+		</div>
     <div class="search-box">
       <div>
-        <select id="combobox-rodzaj">
+        <select class='put-data'  id="combobox-rodzaj">
           <option>Wszyscy</option>          
           <option>Lekarz</option>
           <option>Pacjent</option>
         </select>
       </div>
       <div>
-        <input type="text" id="textbox-imie" placeholder="Imie">
+        <input type="text"  class='put-data' id="textbox-imie" placeholder="Imie">
       </div>
       <div>
-        <input type="text" id="textbox-nazwisko" placeholder="Nazwisko">        
+        <input type="text" class='put-data' id="textbox-nazwisko" placeholder="Nazwisko">        
       </div>
       <div>
-        <input type="button" value="Szukaj" id="search-button">
+        <input type="button"  value="Szukaj" id="search-button">
       </div>      
     </div>
     <div class="search-results" id="search-results">
@@ -74,6 +88,7 @@
       </div>
     </div>
     
+		
     <script src="./js/api.js"></script>
     <script>
 

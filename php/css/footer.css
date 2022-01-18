@@ -1,0 +1,34 @@
+.footer
+{
+	display: flex;
+	background-color: #010409;
+	color: #6d757e;
+	border-top: 1px solid #31343b;
+	height: fit-content;
+	position: relative;
+	bottom: 0%;
+	width: 100%;
+}
+.footer > .footContent
+{
+	flex: 90%;
+	display: flex;
+	justify-content: space-around;
+}
+.footContent h3,p
+{
+	font-size: 13px;
+}
+
+.footer >.psk-img
+{
+	flex: 15%;
+	display: grid;
+	place-items: center;
+}
+.psk-img > .img
+{
+	width: 25%;
+	border-radius: 40px;
+	content:url('../data/img/news/psk.jpg');
+}

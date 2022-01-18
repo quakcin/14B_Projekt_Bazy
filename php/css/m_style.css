@@ -14,7 +14,8 @@ body
   height: 200px;	
   padding: 80px;
   text-align: center;
-  background: #1abc9c;
+  background: rgb(88,96,108);
+	background: linear-gradient(180deg, rgba(88,96,108,1) 0%, rgba(82,92,107,1) 23%, rgba(0,0,0,1) 100%);
   color: white;
 }
 
@@ -26,7 +27,7 @@ body
 .navbar 
 {
   overflow: hidden;
-  background-color: #333;
+  background-color: #161b22;
   position: sticky;
   position: -webkit-sticky;
   top: 0;
@@ -50,71 +51,105 @@ body
 
 .navbar a:hover 
 {
-  background-color: #ddd;
-  color: black;
+  background-color: #161b22;
+	color: #7b8187;
 }
 
 .navbar a.active 
 {
-  background-color: #666;
-  color: white;
+  background-color: #161b22;
+	color: #7b8187;
 }
 
 .row 
 {  
-  display: -ms-flexbox; /* IE10 */
   display: flex;
-  -ms-flex-wrap: wrap; /* IE10 */
   flex-wrap: wrap;
   color: white;
 }
 
 .side 
 {
-  -ms-flex: 30%; /* IE10 */
   flex: 30%;
-  background-color: black;
+  background-color: #0d1117;
   padding: 20px;
+	border-right: 1px solid #31343b;
+}
+.side >h3
+{
+	color: #c9cece;
+	font-size: 20px;
+	font-weight: 600;
+	letter-spacing: 1px;
+	padding-bottom: 5px;
+	border-bottom: 1px solid #31343b;
+}
+.container-side  h2
+{
+	color: #8b949e;
+	font-size: 14px;
+	font-weight: 600;
+	letter-spacing: 1px;
+	padding-bottom: 5px;
+}
+
+.side >p
+{
+	color: #6d757e;
+	font-weight: 600;
+	letter-spacing: 1px;
+	font-size: 14px;
 }
 
 .main 
 {   
-  -ms-flex: 70%; /* IE10 */
   flex: 70%;
-  background-color: black;
+  background-color: #010409;
   padding: 20px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 25px;
 }
-
-.fakeimg {
-  background-color: black;
+.main > h2
+{   
+	width: 25%;
+  color: #bfbdae;
+	font-size: 20px;
+	font-weight: 600;
+	letter-spacing: 1px;
+	padding-bottom: 5px;
+	border-bottom: 1px solid #31343b;
+}
+.main > .container-row
+{
+	background-color: #14181f;
+	border: 1px solid #31343b;
+	border-radius: 15px;
+	padding: 0 15px;
+	width: 100%;
+}
+#fakeimg {
   width: 100%;
   padding: 20px;
+	border-radius: 15px;
+} 
+#fakeimg > .img1
+{
+	width: 45%;
+	border-radius: 15px;
+	content:url('../data/img/news/doktor.jpg');
 }
 
-.footersideL
+#fakeimg > .img2
 {
-  -ms-flex: 20%;
-  flex: 2%;
-  padding: 5px;
-  text-align: center;
-  background: #1abc9c;
+	width: 45%;
+	border-radius: 15px;
+	content:url('../data/img/news/delta.png');
 }
-.footermain
-{
-  -ms-flex: 40%;
-  flex: 40%;
-  padding: 5px;
-  text-align: center;
-  background: #1abc9c;
-}
-.footersideR
-{
-  -ms-flex: 40%;
-  flex: 40%;
-  padding: 5px;
-  text-align: center;
-  background: #1abc9c;
-}
+
+
+
+
 
 /* Responsive layout - jak szerokosc mniejsza niz 700px , ustawia dwie kolumny nad soba zamiast obok siebie*/
 @media screen and (max-width: 700px) 
@@ -133,78 +168,4 @@ body
     float: none;
     width: 100%;
   }
-}
-
-#grad1 {
-	height: 300px;	width: 300px;
-	background-color: #cccccc;
-	background-image: url(../data/img/news/back.png);
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: cover;
-}
-#grad2 {
-	height: 300px;
-	background-color: #cccccc;
-	background-image: url(../data/img/news/a.jpg);
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: cover;
-}
-#grad3 {
-	height:200px;
-	background-color: #cccccc;
-	background-image: url(../data/img/news/b.jpg);
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: cover;
-}
-#grad4 {
-	height: 300px;
-	background-color: #cccccc;
-	background-image: url(../data/img/news/c.jpg);
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: cover;
-}
-#grad5 {
-	height: 300px;
-	background-color: #cccccc;
-	background-image: url(../data/img/news/doktor.jpg);
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: cover;
-}
-#grad6 {
-	height: 300px;
-	background-color: #cccccc;
-	background-image: url(../data/img/news/apteka.jpg);
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: cover;
-}
-#grad7 {
-	height: 100px;	width: 100px;
-	background-color: #cccccc;
-	background-image: url(../data/img/news/psk.jpg);
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: cover;
-}
-#grad8 {
-	height: 400px;
-	background-color: #cccccc;
-	background-image: url(../data/img/news/kolejka.jpg);
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: cover;
-}
-#p	 {
-	font-size: 22px;
-}
-#h	 {
-	font-size: 33px;
-}
-#ha	 {
-	margin-top:-4px;
 }
