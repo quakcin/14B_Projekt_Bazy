@@ -21,6 +21,8 @@ RETURN v_Nr_Wizyty;
 END;
 /
 
+
+
 --SELECT Dostepnosc_Wizyty(1, '30.12.2021 10:0') FROM DUAL;
 
 CREATE OR REPLACE PROCEDURE Umow_Wizyte(p_Numer_Lekarza Lekarze.nr_lekarza%TYPE, p_Numer_Osoby Pacjenci.nr_karty_pacjenta%TYPE, p_Data NVARCHAR2, p_Opis Wizyty.Opis%TYPE)
@@ -28,7 +30,7 @@ IS
 v_Numer_Pacjenta osoby.nr_osoby%TYPE;
 BEGIN
 SELECT NR_KARTY_PACJENTA INTO v_Numer_Pacjenta FROM Pacjenci INNER JOIN Osoby ON pacjenci.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = p_Numer_Osoby;
-INSERT INTO Wizyty (lekarz_nr, pacjent_nr, Data_wizyty, opis) VALUES(p_Numer_Lekarza, v_Numer_Pacjenta, TO_DATE(p_Data, 'DD.MM.YYYY HH24:MI'), p_Opis);
+INSERT INTO Wizyty (lekarz_nr, pacjent_nr, Data_wizyty, opis) VALUES(p_Numer_Lekarza, v_Numer_Pacjenta, TO_DATE(p_Data, 'YYYY-MM-DD HH24:MI'), p_Opis);
 END;
 /
 

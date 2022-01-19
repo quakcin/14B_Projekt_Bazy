@@ -86,6 +86,7 @@ CREATE OR REPLACE PROCEDURE DodajRecepte_z_Wizyty(p_lekarz wizyty.lekarz_nr%TYPE
 IS
 v_recepta recepty.nr_recepty%TYPE;
 BEGIN
+    UPDATE Wizyty SET Czy_Odbyta = 'Odbyta' WHERE Nr_Wizyty = p_wizyta;
     INSERT INTO Recepty (Wizyta_Nr, Data_Wystawienia, Data_Waznosci, Zalecenia) VALUES (p_wizyta, p_DataWystawienia, p_DataWaznosci, p_Zalecenia);
     SELECT Nr_Recepty INTO v_recepta FROM Recepty WHERE wizyta_nr = p_wizyta;
     UPDATE Lekarze SET Ostatnia_Recepta = v_recepta WHERE Osoba_Nr = p_lekarz;

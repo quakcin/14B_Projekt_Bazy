@@ -6,7 +6,7 @@ INSERT INTO Specjalizacje (Nazwa_Specjalizacji, Opis) VALUES ('Neurolog', 'Lekar
 INSERT INTO Specjalizacje (Nazwa_Specjalizacji, Opis) VALUES ('Urolog', 'Lekarz medycyny zajmujący sie chorobami układu moczowego u mężczyzn, kobiet, a także dzieci');
 INSERT INTO Specjalizacje (Nazwa_Specjalizacji, Opis) VALUES ('Psychiatra', 'Lekarz medycyny zajmujący sie diagnozowaniem oraz leczeniem chorób i zaburzę psychicznych');
 INSERT INTO Specjalizacje (Nazwa_Specjalizacji, Opis) VALUES ('Pediatra', 'Lekarz medycyny zajmujący sie chorobami dziecięcymi');
-INSERT INTO Specjalizacje (Nazwa_Specjalizacji, Opis) VALUES ('Dermatolog', 'Lekarz medycyny zajmujący sie  leczeniem, diagnozowaniem i profilaktyka chorób skory, włosów i paznokci');
+INSERT INTO Specjalizacje (Nazwa_Specjalizacji, Opis) VALUES ('Dermatolog', 'Lekarz medycyny zajmujący sie  leczeniem, diagnozowaniem i profilaktyka chorób skóry, włosów i paznokci');
 INSERT INTO Specjalizacje (Nazwa_Specjalizacji, Opis) VALUES ('Ginekolog', 'Lekarz medycyny zajmujący sie  profilaktyka i leczeniem chorób żeńskiego układu płciowego');
 INSERT INTO Specjalizacje (Nazwa_Specjalizacji, Opis) VALUES ('Alergolog', 'Lekarz medycyny zajmujący sie chorobami wywoływanymi przez alergeny');
 INSERT INTO Specjalizacje (Nazwa_Specjalizacji, Opis) VALUES ('Reumatolog', 'Lekarz medycyny zajmujący sie rożnego typu schorzeniami powiązanymi ze stanami zwyrodnieniowymi i zapalnymi tkanki łącznej, kości i stawów');
@@ -28,7 +28,7 @@ INSERT INTO Pacjenci_view VALUES ('Pac4', 'Firanka','Tomasz', 'Nowakowski', sysd
 
 --Lekarze
 INSERT INTO Lekarze_view VALUES ('Lek1', 'lek1', 'Grzegorz', 'Nowak', sysdate-7000, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'doktorNowak@wp.pl', 'Kielce', 'Karczówkowska', '63', NULL, '25-987', 'Kardiolog', NULL, NULL, NULL);
-INSERT INTO Lekarze_view VALUES ('Lek2', 'lek2', 'Tomek', 'Maciaszczyk', sysdate-6500, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'doktorMaciaszczyk@wp.pl', 'Warszawa', 'Skrajna', '63', NULL, '22-287', 'Dentysta', NULL, NULL, NULL);
+INSERT INTO Lekarze_view VALUES ('Lek2', 'lek2', 'Tomasz', 'Maciaszczyk', sysdate-6500, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'doktorMaciaszczyk@wp.pl', 'Warszawa', 'Skrajna', '63', NULL, '22-287', 'Dentysta', NULL, NULL, NULL);
 INSERT INTO Lekarze_view VALUES ('Lek3', 'lek3', 'Jacek', 'Stopa', sysdate-8000, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'doktorStopa@wp.pl', 'Krakow', 'Duza', '63', NULL, '21-587', 'Kardiolog', NULL, NULL, NULL);
 INSERT INTO Lekarze_view VALUES ('Lek4', 'lek4', 'Anna', 'Nowak', sysdate-6000, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'doktorANowak@wp.pl', 'Kielce', 'Karczówkowska', '63', NULL, '25-987', 'Dentysta', NULL, NULL, NULL);
 INSERT INTO Lekarze_view VALUES ('Lek5', 'lek5', 'Adam', 'Witkowski', sysdate-16000, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'doktorAWitkowski@wp.pl', 'Kielce', 'Skrajna', '23', NULL, '25-987', 'Okulista', NULL, NULL, NULL);
