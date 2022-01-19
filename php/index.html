@@ -118,13 +118,17 @@
 	
   <script>
     document.body.onload = function () {
-      dbReq((e) => {
+      dbReq((e) =>
+      {
         if (e.success)
         {
-          for (let elem of e.db)
-            document.getElementById("db_out").innerHTML += `${elem[0]}, `;	
+          // ----------------------------------------
+          // -- Podmiana Danych z tymi z Bazy
+
+          for (let i = 1; i <= 7; i++)
+            document.body.innerHTML = document.body.innerHTML.replaceAll(`%${i}`, `${e.db[i]}`);
         }
-      }, "indexSpec");
+      }, "indexInit");
     }
   </script>
   </body>

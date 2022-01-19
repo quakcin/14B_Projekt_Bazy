@@ -91,7 +91,7 @@
 
   //  -- Polaczenie Z Baza
 
-  $db = @oci_connect("system", "123qwe", "localhost/xe", "AL32UTF8");
+  $db = @oci_connect("system", "1234", "localhost/xe", "AL32UTF8");
 
   if (!$db)
     packetThrow((oci_error())['message'], []);
@@ -716,6 +716,24 @@
     $retDb[0] = dbRequire("SELECT imie, nazwisko, Nazwa_Specjalizacji, Telefon, Email FROM Lekarze_view WHERE LOWER(Imie) LIKE '%" . $_GET["imie"] . "%' AND LOWER(Nazwisko) LIKE '%" . $_GET["nazwisko"] . "%'");
     $retDb[1] = dbRequire("SELECT imie, nazwisko, TO_CHAR(data_urodzenia, 'dd.mm.yyyy'), miasto, Telefon, Email FROM Pacjenci_view WHERE LOWER(Imie) LIKE '%" . $_GET["imie"] . "%' AND LOWER(Nazwisko) LIKE '%" . $_GET["nazwisko"] . "%'");
   }
+
+  
+  // -------------------------------------
+  // -- Index:
+  // -------------------------------------
+  
+  function index_init ()
+  {
+    global $retDb;
+
+    $retDb[1] = dbRequire("SELECT dwaj_lekarze_info() FROM dual");
+    $retDb[2] = dbRequire("SELECT NajczesciejOdwiedzanyLekarz() FROM dual");
+    $retDb[3] = dbRequire("SELECT NajczesciejOdwiedzaniLekarze() FROM dual");
+    $retDb[4] = dbRequire("SELECT COUNT(Nr_leku) Ilosc_leków FROM leki");
+    $retDb[5] = dbRequire("SELECT Leki.NAZWA_LEKU ,COUNT(Lek_NR) Ilosc_Przepisan FROM LEK_NA_RECEPTE INNER JOIN LEKI ON Lek_Nr=LEKI.NR_Leku GROUP BY Lek_NR,Leki.NAZWA_LEKU FETCH FIRST ROW ONLY");
+    // TO-DO:   $retDb[6] = dbRequire("SELECT NajdroższyLek() FROM dual");
+    $retDb[7] = dbRequire("SELECT TO_CHAR(DATA_WIZYTY,'HH24:MI') godzina,count(TO_CHAR(DATA_WIZYTY,'HH24:MI')) Ilosc_wizyt FROM WIZYTY GROUP BY TO_CHAR(DATA_WIZYTY,'HH24:MI') FETCH FIRST ROW ONLY");
+  }
   
   // -- Wszystkie Polecenia oblugiwane po stronie php
   //    Format:   (  JS, PHP, Dostep, [parametry z _GET]  )
@@ -730,10 +748,10 @@
     new Command("ac_debug", "konto_info", "lekarz", []),
     new Command("ac_debug", "konto_info", "admin", []),
 
-    new Command("indexSpec", "indexSpecjalizacje", "brak", []),
-    new Command("indexSpec", "indexSpecjalizacje", "admin", []),
-    new Command("indexSpec", "indexSpecjalizacje", "lekarz", []),
-    new Command("indexSpec", "indexSpecjalizacje", "pacjent", []),
+    new Command("indexInit", "index_init", "brak", []),
+    new Command("indexInit", "index_init", "admin", []),
+    new Command("indexInit", "index_init", "lekarz", []),
+    new Command("indexInit", "index_init", "pacjent", []),
 
     // Perm: Zalogowani
     new Command("req_pacKonto", "req_ac_info", "pacjent", []),

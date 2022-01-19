@@ -55,18 +55,15 @@
 
     <div id="search-result-template" style="display: none;">
       <div class="search-result tooltip" id="lek_%id"  data-tooltip="%desc">
-        <div class="picture" style="background: url(%img);" onclick="window.open('%url');">
-				</div>
-				<div class='search-content'>
-					<div class="meta">
-						<div class="name">%name</div>
-						<div class="price">%price zł</div>
-					</div>
-					%config
-				</div>
-        
+        <div class="picture" style="background: url(%img), url(./data/img/apteka/missing.png);" onclick="window.open('%url');" onerror="console.log('Hello World');"></div>
+        <div class='search-content'>
+          <div class="meta">
+            <div class="name">%name</div>
+            <div class="price">%price zł</div>
+          </div>
+          %config
+        </div>
       </div>
-
     </div>
 
     <div id="result-config-lekarz" style="display: none;">
@@ -118,6 +115,7 @@
           {
             for (const [i, elem] of e.db.entries())
               document.getElementById('search-company').innerHTML += `<option value="${elem[1]}">${elem[0].length > 20 ? elem[0].substr(0, 17) + "..." : elem[0]}</option>`;
+            document.getElementById('search-type').setAttribute('disabled', '');
           }
           else if (e.acType == 'pacjent')
           {
@@ -125,8 +123,28 @@
               document.getElementById('search-type').innerHTML += `<option>${elem[0]}</option>`;
             
             for (const [i, elem] of e.db[1].entries())
-              document.getElementById('search-company').innerHTML += `<option value="${elem[1]}">${elem[0].length > 20 ? elem[0].substr(0, 17) + "..." : elem[0]}</option>`;            
+              document.getElementById('search-company').innerHTML += `<option value="${elem[1]}">${elem[0].length > 20 ? elem[0].substr(0, 17) + "..." : elem[0]}</option>`;
+
+            setInterval(() =>
+            {
+              if (document.getElementById('search-type').value != 'Bez Recepty')
+              {
+                document.getElementById('search-company').disabled = true;
+                document.getElementById('search-box').disabled = true;
+                document.getElementById('search-company').value = 'Wszystkie';  
+                document.getElementById('search-box').value = '';
+              }
+              else
+              {
+                document.getElementById('search-company').disabled = false;
+                document.getElementById('search-box').disabled = false;
+              }
+            }, 1000 / 25);
           }
+
+          // ----------------------------------------
+          // -- Wstepne Wyszukiwanie
+          lookup();
           
         }, "aptekaInit");
       }
@@ -141,6 +159,16 @@
       {
         lookup();
       }
+      
+      document.getElementById('search-company').onchange = (e) =>
+      {
+        lookup();
+      }
+      
+      document.getElementById('search-box').onkeyup = (e) =>
+      {
+        lookup();
+      }      
 
       // ----------------------------------------
       // -- Wyrenderowanie Wyników
@@ -168,13 +196,13 @@
       const rawSearch = function ()
       {
         dbReq((e) =>
-          {
-            console.log(e);
-            if (e.success == false)
-              alert(`Wystąpił błąd serwera: ${e.err}!`);
-            else
-              renderResults(e.db[0], e.db[1]);
-        }, "aptekaSzukaj", ["key", document.getElementById('search-box').value, 'typ', document.getElementById('search-type').value, 'prod', document.getElementById('search-company').value]);
+        {
+          console.log(e);
+          if (e.success == false)
+            alert(`Wystąpił błąd serwera: ${e.err}!`);
+          else
+            renderResults(e.db[0], e.db[1]);
+        }, "aptekaSzukaj", ["key", document.getElementById('search-box').value.toLowerCase(), 'typ', document.getElementById('search-type').value, 'prod', document.getElementById('search-company').value]);
       }
 
       // ----------------------------------------
@@ -182,12 +210,12 @@
       const properSearch = function ()
       {
         dbReq((e) =>
-          {
-            console.log(e);
-            if (e.success == false)
-              alert(`Wystąpił błąd serwera: ${e.err}!`);
-            else
-              renderResults(e.db);
+        {
+          console.log(e);
+          if (e.success == false)
+            alert(`Wystąpił błąd serwera: ${e.err}!`);
+          else
+            renderResults(e.db);
         }, "aptekaSzukajRecepty", ['rec', document.getElementById('search-type').value]);
       }
 

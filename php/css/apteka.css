@@ -52,8 +52,10 @@ body
   width: 140px;
   height: 140px;  
 	border-radius: 100px;
+  background-size: cover!important;
 	cursor: pointer;
 	margin: 0 auto;
+  
 }
 .search-result > .picture:hover
 {
@@ -65,10 +67,10 @@ body
     font-size: 20px;
 }
 
-.search-result > .meta >.price
+.search-result > .meta > .price
 {
     font-size: 18px;
-    font-weight: bold;
+    font-weight: bold!important;
 }
 .config
 {
@@ -103,6 +105,7 @@ body
 
 .search-content > .meta
 {
+  margin-top: 15px;
 	font-size: 14px;
 }
 .search-content
