@@ -1,3 +1,6 @@
+--%0
+--SELECT NAZWA_SPECJALIZACJI FROM specjalizacje ORDER BY NAZWA_SPECJALIZACJI;
+
 --%1 
 CREATE OR REPLACE FUNCTION dwaj_lekarze_info RETURN NVARCHAR2
 IS
@@ -32,34 +35,31 @@ END;
 --SELECT dwaj_lekarze_info() FROM dual;
 
 --%2
-CREATE OR REPLACE FUNCTION NajczesciejOdwiedzanyLekarz RETURN NVARCHAR2
+CREATE OR REPLACE FUNCTION NajczesciejOdwiedzanajacyPacjent RETURN NVARCHAR2
 IS
-CURSOR LekarzeImieNazSpecOdw IS SELECT imie, nazwisko, NAZWA_SPECJALIZACJI specjalizacja, count(Lekarz_Nr) Ilosc_Wizyt FROM wizyty
-    INNER JOIN Lekarze ON Lekarze.Nr_Lekarza = Wizyty.Lekarz_Nr
-    INNER JOIN Osoby ON Osoby.Nr_Osoby = Lekarze.Osoba_Nr
-    INNER JOIN Specjalizacje ON Specjalizacje.Nr_Specjalizacji = Lekarze.Specjalizacja_nr
+CURSOR PacImieNazOdw IS SELECT imie, nazwisko, count(Pacjent_Nr) Ilosc_Wizyt FROM wizyty
+    INNER JOIN Pacjenci ON Pacjenci.NR_KARTY_PACJENTA = Wizyty.Pacjent_Nr
+    INNER JOIN Osoby ON Osoby.Nr_Osoby = Pacjenci.Osoba_Nr
     WHERE wizyty.Czy_Odbyta='Odbyta'
-    GROUP BY Lekarz_Nr, imie, nazwisko, NAZWA_SPECJALIZACJI;
+    GROUP BY Pacjent_Nr, imie, nazwisko;
 imie Osoby.imie%type;
 nazw Osoby.nazwisko%type;
-    spec Specjalizacje.NAZWA_SPECJALIZACJI%type;
 Ilosc_Wizyt NUMBER :=0;
 output NVARCHAR2(1000);
 BEGIN
-FOR rec IN LekarzeImieNazSpecOdw LOOP
+FOR rec IN PacImieNazOdw LOOP
     IF(rec.Ilosc_Wizyt>Ilosc_Wizyt) THEN
         imie:=rec.imie;
         nazw:=rec.nazwisko;
-        spec:=rec.specjalizacja;
         Ilosc_Wizyt:=rec.Ilosc_Wizyt;
     END IF;
 END loop;
-output:=imie||' '||nazw||' - '||spec||' Ilość wizyt: '||Ilosc_Wizyt;
+output:=imie||' '||nazw||' Ilosc wizyt: '||Ilosc_Wizyt;
 RETURN output;
 END;
 /
 
---SELECT NajczesciejOdwiedzanyLekarz() FROM dual;
+--SELECT NajczesciejOdwiedzanajacyPacjent() FROM dual;
 
 --%3
 CREATE OR REPLACE FUNCTION NajczesciejOdwiedzaniLekarze RETURN NVARCHAR2
@@ -88,8 +88,8 @@ FOR rec IN LekarzeImieNazSpecOdw LOOP
         imie4:=rec.imie;    nazw4:=rec.nazwisko;    spec4:=rec.specjalizacja;   Ilosc_Wizyt4:=rec.Ilosc_Wizyt;
     END IF;
 END loop;
-output:=imie1||' '||nazw1||' - '||spec1||' Ilość wizyt: '||Ilosc_Wizyt1|| '<br>' ||imie2||' '||nazw2||' - '||spec2||' Ilość wizyt: '||Ilosc_Wizyt2
-|| '<br>' ||imie3||' '||nazw3||' - '||spec3||' Ilość wizyt: '||Ilosc_Wizyt3|| '<br>' ||imie4||' '||nazw4||' - '||spec4||' Ilość wizyt: '||Ilosc_Wizyt4;
+output:=imie1||' '||nazw1||' - '||spec1||' Ilosc wizyt: '||Ilosc_Wizyt1|| '<br>' ||imie2||' '||nazw2||' - '||spec2||' Ilosc wizyt: '||Ilosc_Wizyt2
+|| '<br>' ||imie3||' '||nazw3||' - '||spec3||' Ilosc wizyt: '||Ilosc_Wizyt3|| '<br>' ||imie4||' '||nazw4||' - '||spec4||' Ilosc wizyt: '||Ilosc_Wizyt4;
 RETURN output;
 END;
 /
@@ -97,7 +97,7 @@ END;
 --SELECT NajczesciejOdwiedzaniLekarze() FROM dual;
 
 --%4
-/*SELECT COUNT(Nr_leku) Ilosc_leków FROM leki;*/
+--SELECT COUNT(Nr_leku) Ilosc_lekow FROM leki;
 
 --%5
 /*SELECT Leki.NAZWA_LEKU ,COUNT(Lek_NR) Ilosc_Przepisan FROM LEK_NA_RECEPTE
@@ -106,7 +106,7 @@ GROUP BY Lek_NR,Leki.NAZWA_LEKU
 FETCH FIRST ROW ONLY;*/
 
 --%6
-CREATE OR REPLACE FUNCTION NajdroższyLek RETURN NVARCHAR2
+CREATE OR REPLACE FUNCTION NajdrozszyLek RETURN NVARCHAR2
 IS
 CURSOR LekCena IS SELECT NAZWA_LEKU,CENA  FROM LEKI_Z_APTEKI
     INNER JOIN LEKI ON LEKI.NR_LEKU=LEKI_Z_APTEKI.Lek_NR;
@@ -120,11 +120,11 @@ FOR rec IN LekCena LOOP
         nazwa:=rec.NAZWA_LEKU;
     END IF;
 END LOOP;
-output:=nazwa||' - Cena: '||najdrozszy||'PLN';
+output:=nazwa||' - Cena: '||najdrozszy||' PLN';
 RETURN output;
 END;
 /
---SELECT NajdroższyLek() FROM dual;
+--SELECT NajdrozszyLek() FROM dual;
 
 --%7
 /*SELECT TO_CHAR(DATA_WIZYTY,'HH24:MI') godzina,count(TO_CHAR(DATA_WIZYTY,'HH24:MI')) Ilosc_wizyt FROM WIZYTY
