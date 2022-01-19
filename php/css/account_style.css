@@ -236,7 +236,7 @@ input[type=date], #form_data
 	padding: 5px;
 	font-size: 20px;
 	border-bottom: 1px solid #30363d;
-	margin-bottom: 20px;
+	margin-bottom: 30px;
 }
 /* selecty */
 select
@@ -273,4 +273,8 @@ input[type=text][disabled]
 {
 	background-color: #151a21;
 	color: #404040;
+}
+.footer
+{
+	padding-top: 15px;
 }

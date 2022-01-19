@@ -21,11 +21,11 @@ body
 
 .search-results
 {
-		justify-content: flex-start;
+		justify-content: space-around;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    width: calc(100vw - 180px);
+    width: 100%;
 
 }
 
