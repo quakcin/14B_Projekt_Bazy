@@ -86,18 +86,6 @@ END;
 --EXECUTE OdwolajWizyteLek(6);
 
 
---Wizyty bez opisow
-CREATE TABLE dostepne_godz(
-godz NVARCHAR2(20)
-);
-INSERT INTO dostepne_godz VALUES ('10:00');
-INSERT INTO dostepne_godz VALUES ('11:30');
-INSERT INTO dostepne_godz VALUES ('13:00');
-INSERT INTO dostepne_godz VALUES ('14:30');
-INSERT INTO dostepne_godz VALUES ('16:00');
-INSERT INTO dostepne_godz VALUES ('17:30');
-INSERT INTO dostepne_godz VALUES ('19:00');
-
 ALTER TRIGGER check_Wizyty_dates_trigger DISABLE;
 CREATE OR REPLACE PROCEDURE dodaj_wizyte_random(p_ilosc NUMBER)
 IS
@@ -130,4 +118,3 @@ END;
 /
 EXECUTE dodaj_wizyte_random(40);
 ALTER TRIGGER check_Wizyty_dates_trigger ENABLE;
-DROP TABLE dostepne_godz CASCADE CONSTRAINTS;

@@ -34,6 +34,10 @@ START WITH 1
 NOCYCLE;
 
 
+CREATE TABLE dostepne_godz(
+godz NVARCHAR2(20)
+);
+
 CREATE TABLE Adresy(
     Nr_Adresu NUMERIC PRIMARY KEY,
     Miasto NVARCHAR2(40) NOT NULL,

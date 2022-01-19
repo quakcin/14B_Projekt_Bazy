@@ -49,6 +49,7 @@ INSERT INTO Lekarze_view VALUES ('Lek19', 'lek19', 'Andrzej', 'Jakubowski', sysd
 INSERT INTO Lekarze_view VALUES ('Lek20', 'lek20', 'Michał', 'Wróblewski', sysdate-14600, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'Wroblewski@wp.pl', 'Kielce', 'Hoza', '25', NULL, '25-987', 'Lekarz Rodzinny', NULL, NULL, NULL);
 INSERT INTO Lekarze_view VALUES ('Lek21', 'lek21', 'Szymon', 'Szymczak', sysdate-21370, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'doktorSzymczak@wp.pl', 'Kielce', 'Czestochowska', '46', NULL, '25-987', 'Lekarz Rodzinny', NULL, NULL, NULL);
 
+
 --Producenci leków
 INSERT INTO Producenci_Lekow_view (nazwa_producenta, kod_pocztowy, miasto, ulica,nr_domu, nr_mieszkania, email,telefon) VALUES ('USP Zdrowie sp. z o.o.', '02-822', 'Warszawa', 'Poleczki', '35', NULL, 'hurtownia@usp.pl', '225436000');
 INSERT INTO Producenci_Lekow_view (nazwa_producenta, kod_pocztowy, miasto, ulica,nr_domu, nr_mieszkania, email,telefon) VALUES ('Mabion S.A.', '95-050', 'Konstantynów Łódzki', 'gen. Mariana Langiewicza', '60', NULL, 'info@mabion.eu', '422077890');
@@ -61,3 +62,12 @@ INSERT INTO Producenci_Lekow_view (nazwa_producenta, kod_pocztowy, miasto, ulica
 INSERT INTO Producenci_Lekow_view (nazwa_producenta, kod_pocztowy, miasto, ulica,nr_domu, nr_mieszkania, email,telefon) VALUES ('Toruńskie Zakłady Materiałów Opatrunkowych', '87-100', 'Toruń', 'Żółkiewskiego', '20', '26', 'bok@tzmo-global.com', '566123800');
 INSERT INTO Producenci_Lekow_view (nazwa_producenta, kod_pocztowy, miasto, ulica,nr_domu, nr_mieszkania, email,telefon) VALUES ('Zakłady Farmaceutyczne Polpharma S.A.', '83-200', 'Starogard Gdański', 'Pelplińska', '19', NULL, 'iod@polpharma.com', '585631600');
 
+
+--Godziny wizyt
+INSERT INTO dostepne_godz VALUES ('10:00');
+INSERT INTO dostepne_godz VALUES ('11:30');
+INSERT INTO dostepne_godz VALUES ('13:00');
+INSERT INTO dostepne_godz VALUES ('14:30');
+INSERT INTO dostepne_godz VALUES ('16:00');
+INSERT INTO dostepne_godz VALUES ('17:30');
+INSERT INTO dostepne_godz VALUES ('19:00');
