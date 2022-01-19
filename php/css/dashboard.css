@@ -28,6 +28,7 @@ body
   box-sizing: border-box;
   display: flex;
   overflow: auto;
+	
   
 }
 .wrapper > .content::-webkit-scrollbar { width: 20px; }
@@ -58,8 +59,8 @@ body
     --width: 70vw;
     display: flex;
 	flex-wrap: wrap;
-    align-items: center;
-    -justify-content: space-between;
+  align-items: center;
+
 }
 
 .superTable > .row > div

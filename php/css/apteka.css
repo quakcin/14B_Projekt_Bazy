@@ -1,46 +1,63 @@
 body
 {
-    padding: 0px;
-    margin: 0px;
+  padding: 0px;
+  margin: 0px;
+	font-family: Arial, Helvetica, sans-serif;
+	background-color: #010409;
 }
 
 .search-wrapper
 {
     display: flex;
     justify-content: space-around;
-    align-items: center;
+    align-items: flex-start;
+		place-items: center;
     width: 550px;
-    padding: 30px;
+    padding: 10px 30px;
     box-sizing: border-box;
-    background-color: #f0f0f0;
     margin-left: 100px;
-    margin-top: 25px;
+		float: right;
 }
 
 .search-results
 {
+		justify-content: flex-start;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     width: calc(100vw - 180px);
-    margin-left: 100px;
+
 }
 
 .search-result
 {
-    display: block;
-    width: 210px;
-    height: 350px;
+    display: table;
+		flex-direction: column;
+		justify-content: center;
+    width: 240px;
+    height: auto;
     padding: 10px;
     box-sizing: border-box;
     margin: 40px;
+		border: 1px solid #30363d;
+		background: #15191f;
+		border-radius: 15px;
+		color: #c9d1d9;
 }
 
 .search-result > .picture
 {
-    width: 190px;
-    height: 190px;
-    background-size: cover;    
+	position: relative;
+	top: 0%;
+  width: 140px;
+  height: 140px;  
+	border-radius: 100px;
+	cursor: pointer;
+	margin: 0 auto;
+}
+.search-result > .picture:hover
+{
+  opacity: 0.8;
 }
 
 .search-result > .meta >.name
@@ -52,4 +69,43 @@ body
 {
     font-size: 18px;
     font-weight: bold;
+}
+.config
+{
+	padding: 0 15px;
+}
+.search-result input[type=button]
+{
+  appearance:none;
+	width: fit-content;
+	padding: 5px 15px;
+	-webkit-appearance:none;
+	text-align: center;
+	background-color: #21262d;
+	border: 1px;
+	border-style: solid;
+	border-color: #30363d;
+  border-radius:10px;
+	cursor:pointer;
+	color: #c9ccd1;
+	
+}
+.search-result input[type=button]:hover
+{
+	background-color: #292e36;
+	border: 1px solid #797c80;
+}
+.search-result input[type=button]:active
+{
+	border-color: #21262d;
+  box-shadow: 0px 0px 5px 5px #0c2d6b;
+}
+
+.search-content > .meta
+{
+	font-size: 14px;
+}
+.search-content
+{
+	height: 120px;
 }

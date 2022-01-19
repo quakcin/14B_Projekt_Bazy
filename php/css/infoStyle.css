@@ -1,6 +1,7 @@
 body
 {
 	background-color: #010409;
+			font-family: Arial, Helvetica, sans-serif;
 }
 
 .search-box
@@ -41,12 +42,10 @@ body
   padding: 0 15px;
   -webkit-appearance: none;
   text-align: center;
-  background-color: #161b22;
-  color: #c9ccd1;
-  border: 1px;
-  border-style: solid;
-  border-color: #30363d;
-  border-radius: 10px;
+  background-color: transparent;
+  color: white;
+	border: 0px;
+  border-radius: 100px;
   cursor: pointer;
 	
 }
@@ -69,4 +68,12 @@ body
 	background: #15191f;
 	border-radius: 15px;
 	color: #bfbdae;
+}
+#search-button
+{
+	color: white;
+	font-size: 25px;
+	background-color: transparent;
+	cursor: pointer;
+	border: 0;
 }

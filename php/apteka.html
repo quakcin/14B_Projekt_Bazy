@@ -7,42 +7,66 @@
   <head>
     <title> PRZYCHODNIA | APTEKA </title>
     <meta charset="UTF-8">
-    <link rel="Stylesheet" href="./css/apteka.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">	<link rel="Stylesheet" href="css/dashboard.css">
+		<link rel="Stylesheet" href="./css/apteka.css">
+		<link rel="stylesheet" href="css/accountNavbar_style.css">
+		<link rel="stylesheet" href="css/aptekaStyle.css">
   </head>
   <body>
-
-    <div class="search-wrapper">
-      <div>
-        <input type="text" placeholder="Nazwa Leku" id="search-box">
-      </div>
-      <div>
-        <select id="search-type">
-          <option>Bez Recepty</option>
-        </select>
-      </div>
-      <div>
-        <select id="search-company">
-          <option>Wszystkie</option>
-        </select>
-      </div>      
-      <div>
-        <input type="button" value="Szukaj" id="search-button">
-      </div>
-    </div>
+		<div class="navbar">
+			<a href="index.html">
+				<img class="logo" src="./data/img/samples/logo.png"  alt="logo" />
+			</a>
+			<div class="nav-bar">
+				<a href="konto">Moje Konto</a> 
+				<a href="wizyty"> Umów sie na wizyte </a>
+				<a href="informator"> Informacje o Pacjencie / Lekarzu </a>
+				<a href="apteka"> Apteka </a>
+				
+			</div>	
+			<!-- search wrapper -->
+				<div class="search-wrapper">
+					<div>
+						<input type="text" class='put-data' placeholder="Nazwa Leku" id="search-box">
+					</div>
+					<div>
+						<select class='put-data' id="search-type">
+							<option>Bez Recepty</option>
+						</select>
+					</div>
+					<div>
+						<select class='put-data' id="search-company">
+							<option>Wszystkie</option>
+						</select>
+					</div>      
+					<div>
+						<button id="search-button">
+							<i class="bi bi-search"></i>
+						</button>	
+					</div>
+				</div>
+		</div>
+		
+    
 
     <div class="search-results" id="search-results">
       
     </div>
 
     <div id="search-result-template" style="display: none;">
-      <div class="search-result" id="lek_%id" style="background-color: %bgcol;" title="%desc">
-        <div class="picture" style="background-image: url(%img);" onclick="window.open('%url');"></div>
-        <div class="meta">
-          <div class="name">%name</div>
-          <div class="price">%price zł</div>
-        </div>
-        %config
+      <div class="search-result tooltip" id="lek_%id"  data-tooltip="%desc">
+        <div class="picture" style="background: url(%img);" onclick="window.open('%url');">
+				</div>
+				<div class='search-content'>
+					<div class="meta">
+						<div class="name">%name</div>
+						<div class="price">%price zł</div>
+					</div>
+					%config
+				</div>
+        
       </div>
+
     </div>
 
     <div id="result-config-lekarz" style="display: none;">
@@ -53,7 +77,7 @@
     </div>
 
     <div id="result-config-admin" style="display: none;">
-      <div class="config">
+      <div class="config" data-tooltip="%desc">
         <input type="button" value="Usun" onclick="usunZBazy(%id)">      
       </div>
     </div>
@@ -191,7 +215,7 @@
           if (e.success == false)
             alert(`Błąd Serwera ${e.err}`);
 
-          document.getElementById(`lek_${id}`).setAttribute('style', 'background-color: #fff1c9;');
+          document.getElementById(`lek_${id}`).setAttribute('style', 'background-color: #292a2b; box-shadow: 0px 0px 5px 5px #0c2d6b;');
           
         }, "aptekaDodajRecepte", ["rec", document.getElementById('search-type').value, "lek", id]);
       }
@@ -206,7 +230,7 @@
           if (e.success == false)
             alert(`Błąd Serwera ${e.err}`);
 
-          document.getElementById(`lek_${id}`).setAttribute('style', 'background-color: transparent;');
+          document.getElementById(`lek_${id}`).setAttribute('style', 'background-color: transparent; box-shadow: 0px 0px 5px 5px #6b0c0c;');
 
         }, "aptekaUsunRecepte", ["rec", document.getElementById('search-type').value, "lek", id]);
       }

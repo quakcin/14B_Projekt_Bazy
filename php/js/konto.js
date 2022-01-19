@@ -221,7 +221,7 @@ const invokeEditor = function (name, p_id)
       }
 
       // -- dodanie wrappera do odpowiedniej kolumny
-      (scheme.indexOf(item) < 7 ? fCol : sCol ).appendChild(wrapper);      
+      (scheme.indexOf(item) < scheme.length/2 ? fCol : sCol ).appendChild(wrapper);      
 
       // style do diva kiedy jest haslo
       if (item.t == 'password')

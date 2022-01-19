@@ -8,9 +8,8 @@ body
   overflow: hidden;
   background-color: #161b22;
   position: sticky;
-  position: -webkit-sticky;
   top: 0;
-  font-size: 20px;
+  font-size: 18px;
   
 }
 
