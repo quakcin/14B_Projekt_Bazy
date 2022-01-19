@@ -141,51 +141,25 @@
           }, "dostepniLekarze", ["spec", document.getElementById("rodzaj-lekarza").value]);
         });
         
-        // -- Inny pomysl: Wpisac na sztywno godziny wizyt (posortowane)
-        //                 i usuwac te ktore sa juz zajete!
-        addStage("Dostepne Godziny:", (e) => {
+        addStage("Dostepne Godziny:", (e) =>
+        {
           const sel = document.getElementById('godziny-lekarza');
-          const hour_and_a_half = 30 * 60 * 1000 + 60 * 60 * 1000;
-          const root_time = new Date(document.getElementById('meet-date').value).getTime();
-          let cur_time = root_time + 6 * hour_and_a_half;
-          for (let i = 0; i < 7; i += 1)
+          const hrs = ['10:00', '11:30', '13:00', '14:30', '16:00', '17:30', '19:00'];
+          dbReq((e) =>
           {
-            const t = new Date(cur_time)
-            const stamp = `${t.getDate()}.${t.getMonth() + 1}.${t.getFullYear()} ${t.getHours()}:${t.getMinutes()}`;
-            dbReq((e) => {
-              if (e.success)
-                if (e.db[0][0] == '')
-                {
-                  const opt = document.createElement('option');
-                  const tName = `${t.getHours()}:${t.getMinutes()}`;
-                  opt.textContent = tName;
-                  opt.value = stamp;
-                  sel.appendChild(opt);
-                }
-              console.log(e);
-              /*
-              // -- Niestey: JS nie obsluguje semaforow i muteksow
-              //             moze dojsc do hazardu :(
-              if (i == 6)
-              {
-                // -- Na ostatnim: sortujemy legitne godziny
-                let hrs = Array.apply(null, sel.options);
-                console.log(hrs);
-                hrs = hrs.sort((a, b) =>
-                  new Date(`11-21-2000 ${a.innerText}`) - new Date(`11-21-2000 ${b.innerText}`)
-                );
+            if (e.success == false)
+              alert(`Bład serwera ${e.err}`);
 
-                let j = 0;
-                for (let t of sel.options)
-                  t.innerText = hrs[j++].innerText;
-                console.log(hrs);
+            for (const [i, elem] of e.db.entries())
+              if (elem == '')
+              {
+                const opt = document.createElement('option');
+                opt.value = `${document.getElementById('meet-date').value} ${hrs[i]}`;
+                opt.innerText = hrs[i];
+                sel.appendChild(opt);
               }
-              */
-            }, "czyLekarzDostepny", ["time", stamp, "lekarz", document.getElementById('nazwy-lekarza').value]);
-            cur_time += hour_and_a_half;
-          }
-          // TO-DO: Sortowanie zwroconych godzin ewentualnie
-          //        obluga wyjatku jesli wszytkie godziny zajete!
+          }, "czyLekarzDostepny", ["time", document.getElementById('meet-date').value, "lekarz", document.getElementById('nazwy-lekarza').value]);
+          
         });
 
         addStage("Opisz swoj problem:", (e) => {

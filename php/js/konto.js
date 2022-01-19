@@ -468,12 +468,8 @@ const initPacjent = function ()
       name: 'Apteka',
       action: (e) =>
       {
-        const items = uncomplexResult(e.target)[2];
-        const drugs = items.split(", ");
-        for (let drug of drugs)
-          window.open(`https://www.doz.pl/apteka/szukaj?search=${drug}`, '_blank').focus();
-        // -- TO-DO: Przerobic na takie samo dzialanie, ale na
-        //           naszej stronie w naszej bazie lekow!
+        const recepta = uncomplexResult(e.target);
+        window.location.href = `./apteka?nr_recepty=${recepta[0]}`;
       }
     }
   );

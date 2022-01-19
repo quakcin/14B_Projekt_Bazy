@@ -123,7 +123,7 @@
               document.getElementById('search-type').innerHTML += `<option>${elem[0]}</option>`;
             
             for (const [i, elem] of e.db[1].entries())
-              document.getElementById('search-company').innerHTML += `<option value="${elem[1]}">${elem[0].length > 20 ? elem[0].substr(0, 17) + "..." : elem[0]}</option>`;
+              document.getElementById('search-company').innerHTML += `<option value="${elem[1]}">${elem[0].length > 20 ? elem[0].substr(0, 17) + "..." : elem[0]}</option>`;            
 
             setInterval(() =>
             {
@@ -142,6 +142,18 @@
             }, 1000 / 25);
           }
 
+          // ----------------------------------------
+          // -- Parametry GET
+          const params = [];
+          for (const [i, elem] of location.href.split("?")[1].split("&").entries())
+            params[elem.split('=')[0]] = decodeURIComponent(elem.split('=')[1]);
+
+          if ('nr_recepty' in params)
+            document.getElementById('search-type').value = params['nr_recepty'];
+
+          if ('nazwa' in params)
+            document.getElementById('search-box').value = params['nazwa'];
+          
           // ----------------------------------------
           // -- Wstepne Wyszukiwanie
           lookup();

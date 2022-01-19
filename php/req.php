@@ -685,8 +685,14 @@
 
   function czyLekarzDostepny ()
   {
-    global $retDb;
-    $retDb = dbRequire("SELECT Dostepnosc_wizyty(" . $_GET["lekarz"] . ", '" . $_GET["time"] . "') FROM DUAL");
+    global $retDb; // DD.MM.YYYY HH:MM
+    $hours = ["10:00", "11:30", "13:00", "14:30", "16:00", "17:30", "19:00"];
+
+    for ($i = 0; $i < 7; $i++)
+    {
+      $ctime = $_GET["time"] . " " . $hours[$i];
+      $retDb[$i] = dbRequire("SELECT Dostepnosc_wizyty(" . $_GET["lekarz"] . ", '" . $ctime . "') FROM DUAL")[0];    
+    }  
   }
   
   function dodajWizyte ()
