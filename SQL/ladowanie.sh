@@ -1,5 +1,4 @@
 export NLS_LANG=AMERICAN_AMERICA.AL32UTF8
-SET NLS_LANG=AMERICAN_AMERICA.AL32UTF8
 NLS_LANG=AMERICAN_AMERICA.AL32UTF8
 (
    echo @"./DROPs.sql"
@@ -15,4 +14,5 @@ NLS_LANG=AMERICAN_AMERICA.AL32UTF8
    echo @"./LOGOWANIE.sql"
    echo @"./rejestracja.sql"
    echo @"./odswiezanie_sesji.sql"
-) | sqlplus system/1234
+   echo @"./index.sql"
+) | sqlplus system/root

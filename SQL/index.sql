@@ -1,4 +1,4 @@
-%1 
+--%1 
 CREATE OR REPLACE FUNCTION dwaj_lekarze_info RETURN NVARCHAR2
 IS
 CURSOR LekarzeImieNazSpec IS SELECT rownum kolumna, imie , nazwisko, NAZWA_SPECJALIZACJI specjalizacja FROM Lekarze
@@ -31,7 +31,7 @@ END;
 
 --SELECT dwaj_lekarze_info() FROM dual;
 
-%2
+--%2
 CREATE OR REPLACE FUNCTION NajczesciejOdwiedzanyLekarz RETURN NVARCHAR2
 IS
 CURSOR LekarzeImieNazSpecOdw IS SELECT imie, nazwisko, NAZWA_SPECJALIZACJI specjalizacja, count(Lekarz_Nr) Ilosc_Wizyt FROM wizyty
@@ -61,7 +61,7 @@ END;
 
 --SELECT NajczesciejOdwiedzanyLekarz() FROM dual;
 
-%3
+--%3
 CREATE OR REPLACE FUNCTION NajczesciejOdwiedzaniLekarze RETURN NVARCHAR2
 IS
 CURSOR LekarzeImieNazSpecOdw IS SELECT imie, nazwisko, NAZWA_SPECJALIZACJI specjalizacja, count(Lekarz_Nr) Ilosc_Wizyt FROM wizyty
@@ -96,16 +96,16 @@ END;
 
 --SELECT NajczesciejOdwiedzaniLekarze() FROM dual;
 
-%4
-SELECT COUNT(Nr_leku) Ilosc_leków FROM leki;
+--%4
+/*SELECT COUNT(Nr_leku) Ilosc_leków FROM leki;*/
 
-%5
-SELECT Leki.NAZWA_LEKU ,COUNT(Lek_NR) Ilosc_Przepisan FROM LEK_NA_RECEPTE
+--%5
+/*SELECT Leki.NAZWA_LEKU ,COUNT(Lek_NR) Ilosc_Przepisan FROM LEK_NA_RECEPTE
 INNER JOIN LEKI ON Lek_Nr=LEKI.NR_Leku 
 GROUP BY Lek_NR,Leki.NAZWA_LEKU
-FETCH FIRST ROW ONLY;
+FETCH FIRST ROW ONLY;*/
 
-%6
+--%6
 CREATE OR REPLACE FUNCTION NajdroższyLek RETURN NVARCHAR2
 IS
 CURSOR LekCena IS SELECT NAZWA_LEKU,CENA  FROM LEKI_Z_APTEKI
@@ -126,6 +126,6 @@ END;
 /
 --SELECT NajdroższyLek() FROM dual;
 
-%7
-SELECT TO_CHAR(DATA_WIZYTY,'HH24:MI') godzina,count(TO_CHAR(DATA_WIZYTY,'HH24:MI')) Ilosc_wizyt FROM WIZYTY
-GROUP BY TO_CHAR(DATA_WIZYTY,'HH24:MI') FETCH FIRST ROW ONLY;
+--%7
+/*SELECT TO_CHAR(DATA_WIZYTY,'HH24:MI') godzina,count(TO_CHAR(DATA_WIZYTY,'HH24:MI')) Ilosc_wizyt FROM WIZYTY
+GROUP BY TO_CHAR(DATA_WIZYTY,'HH24:MI') FETCH FIRST ROW ONLY;*/
