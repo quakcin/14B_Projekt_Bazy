@@ -98,7 +98,7 @@ los NUMBER;
 prawdopodob NUMBER;
 BEGIN
 FOR i IN 1..p_ilosc LOOP
-    los:=round(dbms_random.VALUE(-60,60));
+    los:=round(dbms_random.VALUE(-100, 60));
     SELECT to_char(sysdate + los, 'DD.MM.YYYY') INTO dni FROM dual;
     SELECT * INTO godziny FROM(SELECT * FROM dostepne_godz ORDER BY DBMS_RANDOM.RANDOM) WHERE  ROWNUM < 2;
     data_wizyty := (dni||' '||godziny);
@@ -118,5 +118,5 @@ END LOOP;
     UPDATE Wizyty SET czy_odbyta = 'Odbyta' WHERE wizyty.data_wizyty < SYSDATE AND wizyty.czy_odbyta NOT LIKE 'Odwołana';
 END;
 /
-EXECUTE dodaj_wizyte_random(40);
+EXECUTE dodaj_wizyte_random(200);
 ALTER TRIGGER check_Wizyty_dates_trigger ENABLE;

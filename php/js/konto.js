@@ -437,7 +437,7 @@ const initPacjent = function ()
       {n: "Specjalizacja", s: 110},
       {n: "Data", s: 180},
       {n: "Opis", s: 350},
-      {n: "Status", s: 100},
+      {n: "Status", s: 120},
       {n: "Pacjent", s: 60}
     ],
     {
