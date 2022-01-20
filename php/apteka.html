@@ -54,8 +54,8 @@
     </div>
 
     <div id="search-result-template" style="display: none;">
-      <div class="search-result tooltip" id="lek_%id"  data-tooltip="%desc">
-        <div class="picture" style="background: url(%img), url(./data/img/apteka/missing.png);" onclick="window.open('%url');" onerror="console.log('Hello World');"></div>
+      <div class="search-result tooltip" id="lek_%id"  data-tooltip="%desc" style="background-color: %bgcol; box-shadow: 0px 0px 5px 5px %brcol;">
+        <div class="picture" style="background: url(%img), url(./data/img/apteka/missing.png);" onclick="window.open('%url');" ></div>
         <div class='search-content'>
           <div class="meta">
             <div class="name">%name</div>
@@ -195,7 +195,8 @@
         {
           const proto = document.getElementById('search-result-template').innerHTML
             .replace('%config', (P_AC_TYPE == 'pacjent' || P_AC_TYPE == 'brak') ? '' : (P_AC_TYPE == 'lekarz' ? document.getElementById('result-config-lekarz').innerHTML : document.getElementById('result-config-admin').innerHTML))
-            .replace('%bgcol', (special.flat().includes(result[5]) ? '#fff1c9' : 'transparent'))
+            .replace('%bgcol', (special.flat().includes(result[5]) ? '#292a2b' : 'transparent'))
+            .replace('%brcol', (special.flat().includes(result[5]) ? '#0c2d6b' : 'transparent'))          
             .replace('%name', result[0])
             .replace('%price', result[1])
             .replace('%url', result[2])
