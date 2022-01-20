@@ -94,6 +94,11 @@
     <script src="./js/api.js"></script>
     <script>
 
+      dbRestrict(
+        "Musisz być zalogowany/zalogowana żeby korzystać z tej funkcji!", 
+        "./logowanie", ["admin", "lekarz", "pacjent"]
+      );
+
       const lookup = function ()
       {
         const typ = document.getElementById("combobox-rodzaj").value;

@@ -113,6 +113,6 @@ const apiInit = function ()
   }
 }
 
-document.body.onload = (e) => {
-  apiInit();
-}
+setTimeout(() => {
+  apiInit();  
+}, 1000);

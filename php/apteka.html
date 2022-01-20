@@ -145,20 +145,23 @@
           // ----------------------------------------
           // -- Parametry GET
           const params = [];
-          for (const [i, elem] of location.href.split("?")[1].split("&").entries())
-            params[elem.split('=')[0]] = decodeURIComponent(elem.split('=')[1]);
+          if (location.href.includes('?'))
+            for (const [i, elem] of location.href.split("?")[1].split("&").entries())
+              params[elem.split('=')[0]] = decodeURIComponent(elem.split('=')[1]);
 
           if ('nr_recepty' in params)
             document.getElementById('search-type').value = params['nr_recepty'];
 
           if ('nazwa' in params)
             document.getElementById('search-box').value = params['nazwa'];
+
           
           // ----------------------------------------
           // -- Wstepne Wyszukiwanie
-          lookup();
+          lookup();                  
           
         }, "aptekaInit");
+
       }
       
       // -- move to proper file!

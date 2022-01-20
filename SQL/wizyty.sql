@@ -16,7 +16,7 @@ RETURN NUMBER
 IS
 v_Nr_Wizyty Wizyty.nr_wizyty%TYPE;
 BEGIN
-SELECT Nr_Wizyty INTO v_Nr_Wizyty FROM Wizyty WHERE lekarz_nr = p_Numer_Lekarza AND data_wizyty = TO_DATE(p_Data, 'DD.MM.YYYY HH24:MI');
+SELECT Nr_Wizyty INTO v_Nr_Wizyty FROM Wizyty WHERE lekarz_nr = p_Numer_Lekarza AND data_wizyty = TO_DATE(p_Data, 'YYYY.MM.DD HH24:MI');
 RETURN v_Nr_Wizyty;
 END;
 /
