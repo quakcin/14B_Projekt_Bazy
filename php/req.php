@@ -91,7 +91,7 @@
 
   //  -- Polaczenie Z Baza
 
-  $db = @oci_connect("system", "123qwe", "localhost/xe", "AL32UTF8");
+  $db = @oci_connect("system", "1234", "localhost/xe", "AL32UTF8");
 
   if (!$db)
     packetThrow((oci_error())['message'], []);
@@ -732,12 +732,13 @@
   {
     global $retDb;
 
+    $retDb[0] = dbRequire("SELECT NAZWA_SPECJALIZACJI FROM specjalizacje ORDER BY NAZWA_SPECJALIZACJI");
     $retDb[1] = dbRequire("SELECT dwaj_lekarze_info() FROM dual");
-    $retDb[2] = dbRequire("SELECT NajczesciejOdwiedzanyLekarz() FROM dual");
+    $retDb[2] = dbRequire("SELECT NajczesciejOdwiedzanajacyPacjent() FROM dual");
     $retDb[3] = dbRequire("SELECT NajczesciejOdwiedzaniLekarze() FROM dual");
-    $retDb[4] = dbRequire("SELECT COUNT(Nr_leku) Ilosc_leków FROM leki");
+    $retDb[4] = dbRequire("SELECT COUNT(Nr_leku) Ilosc_lekow FROM leki");
     $retDb[5] = dbRequire("SELECT Leki.NAZWA_LEKU ,COUNT(Lek_NR) Ilosc_Przepisan FROM LEK_NA_RECEPTE INNER JOIN LEKI ON Lek_Nr=LEKI.NR_Leku GROUP BY Lek_NR,Leki.NAZWA_LEKU FETCH FIRST ROW ONLY");
-    // TO-DO:   $retDb[6] = dbRequire("SELECT NajdroższyLek() FROM dual");
+    $retDb[6] = dbRequire("SELECT NajdrozszyLek() FROM dual");
     $retDb[7] = dbRequire("SELECT TO_CHAR(DATA_WIZYTY,'HH24:MI') godzina,count(TO_CHAR(DATA_WIZYTY,'HH24:MI')) Ilosc_wizyt FROM WIZYTY GROUP BY TO_CHAR(DATA_WIZYTY,'HH24:MI') FETCH FIRST ROW ONLY");
   }
   
