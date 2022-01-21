@@ -1,7 +1,43 @@
 --%0
 --SELECT NAZWA_SPECJALIZACJI FROM specjalizacje ORDER BY NAZWA_SPECJALIZACJI;
-
 --%1 
+--SELECT dwaj_lekarze_info() FROM dual;
+--%2
+--SELECT NajczesciejOdwiedzanajacyPacjent() FROM dual;
+--%3
+--SELECT NajczesciejOdwiedzaniLekarze() FROM dual;
+--%4
+--SELECT COUNT(Nr_leku) Ilosc_lekow FROM leki;
+--%5
+--SELECT NajwPrzepLek FROM DUAL;
+--%6
+--SELECT NajdrozszyLek() FROM dual
+--%7
+--SELECT NajczestszaGodzWizyt FROM DUAL;
+--%8
+--SELECT * FROM dostepne_godz;
+
+--Proste selekty
+--SELECT Zliczenia FROM DUAL;
+CREATE OR REPLACE FUNCTION Zliczenia RETURN NVARCHAR2
+IS
+lekarze NUMBER;
+pacjenci NUMBER;
+wizyty NUMBER;
+recepty NUMBER;
+output NVARCHAR2(1000);
+BEGIN
+SELECT COUNT(NR_LEKARZA) INTO lekarze FROM LEKARZE;
+SELECT COUNT(NR_karty_pacjenta) INTO pacjenci FROM PACJENCI;
+SELECT COUNT(NR_WIZYTY) INTO wizyty FROM WIZYTY;
+SELECT COUNT(NR_Recepty) INTO recepty FROM RECEPTY;
+output:= '<br>Ilość lekarzy: '||lekarze||'<br>Ilość pacjentów: '||pacjenci||'<br>Ilość wizyt: '||wizyty||'<br>Ilość recept: '||recepty;
+RETURN output;
+END;
+/
+
+--%1
+
 CREATE OR REPLACE FUNCTION dwaj_lekarze_info RETURN NVARCHAR2
 IS
 CURSOR LekarzeImieNazSpec IS SELECT rownum kolumna, imie , nazwisko, NAZWA_SPECJALIZACJI specjalizacja FROM Lekarze
@@ -88,7 +124,7 @@ FOR rec IN LekarzeImieNazSpecOdw LOOP
         imie4:=rec.imie;    nazw4:=rec.nazwisko;    spec4:=rec.specjalizacja;   Ilosc_Wizyt4:=rec.Ilosc_Wizyt;
     END IF;
 END loop;
-output:=imie1||' '||nazw1||' - '||spec1||' Ilosc wizyt: '||Ilosc_Wizyt1|| '<br>' ||imie2||' '||nazw2||' - '||spec2||' Ilosc wizyt: '||Ilosc_Wizyt2
+output:='<br>'||imie1||' '||nazw1||' - '||spec1||' Ilosc wizyt: '||Ilosc_Wizyt1|| '<br>' ||imie2||' '||nazw2||' - '||spec2||' Ilosc wizyt: '||Ilosc_Wizyt2
 || '<br>' ||imie3||' '||nazw3||' - '||spec3||' Ilosc wizyt: '||Ilosc_Wizyt3|| '<br>' ||imie4||' '||nazw4||' - '||spec4||' Ilosc wizyt: '||Ilosc_Wizyt4;
 RETURN output;
 END;
@@ -108,7 +144,24 @@ FETCH FIRST ROW ONLY;
 
 --SELECT * FROM NajPrzepLek;
 
+CREATE OR REPLACE FUNCTION NajwPrzepLek RETURN NVARCHAR2
+IS
+nazwa LEKI.NAZWA_LEKU%TYPE;
+Il_Przepisan NUMBER;
+output NVARCHAR2(1000);
+BEGIN
+SELECT Leki.NAZWA_LEKU ,COUNT(Lek_NR) Ilosc_Przepisan INTO nazwa,Il_Przepisan FROM LEK_NA_RECEPTE
+INNER JOIN LEKI ON Lek_Nr=LEKI.NR_Leku 
+GROUP BY Lek_NR,Leki.NAZWA_LEKU
+FETCH FIRST ROW ONLY;
+output:=nazwa||' - Ilość przepisań: '||Il_Przepisan;
+RETURN output;
+END;
+/
+
+--SELECT NajwPrzepLek FROM DUAL;
 --%6
+
 CREATE OR REPLACE FUNCTION NajdrozszyLek RETURN NVARCHAR2
 IS
 CURSOR LekCena IS SELECT NAZWA_LEKU,CENA  FROM LEKI_Z_APTEKI
@@ -128,13 +181,21 @@ RETURN output;
 END;
 /
 --SELECT NajdrozszyLek() FROM dual;
-
 --%7
-CREATE OR REPLACE VIEW NajczestszaGodzWizyt AS
-SELECT TO_CHAR(DATA_WIZYTY,'HH24:MI') godzina,count(TO_CHAR(DATA_WIZYTY,'HH24:MI')) Ilosc_wizyt FROM WIZYTY
+DROP FUNCTION NajczestszaGodzWizyt;
+CREATE OR REPLACE FUNCTION NajczestszaGodzWizyt RETURN NVARCHAR2
+AS
+godz NVARCHAR2 (10);
+Il_wizyt NUMBER;
+output NVARCHAR2(1000);
+BEGIN
+SELECT TO_CHAR(DATA_WIZYTY,'HH24:MI') godzina, count(TO_CHAR(DATA_WIZYTY,'HH24:MI')) Ilosc_wizyt INTO godz, Il_wizyt FROM WIZYTY
 GROUP BY TO_CHAR(DATA_WIZYTY,'HH24:MI') FETCH FIRST ROW ONLY;
+output:=godz||'. Ilość wizyt odbytych o tej godzinie: '||Il_wizyt||'.';
+RETURN output;
+END;
+/
 
---SELECT * FROM NajczestszaGodzWizyt;
-
+--SELECT NajczestszaGodzWizyt FROM DUAL;
 --%8
 /*SELECT * FROM dostepne_godz;*/
