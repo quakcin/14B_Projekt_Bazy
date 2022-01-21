@@ -1,5 +1,5 @@
 --Specjalizacje
-INSERT INTO Specjalizacje (Nazwa_Specjalizacji,Opis) VALUES ('Kardiolog', 'Lekarz medycyny zajmujący się chorobami serca i układu krążenia.');
+INSERT INTO Specjalizacje (Nazwa_Specjalizacji, Opis) VALUES ('Kardiolog', 'Lekarz medycyny zajmujący się chorobami serca i układu krążenia.');
 INSERT INTO Specjalizacje (Nazwa_Specjalizacji, Opis) VALUES ('Dentysta', 'Lekarz medycyny zajmujący sie chorobami zębów i jamy ustnej');
 INSERT INTO Specjalizacje (Nazwa_Specjalizacji, Opis) VALUES ('Okulista', 'Lekarz medycyny zajmujący sie badaniem i leczeniem narządu wzroku oraz korygowaniem jego wad');
 INSERT INTO Specjalizacje (Nazwa_Specjalizacji, Opis) VALUES ('Neurolog', 'Lekarz medycyny zajmujący sie zajmujący sie chorobami obwodowego oraz ośrodkowego układu nerwowego');

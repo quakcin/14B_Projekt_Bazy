@@ -118,8 +118,14 @@ CREATE OR REPLACE PROCEDURE AdminEdytuj_Wizyte(p_idWizyty Wizyty.nr_wizyty%TYPE,
                                                 p_opis Wizyty.opis%TYPE, p_status Wizyty.czy_odbyta%TYPE, 
                                                 p_lekarz Wizyty.lekarz_nr%TYPE, p_pacjent Wizyty.pacjent_nr%TYPE)
 AS
+v_wizyta Wizyty.Nr_Wizyty%TYPE;
 BEGIN
-    UPDATE Wizyty SET Data_Wizyty = p_data, opis = p_opis, czy_odbyta = p_status, lekarz_nr = p_lekarz, pacjent_nr = p_pacjent WHERE nr_wizyty = p_idWizyty;
+    SELECT Nr_Wizyty INTO v_wizyta FROM Wizyty WHERE Lekarz_Nr = p_lekarz AND Data_Wizyty = p_data;
+    IF (v_wizyta IS NULL) THEN
+        UPDATE Wizyty SET Data_Wizyty = p_data, opis = p_opis, czy_odbyta = p_status, lekarz_nr = p_lekarz, pacjent_nr = p_pacjent WHERE nr_wizyty = p_idWizyty;
+    ELSE
+        RAISE_APPLICATION_ERROR( -20003, 'Błędna data wizyty: Taka data wizyty jest już zajęta! Wybierz inną.' );
+    END IF;
 END;
 /
 
