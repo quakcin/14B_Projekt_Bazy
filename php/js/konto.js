@@ -368,10 +368,21 @@ const renderSearchResult = function (dbRow, resScheme, index)
   return row;
 }
 
+// ----------------------------------------
+// -- Anty Ghosting
+let perform_search_blocker = false;
+
 // -- Dzialanie: Wykona przeszukanie bazy danych
 //    oraz wyrenderuje rezultaty na stronie.
 const performSearch = function ()
 {
+  // -- Anty Ghosting
+  if (perform_search_blocker)
+    return;
+  
+  perform_search_blocker = true;
+
+  // -- Wyszukiwarka
   const sbr = document.getElementById("search-results");
   const sbx = document.getElementById("search-box");
   const res = findResultScheme(sbx.dataset['name']);
@@ -386,7 +397,7 @@ const performSearch = function ()
   
   dbReq((e) => {
     console.log(e);
-
+    perform_search_blocker = false;
     if (e.success)
     {
       const fields = [];
@@ -402,6 +413,10 @@ const performSearch = function ()
     }
     sbr.appendChild(tab);
   }, res.sCommand, ["key", key, "p_id", p_id]);
+}
+
+document.getElementById("search-box").onkeyup = (e) => {
+  performSearch();
 }
 
 document.getElementById("search-button").onclick = (e) => {
@@ -702,7 +717,7 @@ const szukajkiAdmina = function ()
       {n: "Login", s: 150},
       {n: "Imie", s: 200},
       {n: "Nazwisko", s: 200},
-      {n: "E-Mail", s: 200},
+      {n: "E-Mail", s: 250},
       {n: "P_ID", s: 80}      
     ],
     {

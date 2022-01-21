@@ -91,7 +91,7 @@
 
   //  -- Polaczenie Z Baza
 
-  $db = @oci_connect("system", "root", "localhost/xe", "AL32UTF8");
+  $db = @oci_connect("system", "1234", "localhost/xe", "AL32UTF8");
 
   if (!$db)
     packetThrow((oci_error())['message'], []);
@@ -758,9 +758,9 @@
 
     global $retPacket;
   
-    $retDb[0] = dbRequire("SELECT imie, nazwisko, Nazwa_Specjalizacji, Telefon, Email FROM Lekarze_view WHERE LOWER(Imie) LIKE '%" . $_GET["imie"] . "%' AND LOWER(Nazwisko) LIKE '%" . $_GET["nazwisko"] . "%' AND ROWNUM < 100 ORDER BY Nazwisko");
-    $retDb[1] = dbRequire("SELECT imie, nazwisko, TO_CHAR(data_urodzenia, 'dd.mm.yyyy'), miasto, Telefon, Email FROM Pacjenci_view WHERE LOWER(Imie) LIKE '%" . $_GET["imie"] . "%' AND LOWER(Nazwisko) LIKE '%" . $_GET["nazwisko"] . "%' AND ROWNUM < 100 ORDER BY Nazwisko");
-    $retDb[2] = dbRequire("SELECT * FROM Admin_Info");
+    $retDb[0] = dbRequire("SELECT imie, nazwisko, Nazwa_Specjalizacji, Telefon, Email FROM Lekarze_view WHERE LOWER(Imie) LIKE '%" . $_GET["imie"] . "%' AND LOWER(Nazwisko) LIKE '%" . $_GET["nazwisko"] . "%' AND ROWNUM < 20 ORDER BY Nazwisko");
+    $retDb[1] = dbRequire("SELECT imie, nazwisko, TO_CHAR(data_urodzenia, 'dd.mm.yyyy'), miasto, Telefon, Email FROM Pacjenci_view WHERE LOWER(Imie) LIKE '%" . $_GET["imie"] . "%' AND LOWER(Nazwisko) LIKE '%" . $_GET["nazwisko"] . "%' AND ROWNUM < 20 ORDER BY Nazwisko");
+    $retDb[2] = dbRequire("SELECT * FROM Admin_Info WHERE LOWER(Imie) LIKE '%" . $_GET["imie"] . "%' AND LOWER(Nazwisko) LIKE '%" . $_GET["nazwisko"] . "%' ");
   }
 
   
@@ -777,9 +777,9 @@
     $retDb[2] = dbRequire("SELECT NajczesciejOdwiedzanajacyPacjent() FROM dual");
     $retDb[3] = dbRequire("SELECT NajczesciejOdwiedzaniLekarze() FROM dual");
     $retDb[4] = dbRequire("SELECT COUNT(Nr_leku) Ilosc_lekow FROM leki");
-    $retDb[5] = dbRequire("SELECT * FROM NajPrzepLek");
+    $retDb[5] = dbRequire("SELECT NajwPrzepLek FROM DUAL");
     $retDb[6] = dbRequire("SELECT NajdrozszyLek() FROM dual");
-    $retDb[7] = dbRequire("SELECT * FROM NajczestszaGodzWizyt");
+    $retDb[7] = dbRequire("SELECT NajczestszaGodzWizyt FROM DUAL");
     $retDb[8] = dbRequire("SELECT * FROM dostepne_godz");  
   }
   

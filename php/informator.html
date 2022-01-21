@@ -195,6 +195,16 @@
         lookup();
       }
 
+      document.getElementById("textbox-imie").onkeyup = (e) =>
+      {
+        lookup();
+      }
+
+      document.getElementById("combobox-rodzaj").onchange = (e) =>
+      {
+        lookup();
+      }      
+
       document.body.onload = (e) =>
       {
         const params = [];
