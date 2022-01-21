@@ -82,7 +82,8 @@ CREATE TABLE Recepty(
     Wizyta_Nr Number NOT NULL,
     Data_Wystawienia DATE  DEFAULT SYSDATE,
     Data_Waznosci DATE  DEFAULT SYSDATE+30,
-    Zalecenia NVARCHAR2(256)
+    Zalecenia NVARCHAR2(256),
+    CONSTRAINT Wizyta_fk FOREIGN KEY(Wizyta_Nr) REFERENCES Wizyty(Nr_Wizyty)
 );
 	
 CREATE TABLE Lekarze(
