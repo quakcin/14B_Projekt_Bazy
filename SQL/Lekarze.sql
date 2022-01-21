@@ -73,12 +73,10 @@ GROUP BY pacjenci.nr_karty_pacjenta, osoby.imie, osoby.nazwisko, osoby.data_urod
 --SELECT nr_karty_pacjenta, imie, nazwisko, TO_CHAR(data_urodzenia, 'dd.mm.yyyy'), TO_CHAR("Ostatnia", 'dd.mm.yyyy HH24:mi') FROM pacjentLekarzaInfo WHERE lekarz_nr = 2;
 
 
-CREATE OR REPLACE PROCEDURE ZaznaczRecepte(p_lekarz wizyty.lekarz_nr%TYPE, p_Wizyta wizyty.nr_wizyty%TYPE)
+CREATE OR REPLACE PROCEDURE ZaznaczRecepte(p_lekarz wizyty.lekarz_nr%TYPE, p_Recepta recepty.nr_recepty%TYPE)
 IS
-v_recepta recepty.nr_recepty%TYPE;
 BEGIN
-    SELECT Nr_Recepty INTO v_recepta FROM Recepty WHERE wizyta_nr = p_wizyta;
-    UPDATE Lekarze SET Ostatnia_Recepta = v_recepta WHERE Osoba_Nr = p_lekarz;
+    UPDATE Lekarze SET Ostatnia_Recepta = p_Recepta WHERE Osoba_Nr = p_lekarz;
 END;
 /
 
@@ -88,7 +86,21 @@ v_recepta recepty.nr_recepty%TYPE;
 BEGIN
     UPDATE Wizyty SET Czy_Odbyta = 'Odbyta' WHERE Nr_Wizyty = p_wizyta;
     INSERT INTO Recepty (Wizyta_Nr, Data_Wystawienia, Data_Waznosci, Zalecenia) VALUES (p_wizyta, p_DataWystawienia, p_DataWaznosci, p_Zalecenia);
-    SELECT Nr_Recepty INTO v_recepta FROM Recepty WHERE wizyta_nr = p_wizyta;
+    SELECT Nr_Recepty INTO v_recepta FROM Recepty WHERE wizyta_nr = p_wizyta AND ROWNUM =1;
     UPDATE Lekarze SET Ostatnia_Recepta = v_recepta WHERE Osoba_Nr = p_lekarz;
+END;
+/
+
+CREATE OR REPLACE PROCEDURE EdytujRecepte_Lekarz(p_recepta Recepty.Nr_Recepty%TYPE, p_waznosc Recepty.Data_Waznosci%TYPE, p_zalecenia Recepty.zalecenia%TYPE)
+IS
+BEGIN
+    UPDATE Recepty SET Data_Waznosci = p_waznosc, Zalecenia = p_zalecenia WHERE Nr_Recepty = p_recepta;
+END;
+/
+
+CREATE OR REPLACE PROCEDURE ResetujRecepte_Lekarz(p_recepta Recepty.Nr_Recepty%TYPE)
+IS
+BEGIN
+    DELETE FROM Lek_Na_Recepte WHERE recepta_nr = p_recepta;
 END;
 /

@@ -58,12 +58,22 @@ END CASE;
 END;
 /
 
-CREATE OR REPLACE PROCEDURE lekWizUpdate(p_opis Wizyty.opis%TYPE, p_status Wizyty.czy_odbyta%TYPE, p_wizyta Wizyty.nr_wizyty%TYPE)
+CREATE OR REPLACE PROCEDURE lekWizUpdate(p_osoba Osoby.nr_osoby%TYPE, p_opis Wizyty.opis%TYPE, p_status Wizyty.czy_odbyta%TYPE, p_wizyta Wizyty.nr_wizyty%TYPE, p_data wizyty.data_wizyty%TYPE)
 IS
+v_wizyta Wizyty.Nr_Wizyty%TYPE;
+v_Lekarz lekarze.Nr_Lekarza%TYPE;
+v_data wizyty.data_wizyty%TYPE;
 BEGIN
-UPDATE Wizyty SET Opis = (Opis || ' (Odp: ' || p_opis ||')'), czy_odbyta = p_status WHERE Nr_wizyty = p_wizyta;
+    SELECT Nr_Lekarza INTO v_Lekarz FROM Lekarze WHERE Osoba_Nr = p_osoba;
+    SELECT COUNT(Nr_Wizyty) INTO v_wizyta FROM Wizyty WHERE Lekarz_Nr = v_Lekarz AND Data_Wizyty = p_data AND Nr_Wizyty != p_wizyta;
+    IF (v_wizyta = 0) THEN
+        UPDATE Wizyty SET Data_Wizyty = p_data, opis = p_opis, czy_odbyta = p_status WHERE nr_wizyty = p_wizyta;
+    ELSE
+        RAISE_APPLICATION_ERROR( -20004, 'Błędna data wizyty: Taka data wizyty jest już zajęta! Wybierz inną.' );
+    END IF;
 END;
 /
+EXECUTE lekWizUpdate(124, 'Stany lękowyyy.', 'Przeniesiona', 1, to_date('2022-04-07 10:00', 'YYYY-MM-DD HH24:mi'));
 
 --EXECUTE lekWizUpdate('abd', 'odbyta', 2);
 
