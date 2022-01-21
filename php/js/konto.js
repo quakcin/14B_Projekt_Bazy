@@ -736,6 +736,34 @@ const szukajkiAdmina = function ()
   );
   addResult
   (
+    "recepty", "szukajRecept",
+    [
+      {n: "Nr", s: 80},
+      {n: "Wizyta", s: 80},
+      {n: "Lekarz:  Imie", s: 180},
+      {n: "Nazwisko", s: 180},
+      {n: "Pacjent:", s: 80},      
+      {n: "Imie", s: 180},
+      {n: "Nazwisko", s: 180},
+      {n: "Data Waznosci", s: 150},
+      {n: "Data Wystawienia", s: 150},      
+    ],
+    {
+      name: "Usun", action: (e) =>
+      {
+        const rec = uncomplexResult(e.target).at(0);
+        dbReq((e) =>
+        {
+          if (e.success)
+            performSearch();
+          else
+            alert(`Bład serwera: ${e.err}`);
+        }, "usun_recepte", ["rec", rec]);
+      }
+    }
+  );  
+  addResult
+  (
     "producenci", "szukajProducentow",
     [
       {n: "ID", s: 60},      
@@ -971,6 +999,7 @@ const initAdmin = function ()
   addPanel("Konta Pacjentów", "acPacjenci", P_SEARCH);
   addPanel("Konta Adminów", "acAdmin", P_SEARCH);
   addPanel("Wizyty", "wizyty", P_SEARCH);
+  addPanel("Recepty", "recepty", P_SEARCH);  
   addPanel("Producenci", "producenci", P_SEARCH);
   addPanel("Specjalizacje", "specjalizacje", P_SEARCH);
 

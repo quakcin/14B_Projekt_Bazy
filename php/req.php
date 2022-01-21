@@ -91,7 +91,7 @@
 
   //  -- Polaczenie Z Baza
 
-  $db = @oci_connect("system", "root", "localhost/xe", "AL32UTF8");
+  $db = @oci_connect("system", "1234", "localhost/xe", "AL32UTF8");
 
   if (!$db)
     packetThrow((oci_error())['message'], []);
@@ -489,7 +489,21 @@
     $retDb = dbRequire($qr);
   }
 
+  function adm_szukaj_recept ()
+  {
+    global $retDb;
+    global $retPacket;
+  
+    $qr = packSearchQuerry($_GET["key"], "AdminView_Recepty",
+      ["nr_recepty", "nr_wizyty", "\"Imie lekarza\"", "\"Nazwisko lekarza\"", "\"Imie pacjenta\"", "\"Nazwisko pacjenta\"", "\"Data Wystawienia\"", "\"Data Waznosci\"", "pacjent_nr"]
+    );
 
+    $qr .= " AND ROWNUM < 100 ORDER BY nr_recepty";
+    $retPacket['qr'] = $qr;
+    $retDb = dbRequire($qr);
+
+  }
+  
   function adm_szukaj_specjalizacji ()
   {
     global $retPacket;
@@ -607,7 +621,12 @@
   function adm_usun_pacjenta ()
   {
     dbRequire("CALL AdminUsun_pacjenta(" . $_GET["p_id"] . ")");
-  }  
+  }
+
+  function adm_usun_recepte ()
+  {
+    dbRequire("CALL UsunRecepte_Admin(" . $_GET["rec"] . ")");
+  }
 
   // -------------------------------------
   // -- Apteka:
@@ -822,11 +841,13 @@
     new Command("szukajPacjentow", "adm_szukaj_pacjentow", "admin", ["key"]),
     new Command("szukajAdminow", "adm_szukaj_adminow", "admin", ["key"]),
     new Command("szukajWizyt", "adm_szukaj_wizyt", "admin", ["key"]),
+    new Command("szukajRecept", "adm_szukaj_recept", "admin", ["key"]),  
     new Command("szukajProducentow", "adm_szukaj_producentow", "admin", ["key"]),
     new Command("szukajSpecjalizacji", "adm_szukaj_specjalizacji", "admin", ["key"]),
     new Command("usun_admina", "adm_usun_admina", "admin", ["p_id"]),
     new Command("usun_lekarza", "adm_usun_lekarza", "admin", ["p_id"]),
-    new Command("usun_pacjenta", "adm_usun_pacjenta", "admin", ["p_id"]),      
+    new Command("usun_pacjenta", "adm_usun_pacjenta", "admin", ["p_id"]),
+    new Command("usun_recepte", "adm_usun_recepte", "admin", ["rec"]),        
   
     new Command("req_edLekarz", "adm_req_lekarz", "admin", ["p_id"]),
     new Command("req_edPacjent", "adm_req_pacjent", "admin", ["p_id"]),
