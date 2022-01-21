@@ -2,21 +2,24 @@ body
 {
   padding: 0px;
   margin: 0px;
-  -overflow: hidden;
+  overflow: auto;
+}
+body::-webkit-scrollbar {
+  display: none;
 }
 .wrapper 
 {
   display: flex;
   justify-content: left;
+	height: 90vh;
   
 }
 
 .wrapper > .menu 
 {
   width: 250px;
-  height: 100vh;
   border-right: 2px solid black;
-  padding: 25px;
+	padding: 2px 25px;
   box-sizing: border-box;
 }
 
@@ -28,10 +31,8 @@ body
   box-sizing: border-box;
   display: flex;
   overflow: auto;
-	
-  
 }
-.wrapper > .content::-webkit-scrollbar { width: 20px; }
+.wrapper > .content::-webkit-scrollbar { width: 10px; }
 .wrapper > .content::-webkit-scrollbar-track {
   background-color: #e4e4e4;
   border-radius: 100px;
