@@ -537,7 +537,7 @@
   function adm_req_specjalizacja ()
   {
     global $retDb;
-    $retDb = dbRequire("SELECT nazwa_specjalizacji, opis FROM AdminView_Specjalizacje WHERE nazwa_specjalizacji = '" . $_GET["p_id"] . "'");
+    $retDb = dbRequire("SELECT nr_specjalizacji, nazwa_specjalizacji, opis FROM AdminView_Specjalizacje WHERE nazwa_specjalizacji = '" . $_GET["p_id"] . "' ORDER BY nr_specjalizacji");
   }  
 
   function adm_req_wizyta ()
@@ -549,6 +549,7 @@
 
   function adm_upt_lekarz ()
   {
+    // TO-DO!
     dbRequire("CALL AdminEdytuj_Lekarza(" . $_GET["p_id"] . ", '" . $_GET["imie"] . "', '" . $_GET["nazw"] . "', to_date('" . $_GET["urod"] . "', 'YYYY-MM-DD'), '" . $_GET["pesl"] . "', '" . $_GET["tele"] . "', '" . $_GET["mail"] . "', '" . $_GET["mias"] . "', '" . $_GET["ulic"] . "', '" . $_GET["ndom"] . "', '" . $_GET["nlok"] . "', '" . $_GET["pocz"] . "', '" . $_GET["spec"] . "')");
   }
 
@@ -585,7 +586,7 @@
 
   function adm_ins_lekarz ()
   {
-    dbRequire("INSERT INTO Lekarze_view VALUES ('" . $_GET["logn"] . "', '" . $_GET["pwwd"] . "', '" . $_GET["imie"] . "', '" . $_GET["nazw"] . "', TO_DATE('" . $_GET["urod"] . "', 'YYYY-MM-DD'), '" . $_GET["pesl"] . "', '" . $_GET["tele"] . "', '" . $_GET["mail"] . "', '" . $_GET["mias"] . "', '" . $_GET["ulic"] . "', '" . $_GET["ndom"] . "', '" . $_GET["nlok"] . "', '" . $_GET["pocz"] . "', '" . $_GET["spec"] . "', NULL, NULL, NULL)");
+    dbRequire("CALL DodajLekarza_Admin ('" . $_GET["logn"] . "', '" . $_GET["pwwd"] . "', '" . $_GET["imie"] . "', '" . $_GET["nazw"] . "', TO_DATE('" . $_GET["urod"] . "', 'YYYY-MM-DD'), '" . $_GET["pesl"] . "', '" . $_GET["tele"] . "', '" . $_GET["mail"] . "', '" . $_GET["mias"] . "', '" . $_GET["ulic"] . "', '" . $_GET["ndom"] . "', '" . $_GET["nlok"] . "', '" . $_GET["pocz"] . "', " . $_GET["spec"] . ")");
   }
 
   function adm_ins_admin ()

@@ -784,6 +784,7 @@ const szukajkiAdmina = function ()
   (
     "specjalizacje", "szukajSpecjalizacji",
     [
+      {n: "Kod", s: 80},      
       {n: "Specjalizacja", s: 200},
       {n: "Opis", s: 300},      
       {n: "Dostępni Lekarze", s: 200}
@@ -816,7 +817,7 @@ const edytoryAdmina = function ()
       {n: "ndom", l: "Nr Domu", t: "text"},
       {n: "nlok", l: "Nr Mieszkania", t: "text"},
       {n: "pocz", l: "Kod Pocztowy", t: "text"},
-      {n: "spec", l: "Specjalizacja", t: "select", opt: ["Alergolog", "Dentysta", "Dermatolog", "Ginekolog", "Hematolog", "Kardiolog", "Lekarz Rodzinny", "Neurolog", "Okulista", "Pediatra", "Psychiatra", "Reumatolog", "Urolog"]}
+      {n: "spec", l: "Specjalizacja", t: "number"}
     ],
     [
       {val: "Usuń Konto", evt: (p_id) => {delAccount(2, p_id) }
@@ -940,7 +941,7 @@ const inserteryAdmina = function ()
       {n: "ndom", l: "Nr Domu", t: "text"},
       {n: "nlok", l: "Nr Mieszkania", t: "text"},
       {n: "pocz", l: "Kod Pocztowy", t: "text"},
-      {n: "spec", l: "Specjalizacja", t: "select", opt: ["Alergolog", "Dentysta", "Dermatolog", "Ginekolog", "Hematolog", "Kardiolog", "Lekarz Rodzinny", "Neurolog", "Okulista", "Pediatra", "Psychiatra", "Reumatolog", "Urolog"]}
+      {n: "spec", l: "Kod Specjalizacji", t: "number"}
     ],
   );
   addScheme
