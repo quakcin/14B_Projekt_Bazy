@@ -1,5 +1,5 @@
 --%0
---SELECT NAZWA_SPECJALIZACJI FROM specjalizacje ORDER BY NAZWA_SPECJALIZACJI;
+--SELECT dost_spec FROM DUAL;
 --%1 
 --SELECT dwaj_lekarze_info() FROM dual;
 --%2
@@ -36,8 +36,31 @@ RETURN output;
 END;
 /
 
---%1
+--%0
+CREATE OR REPLACE FUNCTION dost_spec RETURN NVARCHAR2
+IS
+CURSOR NazwSpec IS SELECT NAZWA_SPECJALIZACJI FROM specjalizacje ORDER BY NAZWA_SPECJALIZACJI;
+specRows NUMBER;
+curRow NUMBER:=0;
+spec specjalizacje.NAZWA_SPECJALIZACJI%TYPE;
+output NVARCHAR2(1000);
+BEGIN
+SELECT count(NAZWA_SPECJALIZACJI) INTO specRows FROM specjalizacje;
+    FOR rec IN NazwSpec LOOP
+        curRow:=curRow+1;
+        spec:=rec.NAZWA_SPECJALIZACJI;
+        IF(curRow!=specRows)THEN
+            output:=output||spec||', ';
+        ELSE
+            output:=output||spec||'.';
+        END IF;
+    END LOOP;
+RETURN output;
+END;
+/
 
+--%1
+SELECT count(NAZWA_SPECJALIZACJI) FROM specjalizacje;
 CREATE OR REPLACE FUNCTION dwaj_lekarze_info RETURN NVARCHAR2
 IS
 CURSOR LekarzeImieNazSpec IS SELECT rownum kolumna, imie , nazwisko, NAZWA_SPECJALIZACJI specjalizacja FROM Lekarze
