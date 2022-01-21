@@ -31,6 +31,7 @@
           <option>Wszyscy</option>          
           <option>Lekarz</option>
           <option>Pacjent</option>
+          <option>Admin</option>          
         </select>
       </div>
       <div>
@@ -89,6 +90,28 @@
         </div>        
       </div>
     </div>
+
+
+    <div class="search-result" id="result-template-admin" style="display: none;">
+      <div class="wrapper">
+        <div class="pfp" style="background-image: url(./data/img/pfp/admin.png)">
+        </div>
+        <div class="info">
+          <div class="names">
+            %imie %nazw
+          </div>
+          <div class="spec">
+            Administrator
+          </div>
+          <div class="property">
+            Telefon: %tele
+          </div>
+          <div class="property">
+            E-Mail: %mail
+          </div>
+        </div>        
+      </div>
+    </div>
     
 		
     <script src="./js/api.js"></script>
@@ -106,7 +129,8 @@
         const nazwisko = document.getElementById("textbox-nazwisko").value;
 
         const prot_lekarz = document.getElementById('result-template-lekarz').innerHTML;
-        const prot_pacjent = document.getElementById('result-template-pacjent').innerHTML;        
+        const prot_pacjent = document.getElementById('result-template-pacjent').innerHTML;
+        const prot_admin = document.getElementById('result-template-admin').innerHTML;                
 
         dbReq((e) =>
         {
@@ -144,6 +168,20 @@
                 .replace('%mias', elem[3])
                 .replace('%tele', elem[4])
                 .replace('%mail', elem[5])
+
+              document.getElementById('search-results').innerHTML += proto;
+            }
+          }
+          
+          if (typ == 'Admin' || typ == 'Wszyscy')
+          {
+            for (const [i, elem] of e.db[2].entries())
+            {
+              const proto = prot_admin
+                .replace('%imie', elem[0])
+                .replace('%nazw', elem[1])
+                .replace('%tele', elem[2])
+                .replace('%mail', elem[3])
 
               document.getElementById('search-results').innerHTML += proto;
             }
