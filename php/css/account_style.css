@@ -60,6 +60,7 @@ input[type=number]:active, input[type=number]:focus
 	background-color: #010409;
 	border-top: 1px solid;
 	border-color: #151920;
+	
 }
 .content input[type=button]
 {
@@ -277,4 +278,8 @@ input[type=text][disabled]
 .footer
 {
 	padding-top: 15px;
+}
+.navbar
+{
+	overflow: auto;
 }
