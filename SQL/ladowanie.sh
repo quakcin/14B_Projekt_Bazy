@@ -15,4 +15,4 @@ NLS_LANG=AMERICAN_AMERICA.AL32UTF8
    echo @"./rejestracja.sql"
    echo @"./odswiezanie_sesji.sql"
    echo @"./index.sql"
-) | sqlplus system/root
+) | sqlplus system/123qwe
