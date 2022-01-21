@@ -91,7 +91,7 @@
 
   //  -- Polaczenie Z Baza
 
-  $db = @oci_connect("system", "1234", "localhost/xe", "AL32UTF8");
+  $db = @oci_connect("system", "root", "localhost/xe", "AL32UTF8");
 
   if (!$db)
     packetThrow((oci_error())['message'], []);
@@ -519,7 +519,7 @@
   function adm_req_lekarz ()
   {
     global $retDb;
-    $retDb = dbRequire("SELECT imie, nazwisko, TO_CHAR(data_urodzenia, 'yyyy-MM-dd'), pesel, telefon, email, miasto, ulica, nr_domu, nr_mieszkania, kod_pocztowy, nazwa_specjalizacji FROM Lekarze_view WHERE Nr_lekarza = " . $_GET["p_id"]);
+    $retDb = dbRequire("SELECT imie, nazwisko, TO_CHAR(data_urodzenia, 'yyyy-MM-dd'), pesel, telefon, email, miasto, ulica, nr_domu, nr_mieszkania, kod_pocztowy, nr_specjalizacji FROM Lekarze_Info WHERE Nr_lekarza = " . $_GET["p_id"]);
   }
 
   function adm_req_pacjent ()

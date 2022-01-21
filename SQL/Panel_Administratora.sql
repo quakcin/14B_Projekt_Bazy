@@ -29,11 +29,13 @@ SELECT  Konta.login, osoby.imie, osoby.nazwisko, kontakty.email, osoby.nr_osoby
         INNER JOIN Konta ON Osoby.Nr_osoby = Konta.Osoba_Nr 
         WHERE konta.typ_konta = 'admin';
 
+
 CREATE OR REPLACE VIEW AdminView_Specjalizacje AS
-SELECT specjalizacje.nazwa_specjalizacji, specjalizacje.opis, COUNT(Lekarze.nr_lekarza) AS "Ilosc lekarzy" FROM Specjalizacje
+SELECT specjalizacje.nr_specjalizacji, specjalizacje.nazwa_specjalizacji, specjalizacje.opis, COUNT(Lekarze.nr_lekarza) AS "Ilosc lekarzy" FROM Specjalizacje
 LEFT JOIN Lekarze ON lekarze.specjalizacja_nr = specjalizacje.nr_specjalizacji
-GROUP BY specjalizacje.nazwa_specjalizacji, specjalizacje.opis
-ORDER BY specjalizacje.nazwa_specjalizacji;
+GROUP BY specjalizacje.nr_specjalizacji, specjalizacje.nazwa_specjalizacji, specjalizacje.opis
+ORDER BY specjalizacje.nr_specjalizacji, specjalizacje.nazwa_specjalizacji;
+
 
 CREATE OR REPLACE VIEW AdminView_Recepty AS
 SELECT recepty.nr_recepty, Wizyty.Nr_Wizyty, "OsobaLekarza".imie AS "Imie lekarza", "OsobaLekarza".Nazwisko AS "Nazwisko lekarza",
@@ -46,13 +48,6 @@ SELECT recepty.nr_recepty, Wizyty.Nr_Wizyty, "OsobaLekarza".imie AS "Imie lekarz
     LEFT JOIN Osoby "OsobaPacjenta" ON "OsobaPacjenta".Nr_Osoby = pacjenci.osoba_nr
     LEFT JOIN Osoby "OsobaLekarza" ON "OsobaLekarza".Nr_Osoby = Lekarze.osoba_nr;
     
---SELECT * FROM AdminView_Recepty;
-
-/*SELECT imie, nazwisko, TO_CHAR(data_urodzenia, 'yyyy-MM-dd'), pesel, telefon, email, miasto, ulica, nr_domu, nr_mieszkania, kod_pocztowy, nazwa_specjalizacji FROM Lekarze_view WHERE Nr_lekarza = 1;
-SELECT imie, nazwisko, TO_CHAR(data_urodzenia, 'yyyy-MM-dd'), pesel, telefon, email, miasto, ulica, nr_domu, nr_mieszkania, kod_pocztowy FROM Pacjenci_view WHERE Nr_osoby = (SELECT Osoba_Nr FROM Pacjenci WHERE Nr_Karty_Pacjenta = 1);
-SELECT nazwa_producenta, telefon, email, miasto, ulica, nr_domu, nr_mieszkania, kod_pocztowy FROM Producenci_Lekow_view WHERE nr_producenta = 1; 
-SELECT nazwa_specjalizacji, opis FROM AdminView_Specjalizacje WHERE nazwa_specjalizacji = 'Kardiolog';
-SELECT "Data_Wizyty", Opis, czy_odbyta, lekarz_nr, "Imie lekarza", "Nazwisko lekarza", pacjent_nr, "Imie pacjenta", "Nazwisko pacjenta" FROM AdminView_Wizyta WHERE nr_wizyty = 1;*/
 
 CREATE OR REPLACE PROCEDURE ResetHaslaLekarz(p_id lekarze.nr_lekarza%TYPE, p_haslo konta.haslo%TYPE)
 AS
@@ -75,14 +70,16 @@ END;
 CREATE OR REPLACE PROCEDURE AdminEdytuj_Lekarza(p_idLekarza Lekarze.nr_lekarza%TYPE, p_imie Osoby.imie%TYPE, p_nazwisko Osoby.nazwisko%TYPE, 
                                                 p_data Osoby.data_urodzenia%TYPE, p_pesel Osoby.pesel%TYPE, p_telefon Kontakty.telefon%TYPE,
                                                 p_mail Kontakty.email%TYPE, p_miasto Adresy.miasto%TYPE, p_ulica Adresy.ulica%TYPE, p_dom Adresy.nr_domu%TYPE,
-                                                p_mieszk adresy.nr_mieszkania%TYPE, p_kod Adresy.Kod_Pocztowy%TYPE, p_specjalizacja Specjalizacje.nazwa_specjalizacji%TYPE)
+                                                p_mieszk adresy.nr_mieszkania%TYPE, p_kod Adresy.Kod_Pocztowy%TYPE, p_specjalizacja Specjalizacje.nr_specjalizacji%TYPE)
 AS
 v_osoba osoby.nr_osoby%TYPE;
+v_specjalizacja specjalizacje.nazwa_specjalizacji%TYPE;
 BEGIN
     SELECT Osoba_Nr INTO v_osoba FROM Lekarze WHERE Nr_Lekarza = p_idLekarza;
+    SELECT nazwa_specjalizacji INTO v_specjalizacja FROM Specjalizacje WHERE nr_specjalizacji = p_specjalizacja;
     UPDATE Lekarze_view SET imie = p_imie, nazwisko = p_nazwisko, data_urodzenia = p_data, pesel = p_pesel, telefon = p_telefon, 
                             email = p_mail, miasto = p_miasto, ulica = p_ulica, nr_domu = p_dom, nr_mieszkania = p_mieszk, 
-                            kod_pocztowy = p_kod, nazwa_specjalizacji = p_specjalizacja  
+                            kod_pocztowy = p_kod, nazwa_specjalizacji = v_specjalizacja  
     WHERE Nr_Osoby = v_osoba;
 END;
 /
@@ -213,3 +210,34 @@ BEGIN
     DELETE FROM Recepty WHERE nr_recepty = p_id;
 END;
 /
+
+CREATE OR REPLACE VIEW Admin_Info AS
+SELECT Imie, nazwisko, kontakty.email, kontakty.telefon FROM Osoby
+INNER JOIN Kontakty ON kontakty.nr_kontaktu = osoby.kontakt_nr
+INNER JOIN Konta ON konta.osoba_nr = osoby.nr_osoby
+WHERE konta.typ_konta= 'admin';
+
+--SELECT * FROM Admin_Info;
+
+CREATE OR REPLACE PROCEDURE DodajLekarza_Admin (p_login Konta.login%TYPE, p_haslo Konta.haslo%TYPE, p_imie Osoby.imie%TYPE, p_nazwisko Osoby.nazwisko%TYPE, 
+                                                p_data Osoby.data_urodzenia%TYPE, p_pesel Osoby.pesel%TYPE, p_telefon Kontakty.telefon%TYPE,
+                                                p_mail Kontakty.email%TYPE, p_miasto Adresy.miasto%TYPE, p_ulica Adresy.ulica%TYPE, p_dom Adresy.nr_domu%TYPE,
+                                                p_mieszk adresy.nr_mieszkania%TYPE, p_kod Adresy.Kod_Pocztowy%TYPE, p_specjalizacja Specjalizacje.Nr_Specjalizacji%TYPE)
+AS
+v_specjalizacja specjalizacje.Nazwa_Specjalizacji%TYPE;
+BEGIN
+    SELECT Nazwa_Specjalizacji INTO v_specjalizacja FROM Specjalizacje WHERE nr_specjalizacji = p_specjalizacja;
+    INSERT INTO Lekarze_view VALUES (p_login, p_haslo, p_imie, p_nazwisko, p_data, p_pesel, p_telefon, p_mail, p_miasto, p_ulica, p_dom, p_mieszk, p_kod, v_specjalizacja, NULL, NULL, NULL);
+END;
+/
+
+CREATE OR REPLACE VIEW Lekarze_Info AS
+SELECT  osoby.imie, osoby.nazwisko, data_urodzenia, osoby.pesel, kontakty.telefon, 
+        kontakty.email, adresy.miasto, adresy.ulica, adresy.nr_domu, adresy.nr_mieszkania, 
+        adresy.kod_pocztowy, specjalizacje.nr_specjalizacji, lekarze.nr_lekarza, osoby.nr_osoby
+        FROM Osoby
+        INNER JOIN Adresy ON osoby.adres_nr = adresy.nr_adresu
+        INNER JOIN Kontakty ON osoby.kontakt_nr = kontakty.nr_kontaktu
+        INNER JOIN Konta ON Osoby.Nr_osoby = Konta.Osoba_Nr
+        INNER JOIN Lekarze ON osoby.nr_osoby = lekarze.osoba_Nr
+        INNER JOIN Specjalizacje ON lekarze.Specjalizacja_Nr = specjalizacje.nr_specjalizacji;
