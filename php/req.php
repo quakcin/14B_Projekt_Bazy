@@ -91,7 +91,11 @@
 
   //  -- Polaczenie Z Baza
 
+<<<<<<< HEAD
+  $db = @oci_connect("system", "1234", "localhost/xe", "AL32UTF8");
+=======
   $db = @oci_connect("system", "123qwe", "localhost/xe", "AL32UTF8");
+>>>>>>> 70fe8982ed222a8dac80aa57a110f7bc6d44de4a
 
   if (!$db)
     packetThrow((oci_error())['message'], []);
@@ -267,7 +271,7 @@
     $qr = packSearchQuerry($_GET["key"], "Lekarz_Wizyty",
       ["Nr_Wizyty", "Imie", "Nazwisko", "\"Data Wizyty\"", "Opis", "czy_odbyta"]
     );  
-    $qr .= " AND lekarz_nr = (SELECT Nr_Lekarza FROM lekarze INNER JOIN Osoby ON lekarze.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = " . $retPacket['nrOsoby'] . ")";
+    $qr .= " AND lekarz_nr = (SELECT Nr_Lekarza FROM lekarze INNER JOIN Osoby ON lekarze.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = " . $retPacket['nrOsoby'] . ") AND ROWNUM < 100 ORDER BY NR_WIZYTY";
     $qr = str_replace("*", "Nr_Wizyty, pacjent_nr, Imie, Nazwisko, \"Data Wizyty\", Opis, czy_odbyta", $qr);
   
     $retDb = dbRequire($qr);
@@ -276,14 +280,16 @@
   function req_lekEdycjaWizyty ()
   {
     global $retDb;
-    $retDb = dbRequire("SELECT '', czy_odbyta from wizyty where nr_wizyty = " . $_GET['p_id']);      
+    $retDb = dbRequire("SELECT TO_CHAR(Wizyty.data_wizyty, 'yyyy-MM-dd HH24:MI') as \"Data_Wizyty\", opis, czy_odbyta from wizyty where nr_wizyty = " . $_GET['p_id']);
+    $retDb[0][0] = str_replace(" ", "T", $retDb[0][0]);    
   }
-
+  
   function upt_lekEdycjaWizyty ()
   {
     global $retDb;
     global $retPacket;
-    $qr = "CALL lekWizUpdate('" . $_GET["Zalecenia"] . "', '" . $_GET["NowyStatus"] . "', " . $_GET["p_id"] . ")";
+    $ctime = str_replace("T", " ", $_GET["Data"]);      
+    $qr = "CALL lekWizUpdate(" . $retPacket['nrOsoby'] . ", '" . $_GET["Zalecenia"] . "', '" . $_GET["NowyStatus"] . "', " . $_GET["p_id"] . ", to_date('" . $ctime . "', 'YYYY-MM-DD HH24:mi'))";
     $retPacket['qr'] = $qr;
     dbRequire($qr);
   }
@@ -296,7 +302,7 @@
     $qr = packSearchQuerry($_GET["key"], "pacjentLekarzaInfo",
       ["nr_karty_pacjenta", "imie", "nazwisko", "data_urodzenia", "\"Ostatnia\""]
     );  
-    $qr .= " AND lekarz_nr = (SELECT Nr_Lekarza FROM lekarze INNER JOIN Osoby ON lekarze.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = " . $retPacket['nrOsoby'] . ")";
+    $qr .= " AND lekarz_nr = (SELECT Nr_Lekarza FROM lekarze INNER JOIN Osoby ON lekarze.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = " . $retPacket['nrOsoby'] . ") AND ROWNUM < 100 ORDER BY nr_karty_pacjenta";
     $qr = str_replace("*", "nr_karty_pacjenta, imie, nazwisko, TO_CHAR(data_urodzenia, 'dd.mm.yyyy'), TO_CHAR(\"Ostatnia\", 'dd.mm.yyyy HH24:mi')", $qr);
     $retDb = dbRequire($qr);    
   }
@@ -331,7 +337,7 @@
     );
 
     $qr = str_replace("*", "nr_recepty, Nr_Wizyty, LISTAGG(nazwa_leku, ', ') as \"Nazwa Leku\", zalecenia, Imie, Nazwisko, TO_CHAR(data_waznosci, 'dd/mm/yyyy') as \"Data Waznosci\"", $qr); 
-    $qr .= " AND lekarz_nr = (SELECT Nr_Lekarza FROM lekarze INNER JOIN Osoby ON Lekarze.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = " . $retPacket['nrOsoby'] . ") GROUP BY nr_recepty, nr_wizyty, imie, nazwisko, data_waznosci, zalecenia";
+    $qr .= " AND lekarz_nr = (SELECT Nr_Lekarza FROM lekarze INNER JOIN Osoby ON Lekarze.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = " . $retPacket['nrOsoby'] . ") AND ROWNUM < 100 GROUP BY nr_recepty, nr_wizyty, imie, nazwisko, data_waznosci, zalecenia ORDER BY nr_recepty";
 
     $retPacket['qr'] = $qr;  
     $retDb = dbRequire($qr);
@@ -340,7 +346,7 @@
   function zaznaczRecepte()
   {
     global $retPacket;
-    dbRequire("CALL ZaznaczRecepte(" . $retPacket['nrOsoby'] . ", " . $_GET["wiz"] . ")");
+    dbRequire("CALL ZaznaczRecepte(" . $retPacket['nrOsoby'] . ", " . $_GET["rec"] . ")");
   }
           
   // -------------------------------------
@@ -356,7 +362,7 @@
       ["imie", "nazwisko", "nazwa_specjalizacji", '"Data_Wizyty"', "nr_wizyty", "opis", "czy_odbyta"]
     );
 
-    $qr .= " AND pacjent_nr = (SELECT NR_KARTY_PACJENTA FROM Pacjenci INNER JOIN Osoby ON pacjenci.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = " . $retPacket['nrOsoby'] . ")";
+    $qr .= " AND pacjent_nr = (SELECT NR_KARTY_PACJENTA FROM Pacjenci INNER JOIN Osoby ON pacjenci.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = " . $retPacket['nrOsoby'] . ") AND ROWNUM < 100 ORDER BY NR_WIZYTY";
     $retPacket['qr'] = $qr;
 
     $retDb = dbRequire($qr);
@@ -384,7 +390,7 @@
     $qr = packSearchQuerry($_GET["key"], "pacjent_recepty",
       ["nr_recepty", "nr_wizyty", "nazwa_leku", "zalecenia", "imie", "nazwisko", "data_waznosci"]
     );
-    $qr .= " AND pacjent_nr = (SELECT NR_KARTY_PACJENTA FROM Pacjenci INNER JOIN Osoby ON pacjenci.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = " . $retPacket['nrOsoby'] . ") GROUP BY nr_recepty, nr_wizyty, zalecenia, imie, nazwisko, data_waznosci";
+    $qr .= " AND pacjent_nr = (SELECT NR_KARTY_PACJENTA FROM Pacjenci INNER JOIN Osoby ON pacjenci.osoba_nr = osoby.nr_osoby WHERE osoby.nr_osoby = " . $retPacket['nrOsoby'] . ") AND ROWNUM < 100  GROUP BY nr_recepty, nr_wizyty, zalecenia, imie, nazwisko, data_waznosci ORDER BY nr_recepty";
 
     $qr = str_replace("*", "nr_recepty, nr_wizyty, LISTAGG(nazwa_leku,', ') AS \"Nazwa Leku\" , zalecenia, Imie, nazwisko, TO_CHAR(data_waznosci, 'dd/mm/yyyy') AS \"Data Waznosci\"", $qr);
   
@@ -398,6 +404,22 @@
     dbRequire("delete from Pacjenci_view where nr_osoby = " . $retPacket['nrOsoby']);
   }
 
+  function lek_req_recepte ()
+  {
+    global $retDb;
+    $retDb = dbRequire("SELECT TO_CHAR(data_waznosci, 'yyyy-MM-dd'), Zalecenia FROM Pacjent_Recepty WHERE Nr_Recepty = " . $_GET["p_id"] . " GROUP BY TO_CHAR(data_waznosci, 'yyyy-MM-dd'), Zalecenia");
+  }
+
+  function lek_upt_recepte ()
+  {
+    dbRequire("CALL EdytujRecepte_Lekarz (" . $_GET["p_id"] . ", TO_DATE('" . $_GET["wazn"] . "', 'yyyy-MM-dd'), '" . $_GET["opis"] . "')");
+  }
+
+  function resetujRecepte ()
+  {
+    dbRequire("CALL ResetujRecepte_Lekarz(" . $_GET["p_id"] . ")");
+  }
+  
   // -------------------------------------
   // -- Panel: Administratora
   // -------------------------------------
@@ -410,7 +432,8 @@
 
     $qr = packSearchQuerry($_GET["key"], "Lekarze_view",
       ["login", "imie", "nazwisko", "nazwa_specjalizacji", "pesel", "nr_lekarza"]
-    );  
+    );
+    $qr .= " AND ROWNUM < 100 ORDER BY nr_lekarza";
     $qr = str_replace("*", "login, imie, nazwisko, nazwa_specjalizacji, pesel, nr_lekarza", $qr);
   
     $retDb = dbRequire($qr);
@@ -423,7 +446,8 @@
 
     $qr = packSearchQuerry($_GET["key"], "AdminView_Pacjent",
       ["login", "imie", "nazwisko", '"Data urodzenia"', "pesel", "nr_karty_pacjenta"]
-    );  
+    );
+    $qr .= " AND ROWNUM < 100 ORDER BY nr_karty_pacjenta";
     $qr = str_replace("*", "login, imie, nazwisko, pesel, \"Data urodzenia\", nr_karty_pacjenta", $qr);
   
     $retDb = dbRequire($qr);
@@ -452,7 +476,7 @@
        "pacjent_nr", "\"Imie pacjenta\"", "\"Nazwisko pacjenta\""
       ]
     );
-  
+    $qr .= " AND ROWNUM < 100 ORDER BY NR_WIZYTY";
     $retDb = dbRequire($qr);  
   } 
 
@@ -737,9 +761,10 @@
     $retDb[2] = dbRequire("SELECT NajczesciejOdwiedzanajacyPacjent() FROM dual");
     $retDb[3] = dbRequire("SELECT NajczesciejOdwiedzaniLekarze() FROM dual");
     $retDb[4] = dbRequire("SELECT COUNT(Nr_leku) Ilosc_lekow FROM leki");
-    $retDb[5] = dbRequire("SELECT Leki.NAZWA_LEKU ,COUNT(Lek_NR) Ilosc_Przepisan FROM LEK_NA_RECEPTE INNER JOIN LEKI ON Lek_Nr=LEKI.NR_Leku GROUP BY Lek_NR,Leki.NAZWA_LEKU FETCH FIRST ROW ONLY");
+    $retDb[5] = dbRequire("SELECT * FROM NajPrzepLek");
     $retDb[6] = dbRequire("SELECT NajdrozszyLek() FROM dual");
-    $retDb[7] = dbRequire("SELECT TO_CHAR(DATA_WIZYTY,'HH24:MI') godzina,count(TO_CHAR(DATA_WIZYTY,'HH24:MI')) Ilosc_wizyt FROM WIZYTY GROUP BY TO_CHAR(DATA_WIZYTY,'HH24:MI') FETCH FIRST ROW ONLY");
+    $retDb[7] = dbRequire("SELECT * FROM NajczestszaGodzWizyt");
+    $retDb[8] = dbRequire("SELECT * FROM dostepne_godz");  
   }
   
   // -- Wszystkie Polecenia oblugiwane po stronie php
@@ -778,7 +803,12 @@
     new Command("dodajWizyte", "dodajWizyte", "pacjent", ["lekarz", "time", "opis"]),    
     new Command("szukajPacjentow", "szukajPacjentow", "lekarz", ["key"]),
     new Command("szukajRecept", "szukajReceptyLekarza", "lekarz", ["key"]),  
-    new Command("zaznaczRecepte", "zaznaczRecepte", "lekarz", ["wiz"]),  
+    new Command("zaznaczRecepte", "zaznaczRecepte", "lekarz", ["rec"]),
+    new Command("resetujRecepte", "resetujRecepte", "lekarz", ["p_id"]),  
+
+    new Command("req_edRecepta", "lek_req_recepte", "lekarz", ["p_id"]),
+    new Command("upt_edRecepta", "lek_upt_recepte", "lekarz", ["p_id"]),    
+  
   
     // Perm: Pacjencji
     new Command("szukajWizyty", "szukajWizytyPacjent", "pacjent", ["key"]),

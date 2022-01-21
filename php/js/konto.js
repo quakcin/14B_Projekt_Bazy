@@ -521,6 +521,7 @@ const initLekarz = function ()
     {n: "kod_poczt", l: "Kod pocztowy", t: "text"}
   ]);
   addScheme("lekEdycjaWizyty", "Edytuj wizytę", [
+    {n: "Data", l: "Data Wizyty", t: "datetime-local"},    
     {n: "Zalecenia", l: "Zalecenia", t: "text"},
     {n: "NowyStatus", l: "Status wizyty", t: "select", opt: ["Odbyta",  "Zaplanowana", "Odwołana", "Przeniesiona"]}
   ], [
@@ -586,14 +587,13 @@ const initLekarz = function ()
       {n: "Data Waznosci", s: 180},      
     ],
     {
-      name: "Zaznacz",
+      name: "Edytuj",
       action: (e) =>
       {
-        const wiz = uncomplexResult(e.target)[1];
-        dbReq((e) => {
-          if (e.success == false)
-            alert("Nie Udało się zaznaczyć wizyty!");
-        }, "zaznaczRecepte", ["wiz", wiz]);
+        // -- rasie editor
+        const rec = uncomplexResult(e.target)[0];
+        hideAllPanelsExcept(P_EDIT);
+        invokeEditor('edRecepta', rec);
       }
     }
   );
@@ -604,6 +604,42 @@ const initLekarz = function ()
   ], [/* Bez Dodatkowych Przycisków */], (e) => {
     window.location.href = './apteka';
   });
+
+  addScheme
+  (
+    "edRecepta", "Edytowanie Recepty",
+    [
+      {n: "wazn", l: "Ważna do", t: "date"},
+      {n: "opis", l: "Zalecenia / Dawkowanie", t: "text"},
+    ],
+    [
+      {
+        val: 'Zaznacz',
+        evt: (p_id) =>
+        {
+          dbReq((e) => {
+            if (e.success == false)
+              alert("Nie Udało się zaznaczyć wizyty!");
+            window.location.href = './apteka';
+          }, "zaznaczRecepte", ["rec", p_id]);
+        }
+      },
+      {
+        val: 'Resetuj Recepte',
+        evt: (p_id) =>
+        {
+          dbReq((e) =>
+          {
+            if (e.success)
+              alert("Zresetowano Leki w recepcie!");
+            else
+              alert(`Błąd: ${e.err}`);
+          }, "resetujRecepte", ["p_id", p_id]);
+        }
+      },      
+    ]
+  ); 
+  
   addPanel("Strona Glowna", "n/a", P_HOMEPAGE);
   addPanel("Moje Konto", "lekKonto", P_EDIT);
   addPanel("Moje Wizyty", "lekWizyty", P_SEARCH);
