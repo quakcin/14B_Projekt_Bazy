@@ -17,7 +17,8 @@ DELETE FROM Leki WHERE Nr_Leku = :OLD.Nr_Leku;
 END CASE;
 END;
 /
---6284 LEKI
+
+--6284 inserty leków
 INSERT INTO Leki_view VALUES (NULL, 'DOZ PRODUCT Witamina D3 2000 j.m., kapsułki miękkie, 120 szt.', 'kapsułki, odporność', 1, 19.99, 'https://www.doz.pl/apteka/p143673-DOZ_PRODUCT_Witamina_D3_2000_j.m._kapsulki_miekkie_120_szt.', 'https://azcdn.doz.pl/image/d/product/c0b49dae-scale-180x180.webp');
 INSERT INTO Leki_view VALUES (NULL, 'Test SGTi-flex COVID-19 Ag, test antygenowy, kasetkowy, 1 szt.', 'test diagnostyczny, wyrób medyczny, COVID-19, SARS-CoV-2', 2, 33.99, 'https://www.doz.pl/apteka/p147471-Test_SGTi-flex_COVID-19_Ag_test_antygenowy_kasetkowy_1_szt.', 'https://azcdn.doz.pl/image/d/product/f7bcec36-scale-180x180.webp');
 INSERT INTO Leki_view VALUES (NULL, 'COVID-19-Check-1 Antigen, test, 2 szt.', 'test diagnostyczny, wyrób medyczny, test, infekcja, COVID', 3, 85.99, 'https://www.doz.pl/apteka/p147760-COVID-19-Check-1_Antigen_test_2_szt.', 'https://azcdn.doz.pl/image/d/product/5422d220-scale-180x180.webp');
@@ -3853,7 +3854,7 @@ INSERT INTO Leki_view VALUES (NULL, 'Fonix Ból Uszu Compositum spray do uszu 15
 INSERT INTO Leki_view VALUES (NULL, 'Fonix higiena uszu Compositum spray do uszu 30 ml', 'Fonix higiena uszu Compositum spray do uszu 30 ml', 1, 20.52, 'https://www.wapteka.pl/fonix-higiena-uszu-compositum-spray-do-uszu-30-ml-17398,p', 'https://www.wapteka.pl/produkty_zdjecia/fonix-higiena-uszu-compositum-spray-do-uszu-30-ml.jpg');
 INSERT INTO Leki_view VALUES (NULL, 'Dolgit Med krople do uszu 10 ml', 'Dolgit Med krople do uszu 10 ml', 2, 16.95, 'https://www.wapteka.pl/dolgit-med-krople-do-uszu-10-ml-17399,p', 'https://www.wapteka.pl/produkty_zdjecia/dolgit-med-krople-do-uszu-10-ml.jpg');
 INSERT INTO Leki_view VALUES (NULL, 'Swanson Full Spectrum Cats Claw (Koci Pazur) 500 mg 100 kapsułek', 'Swanson Full Spectrum Cats Claw (Koci Pazur) 500 mg 100 kapsułek', 3, 18.98, 'https://www.wapteka.pl/swanson-full-spectrum-cats-claw-koci-pazur-500-mg-100-kapsulek-17402,p', 'https://www.wapteka.pl/produkty_zdjecia/swanson-full-spectrum-cats-claw-koci-pazur-500-mg-100-kapsulek.jpg');
-INSERT INTO Leki_view VALUES (NULL, 'Swanson Pau d'Arco 500 mg 100 kapsułek', 'Swanson Pau d'Arco 500 mg 100 kapsułek', 4, 21.79, 'https://www.wapteka.pl/swanson-pau-darco-500-mg-100-kapsulek-17404,p', 'https://www.wapteka.pl/produkty_zdjecia/swanson-pau-darco-500-mg-100-kapsulek.jpg');
+INSERT INTO Leki_view VALUES (NULL, 'Swanson Pau dArco 500 mg 100 kapsułek', 'Swanson Pau dArco 500 mg 100 kapsułek', 4, 21.79, 'https://www.wapteka.pl/swanson-pau-darco-500-mg-100-kapsulek-17404,p', 'https://www.wapteka.pl/produkty_zdjecia/swanson-pau-darco-500-mg-100-kapsulek.jpg');
 INSERT INTO Leki_view VALUES (NULL, 'Fibrotin 30 kapsułek', 'Fibrotin 30 kapsułek', 5, 12.25, 'https://www.wapteka.pl/fibrotin-30-kapsulek-17411,p', 'https://www.wapteka.pl/produkty_zdjecia/fibrotin-30-kapsulek.jpg');
 INSERT INTO Leki_view VALUES (NULL, 'Sutricon silikonowy żel na blizny 15 ml', 'Sutricon silikonowy żel na blizny 15 ml', 6, 23.17, 'https://www.wapteka.pl/sutricon-silikonowy-zel-na-blizny-15-ml-17422,p', 'https://www.wapteka.pl/produkty_zdjecia/sutricon-silikonowy-zel-na-blizny-15-ml.jpg');
 INSERT INTO Leki_view VALUES (NULL, 'Alectoin Krople nawilżające do oczu z ektoiną 10 ml', 'Alectoin Krople nawilżające do oczu z ektoiną 10 ml', 7, 22.85, 'https://www.wapteka.pl/alectoin-krople-nawilzajace-do-oczu-z-ektoina-10-ml-17437,p', 'https://www.wapteka.pl/produkty_zdjecia/alectoin-krople-nawilzajace-do-oczu-z-ektoina-10-ml.jpg');

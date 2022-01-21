@@ -155,6 +155,5 @@ BEGIN
     END LOOP;
 END;
 /
-SET SERVEROUTPUT ON;
-EXECUTE dodaj_wizyte_random(700);
+EXECUTE dodaj_wizyte_random(1000);
 ALTER TRIGGER check_Wizyty_dates_trigger ENABLE;
