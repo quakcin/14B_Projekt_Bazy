@@ -91,11 +91,7 @@
 
   //  -- Polaczenie Z Baza
 
-<<<<<<< HEAD
   $db = @oci_connect("system", "1234", "localhost/xe", "AL32UTF8");
-=======
-  $db = @oci_connect("system", "123qwe", "localhost/xe", "AL32UTF8");
->>>>>>> 70fe8982ed222a8dac80aa57a110f7bc6d44de4a
 
   if (!$db)
     packetThrow((oci_error())['message'], []);
