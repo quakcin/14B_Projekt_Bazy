@@ -35,6 +35,19 @@ LEFT JOIN Lekarze ON lekarze.specjalizacja_nr = specjalizacje.nr_specjalizacji
 GROUP BY specjalizacje.nazwa_specjalizacji, specjalizacje.opis
 ORDER BY specjalizacje.nazwa_specjalizacji;
 
+CREATE OR REPLACE VIEW AdminView_Recepty AS
+SELECT recepty.nr_recepty, Wizyty.Nr_Wizyty, "OsobaLekarza".imie AS "Imie lekarza", "OsobaLekarza".Nazwisko AS "Nazwisko lekarza",
+        wizyty.pacjent_nr, "OsobaPacjenta".imie AS "Imie pacjenta", "OsobaPacjenta".Nazwisko AS "Nazwisko pacjenta",
+        TO_CHAR(recepty.data_wystawienia, 'yyyy.MM.dd') as "Data Wystawienia",  TO_CHAR(recepty.data_waznosci, 'yyyy.MM.dd') as "Data Waznosci"
+    FROM Recepty
+    INNER JOIN Wizyty ON wizyty.nr_wizyty = recepty.wizyta_nr
+    LEFT JOIN Lekarze ON wizyty.lekarz_nr = lekarze.nr_lekarza
+    LEFT JOIN Pacjenci ON wizyty.pacjent_nr = pacjenci.nr_karty_pacjenta
+    LEFT JOIN Osoby "OsobaPacjenta" ON "OsobaPacjenta".Nr_Osoby = pacjenci.osoba_nr
+    LEFT JOIN Osoby "OsobaLekarza" ON "OsobaLekarza".Nr_Osoby = Lekarze.osoba_nr;
+    
+--SELECT * FROM AdminView_Recepty;
+
 /*SELECT imie, nazwisko, TO_CHAR(data_urodzenia, 'yyyy-MM-dd'), pesel, telefon, email, miasto, ulica, nr_domu, nr_mieszkania, kod_pocztowy, nazwa_specjalizacji FROM Lekarze_view WHERE Nr_lekarza = 1;
 SELECT imie, nazwisko, TO_CHAR(data_urodzenia, 'yyyy-MM-dd'), pesel, telefon, email, miasto, ulica, nr_domu, nr_mieszkania, kod_pocztowy FROM Pacjenci_view WHERE Nr_osoby = (SELECT Osoba_Nr FROM Pacjenci WHERE Nr_Karty_Pacjenta = 1);
 SELECT nazwa_producenta, telefon, email, miasto, ulica, nr_domu, nr_mieszkania, kod_pocztowy FROM Producenci_Lekow_view WHERE nr_producenta = 1; 
@@ -190,5 +203,13 @@ AS
 BEGIN
 INSERT INTO Producenci_Lekow_view (nazwa_producenta, kod_pocztowy, miasto, ulica,nr_domu, nr_mieszkania, email,telefon) 
 VALUES (p_nazwa, p_kodpoczt, p_miasto, p_ulica, p_dom, p_mieszk, p_mail, p_tel);
+END;
+/
+
+CREATE OR REPLACE PROCEDURE UsunRecepte_Admin(p_id recepty.nr_recepty%TYPE)
+AS
+BEGIN
+    DELETE FROM lek_na_recepte WHERE recepta_nr = p_id;
+    DELETE FROM Recepty WHERE nr_recepty = p_id;
 END;
 /
