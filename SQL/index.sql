@@ -182,7 +182,7 @@ END;
 /
 --SELECT NajdrozszyLek() FROM dual;
 --%7
-DROP FUNCTION NajczestszaGodzWizyt;
+
 CREATE OR REPLACE FUNCTION NajczestszaGodzWizyt RETURN NVARCHAR2
 AS
 godz NVARCHAR2 (10);

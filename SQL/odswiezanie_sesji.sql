@@ -6,7 +6,7 @@ END;
 /
 
 begin
-
+    DBMS_SCHEDULER.DROP_JOB (job_name => 'CALC_JOB');
     DBMS_SCHEDULER.CREATE_JOB (
          job_name           => 'CALC_JOB',
          job_type           => 'STORED_PROCEDURE',

@@ -19,9 +19,9 @@ INSERT INTO Adresy  VALUES(1, 'Kielce', 'Al. Tysiąclecia Państwa Polskiego', '
 INSERT INTO Kontakty VALUES (1, '500000000', 's091234@student.tu.kielce.pl');
 INSERT INTO Kontakty VALUES (2, '500000000', 'martyunderscore@gmail.com');
 INSERT INTO Osoby   VALUES(1, 'Bandura', 'Maciek', TO_DATE('2000-05-16', 'YYYY-MM-DD'), '00000000000', 1, 1);
-INSERT INTO Osoby   VALUES(1, 'Ślusarczym', 'Marcin', TO_DATE('2000-11-21', 'YYYY-MM-DD'), '00000000001', 1, 2);
+INSERT INTO Osoby   VALUES(2, 'Ślusarczyk', 'Marcin', TO_DATE('2000-11-21', 'YYYY-MM-DD'), '00000000001', 1, 2);
 INSERT INTO Konta   VALUES(1, 'admin', 'qwerty', 'admin', 1);
-INSERT INTO Konta   VALUES(1, 'adminMarcin', 'kaczka', 'admin', 2);
+INSERT INTO Konta   VALUES(2, 'adminMarcin', 'kaczka', 'admin', 2);
 
 --Pacjenci
 INSERT INTO Pacjenci_view VALUES ('Pac1', 'Dudek', 'Adam', 'Kowalski', sysdate-1000, TO_CHAR(round(dbms_random.value(00000000001,99999999999))), TO_CHAR(round(dbms_random.value(500000000,999999999))), 'kowal@wp.pl', 'Kielce', 'Sandomierska', '74', '10', '25-987', NULL);
