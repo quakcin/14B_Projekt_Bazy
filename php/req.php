@@ -780,7 +780,8 @@
     $retDb[5] = dbRequire("SELECT NajwPrzepLek FROM DUAL");
     $retDb[6] = dbRequire("SELECT NajdrozszyLek() FROM dual");
     $retDb[7] = dbRequire("SELECT NajczestszaGodzWizyt FROM DUAL");
-    $retDb[8] = dbRequire("SELECT * FROM dostepne_godz");  
+    $retDb[8] = dbRequire("SELECT * FROM dostepne_godz");
+    $retDb[9] = dbRequire("SELECT Zliczenia FROM DUAL");    
   }
   
   // -- Wszystkie Polecenia oblugiwane po stronie php
