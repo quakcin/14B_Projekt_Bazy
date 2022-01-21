@@ -31,7 +31,7 @@ SELECT COUNT(NR_LEKARZA) INTO lekarze FROM LEKARZE;
 SELECT COUNT(NR_karty_pacjenta) INTO pacjenci FROM PACJENCI;
 SELECT COUNT(NR_WIZYTY) INTO wizyty FROM WIZYTY;
 SELECT COUNT(NR_Recepty) INTO recepty FROM RECEPTY;
-output:= '<br>Ilość lekarzy: '||lekarze||'<br>Ilość pacjentów: '||pacjenci||'<br>Ilość wizyt: '||wizyty||'<br>Ilość recept: '||recepty;
+output:= '<br>Ilość lekarzy: '||lekarze||'<br>Ilość pacjentów: '||pacjenci||'<br>Ilość wizyt: '||wizyty||'<br>Ilość wypisanych recept: '||recepty;
 RETURN output;
 END;
 /
