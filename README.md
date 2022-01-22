@@ -12,7 +12,7 @@ Zespół pracujący nad projektem:
 | :-------: | :------: | :------: | :----------------: |
 | Tabele    | 15       | 12       | :white_check_mark: |
 | Triggery  | 6        | 3        | :white_check_mark: |
-| Widoki    | 16       | 6        | :white_check_mark: |
+| Widoki    | 14       | 6        | :white_check_mark: |
 | Inserty   | 6442     | ~180     | :white_check_mark: |
 | Kursory   | 4        | 4        | :white_check_mark: |
 | Sekwencje | 7        |          |                    |
