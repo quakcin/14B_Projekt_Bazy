@@ -14,7 +14,7 @@ Zespół pracujący nad projektem:
 | Triggery  | 6        | 3        | :white_check_mark: |
 | Widoki    | 14       | 6        | :white_check_mark: |
 | Inserty   | 6442     | ~180     | :white_check_mark: |
-| Kursory   | 4        | 4        | :white_check_mark: |
+| Kursory   | 5        | 4        | :white_check_mark: |
 | Sekwencje | 7        |          |                    |
 | Procedury | 20       |          |                    |
 | Funkcje   | 6        |          |                    |
